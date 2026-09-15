@@ -1,0 +1,81 @@
+﻿ID,Type,Category,Content,MustHave
+1,Tip,General,"When you see the word ""immediately"" in a question it almost always points to the correct answer. The ServSafe exam loves urgency.",1
+2,Tip,General,Read every answer choice before selecting one. The exam frequently includes answers that are partially correct but not the best answer.,1
+3,Tip,General,When two answers seem correct ask yourself which one is more complete or more specific. That one is usually right.,0
+4,Tip,General,The exam is not trying to trick you with obscure facts. If an answer sounds extreme or unusual it is probably wrong.,1
+5,Tip,General,Questions about what to do first almost always have the same answer — stop the unsafe practice and correct it immediately.,0
+6,Tip,General,If a question asks what a manager should do the answer almost always involves training correcting or reporting — not ignoring.,1
+7,Tip,General,The exam favors the most cautious answer. When in doubt choose the option that best protects the customer.,1
+8,Trap,General,"The exam will offer ""rinse and reuse"" as an answer for contaminated items. It is never correct. Contaminated food and single-use items must be discarded.",0
+9,Trap,General,"The exam loves to offer ""continue working with gloves"" as a distractor when a food handler is ill. Gloves do not make a sick food handler safe to work.",0
+10,Trap,General,Do not confuse cleaning with sanitizing. The exam treats them as two completely separate steps. Cleaning alone is never sufficient for food-contact surfaces.,0
+11,MemoryHook,General,For cooking temperatures remember the phrase Poultry Ground Whole — 165 155 145. Each step down is 10 degrees.,0
+12,MemoryHook,General,To remember the 5 reportable illnesses think of the phrase Never Hesitate — Salmonella Shigella E. coli. Norovirus Hepatitis A are the N and H.,0
+13,Scenario,General,I have walked into kitchens where the manager thought the food was safe because it looked and smelled fine. Pathogens are invisible and odorless. Appearance means nothing.,0
+14,Scenario,General,One of the most common inspection failures I have seen is a handwashing sink blocked by a bus tub or a bucket. Keep that sink clear every single minute of the day.,0
+15,Tip,Time & Temperature,When a question asks about cooling always think two stages — 135 to 70 in 2 hours then 70 to 41 in 4 more hours. Write it on your scratch paper before the exam.,0
+16,Tip,Time & Temperature,Hot holding is 135 and above. Cold holding is 41 and below. The danger zone is everything in between. Those three numbers anchor almost every time and temperature question.,1
+17,Tip,Time & Temperature,Reheating temperature is always 165 regardless of the original cooking temperature. Do not let the exam confuse you with the original cook temp.,0
+18,Trap,Time & Temperature,The exam will offer 165°F as the correct answer for ground beef cooking temperature. It is not. Ground beef is 155°F for 15 seconds. 165 is for poultry and stuffed items.,0
+19,Trap,Time & Temperature,The exam will suggest stirring or adding hot liquid to food that has dropped below 135°F. Neither is an approved corrective action. The food must be reheated to 165°F.,0
+20,Trap,Time & Temperature,Do not confuse the 4-hour rule with the 6-hour cooling window. Four hours is the maximum time TCS food can be in the danger zone total. Six hours is specifically for the cooling process.,0
+21,MemoryHook,Time & Temperature,Remember cooling as 2 and 4 — 2 hours to get to 70 and 4 more hours to get to 41. Two plus four equals six total hours.,0
+22,MemoryHook,Time & Temperature,For date marking think of the number 7 as a stop sign. On day 7 the food stops — it must be discarded.,0
+23,Scenario,Time & Temperature,I once watched a cook place a full 22-quart stockpot of soup directly into the walk-in cooler to cool. Three hours later it was still at 110°F in the center. Always divide into shallow pans.,0
+24,Scenario,Time & Temperature,A manager I trained thought the steam table was reheating food because it was hot to the touch. Steam tables are holding equipment only. They cannot safely reheat food.,0
+25,Tip,Cross-Contamination,Storage order questions are among the most common on the exam. Memorize the order top to bottom — ready-to-eat seafood whole cuts ground meat poultry. That is the cooking temperature order lowest to highest.,0
+26,Tip,Cross-Contamination,Any question about allergens where the customer has disclosed an allergy — the answer always involves notifying the manager. Never try to handle an allergen request without management involvement.,0
+27,Trap,Cross-Contamination,The exam will suggest rinsing gloves between tasks as an acceptable practice. It is not. Gloves must be removed hands washed and new gloves applied.,0
+28,Trap,Cross-Contamination,"The exam will offer ""store chemicals on the top shelf away from food"" as a correct answer. Top shelf is wrong — chemicals must be stored in a completely separate area away from all food and equipment.",0
+29,MemoryHook,Cross-Contamination,For storage order remember the phrase Really Safe Cooks Go Places — Ready-to-eat Seafood whole Cuts Ground meat Poultry. Top to bottom in the cooler.,0
+30,MemoryHook,Cross-Contamination,The nine allergens — think of the phrase ME FT SWPS — Milk Eggs Fish Tree nuts Shellfish Wheat Peanuts Sesame. It is not pretty but it works.,0
+31,Scenario,Cross-Contamination,I have seen more allergen reactions traced back to a shared fryer than anything else. Even if a dish contains no nuts if it was fried in oil that also fried peanut-coated items it is contaminated.,0
+32,Scenario,Cross-Contamination,A chef I worked with used the same pair of tongs for raw chicken and then for salad without thinking twice. That single habit could have sickened every customer on that shift.,0
+33,Tip,Personal Hygiene,Handwashing questions are straightforward — the answer is almost always wash at a designated sink with soap and warm water for 20 seconds. Any shortcut offered is wrong.,0
+34,Tip,Personal Hygiene,For illness and exclusion questions remember that symptoms like vomiting and diarrhea always mean exclusion. A sore throat with fever may only mean restriction depending on the operation type.,0
+35,Trap,Personal Hygiene,The exam will offer hand sanitizer as an acceptable substitute for handwashing after using the restroom. It is never acceptable as a substitute. Sanitizer is a supplement only.,0
+36,Trap,Personal Hygiene,"The exam frequently offers ""work with gloves"" as a solution for a sick food handler. Gloves do not contain a foodborne illness. A sick handler must be excluded.",0
+37,MemoryHook,Personal Hygiene,For the five reportable illnesses remember the acronym SHEEN — Salmonella Typhi Hepatitis A E. coli O157:H7 and Norovirus. The fifth is Shigella — add it to complete the group.,0
+38,MemoryHook,Personal Hygiene,The handwashing steps are Wet Soap Scrub Rinse Dry. Think of the phrase We Should Scrub Really Diligently.,0
+39,Scenario,Personal Hygiene,I worked with a food handler who washed their hands perfectly but then used the same paper towel to turn off the faucet and dry their hands. Always use a fresh towel to turn off the faucet.,0
+40,Scenario,Personal Hygiene,A common failure I see during inspections — food handlers wearing rings with stones. The stone setting traps food particles and bacteria that no amount of handwashing can remove.,0
+41,Tip,Receiving & Storage,At receiving always check temperature first then packaging then quality. Temperature is the most critical factor and must be verified before accepting any TCS food.,0
+42,Tip,Receiving & Storage,For questions about rejecting deliveries — if there is any doubt the answer is reject. The exam never rewards accepting questionable product.,0
+43,Trap,Receiving & Storage,The exam will suggest accepting a delivery and refrigerating it quickly to bring it to safe temperature. This is never correct. If it arrives out of temperature it must be rejected.,0
+44,Trap,Receiving & Storage,Do not confuse the receiving temperature for shell eggs (45°F) with the general TCS receiving temperature (41°F). Shell eggs get the higher allowance — that distinction appears on the exam.,0
+45,MemoryHook,Receiving & Storage,For shellfish tag retention remember 90 days as three months. Think of shellfish as a three-month commitment.,0
+46,MemoryHook,Receiving & Storage,FIFO — First In First Out. The oldest product always moves first. Think of it as a line — first to arrive first to leave.,0
+47,Scenario,Receiving & Storage,I rejected a delivery of ground beef once because the driver had left the refrigerated truck door open while making previous stops. The paperwork said 38°F but my thermometer read 46°F. Always measure yourself.,0
+48,Scenario,Receiving & Storage,A manager I coached accepted shellfish without checking for tags because the driver said they were in the truck. Tags were never found. During a later illness investigation there was no way to trace the source.,0
+49,Tip,Food Preparation,Thawing questions almost always come down to one principle — keep the food out of the danger zone during the entire thaw. Any method that does that is acceptable.,0
+50,Tip,Food Preparation,For produce questions the answer almost always involves washing under running water before cutting. The act of cutting can drag surface pathogens into the interior.,0
+51,Trap,Food Preparation,"The exam will offer ""trim the spoiled parts and use the rest"" for spoiled produce. This is never correct. Spoiled produce must be discarded entirely.",1
+52,Trap,Food Preparation,The exam will suggest that food contaminated by chemicals can be rinsed and made safe. Chemical contamination cannot be corrected. The food must be discarded.,0
+53,MemoryHook,Food Preparation,The four approved thawing methods — Refrigerator Running-water Microwave Cook-from-frozen. Remember RRMC — Really Responsible Methods of Cooling.,0
+54,Scenario,Food Preparation,I once watched a prep cook thaw shrimp in a bowl of standing warm water on the prep table. By the time the shrimp were thawed the surface temperature was already in the danger zone.,0
+55,Tip,Cleaning & Sanitizing,Three-compartment sink questions follow a strict order — wash rinse sanitize air-dry. Any answer that skips or reorders these steps is wrong.,0
+56,Tip,Cleaning & Sanitizing,For sanitizer concentration questions — if the concentration is too low it does not kill pathogens. If too high it becomes a chemical hazard. Both extremes are wrong.,0
+57,Trap,Cleaning & Sanitizing,The exam will offer towel-drying as an acceptable step after sanitizing. It is never acceptable. Air-drying is always required to avoid recontamination.,0
+58,Trap,Cleaning & Sanitizing,The exam will suggest that sanitizing alone is sufficient without cleaning first. Sanitizer applied to a dirty surface is rendered ineffective by the organic matter present.,0
+59,MemoryHook,Cleaning & Sanitizing,For the three-compartment sink think of the phrase Wash Rinse Sanitize Air — WRSA. Work Right Stay Always clean.,0
+60,MemoryHook,Cleaning & Sanitizing,Chlorine sanitizer range — 50 to 99. Think of it as a speed limit — below 50 you are not going fast enough and above 99 you are in dangerous territory.,0
+61,Scenario,Cleaning & Sanitizing,During an audit I found that a kitchen had been storing wiping cloths in plain water all week. Every surface they wiped was being recontaminated. Sanitizer buckets must have sanitizer — not just water.,0
+62,Scenario,Cleaning & Sanitizing,A cook I trained was proud of how quickly she cleaned the meat slicer — she sprayed sanitizer on it without disassembling it. The blade housing had weeks of dried meat residue that the sanitizer never reached.,0
+63,Tip,Facility & Equipment,For any question about a malfunctioning handwashing sink the answer always involves stopping use and fixing it immediately. There is no workaround for a broken handwashing sink.,0
+64,Tip,Facility & Equipment,Plumbing questions often involve backflow or cross-connections. The safest answer always involves physical separation — an air gap is the most reliable backflow prevention method.,1
+65,Trap,Facility & Equipment,The exam will suggest using the food prep sink or the dish sink for handwashing when the handwashing sink is busy. Neither is acceptable. Handwashing sinks are exclusively for handwashing.,0
+66,Scenario,Facility & Equipment,I have seen handwashing sinks used as ice dumps as storage for cleaning supplies and even as a place to cool beverages. Every one of those uses is a violation. That sink exists for one purpose only.,0
+67,Tip,Pest Management,For pest management questions the answer almost always involves a licensed pest control operator. Food service workers should never apply pesticides themselves.,0
+68,Tip,Pest Management,Prevention questions focus on eliminating the three things pests need — food water and shelter. Any answer that removes one of these is on the right track.,0
+69,Trap,Pest Management,The exam will offer setting your own traps as an acceptable response to a pest sighting. It is not. A licensed pest control operator must be contacted.,1
+70,Trap,Pest Management,Do not confuse pest prevention with pest response. Prevention is about sealing entry points and eliminating harborage. Response always involves a licensed professional.,0
+71,MemoryHook,Pest Management,Pests need Food Water Shelter — FWS. Deny all three and you deny the pest. Think of it as taking away their lease.,0
+72,Scenario,Pest Management,I walked into a storage room once and immediately smelled the musty oily odor of cockroaches before I saw a single dropping. That smell is unmistakable once you know it. Train yourself to notice it.,0
+73,Scenario,Pest Management,A facility I inspected had sealed every visible gap on the exterior but left the gaps around incoming pipes unsealed. Mice were entering through those pipe penetrations every night. Always check around every pipe.,0
+74,Tip,Food Safety Management,For manager responsibility questions the answer almost always involves the manager taking direct action — correcting training documenting or reporting. Delegating and waiting are never correct answers.,0
+75,Tip,Food Safety Management,HACCP questions on the exam focus heavily on CCPs and corrective actions. Know that a CCP is a point of control and that failing to meet a critical limit always requires immediate corrective action.,0
+76,Trap,Food Safety Management,"The exam will offer ""document and continue"" as a corrective action when a CCP is not met. Documentation is required but continuing without correction is never acceptable.",0
+77,Trap,Food Safety Management,Do not confuse verification with monitoring. Monitoring is the ongoing observation at a CCP. Verification is the broader confirmation that the entire HACCP system is working.,0
+78,MemoryHook,Food Safety Management,The seven HACCP principles — Hazard Analysis CCPs Critical Limits Monitoring Corrective Action Verification Records. Think of the phrase Happy Chefs Cook Meals Correctly — Very Reliably.,1
+79,Scenario,Food Safety Management,The most common active managerial control failure I see is a manager who knows the rules but never walks the floor. Food safety only works if someone is watching. Walk your line every hour.,0
+80,Scenario,Food Safety Management,I have seen operations fail inspections not because the food handlers did not know the rules but because the manager never reinforced them. Culture flows from the top. If the manager is casual about food safety the staff will be too.,0

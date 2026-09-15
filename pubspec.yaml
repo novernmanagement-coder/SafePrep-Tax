@@ -1,0 +1,73 @@
+name: safepreptax
+
+description: "SafePrep Tax - Tax Certification Exam Prep"
+
+publish_to: 'none'
+
+version: 1.17.0+2
+
+environment:
+
+  sdk: ^3.11.5
+
+
+
+dependencies:
+
+  flutter_secure_storage: ^9.0.0
+
+  flutter:
+
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  shared_preferences: ^2.3.2
+
+  url_launcher: ^6.3.0
+
+  in_app_purchase: ^3.2.0
+
+  in_app_review: ^2.0.12
+
+  http: ^1.6.0
+
+  path_provider: ^2.1.5
+
+  mixpanel_flutter: ^2.3.3
+
+
+
+dev_dependencies:
+
+  flutter_test:
+
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+
+  flutter_launcher_icons: ^0.14.4
+
+
+
+flutter_launcher_icons:
+
+  android: true
+
+  ios: true
+
+  image_path: "Assets/splash.png"
+
+  remove_alpha_ios: true
+
+  min_sdk_android: 21
+
+
+
+flutter:
+
+  uses-material-design: true
+
+  assets:
+
+    - Assets/

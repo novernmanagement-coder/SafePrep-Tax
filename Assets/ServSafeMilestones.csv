@@ -1,0 +1,9 @@
+ID,Type,Trigger,Threshold,Category,Title,EmoTone,Icon,Message,Elite
+1,Special,AppUnlocked,0,,SafePrep Unlocked,Celebrating,🏆,You invested in yourself. That's the first step to passing.,0
+2,Special,DiagnosticCompleted,0,,Optimized Path Chosen,Encouraging,🗺️,You took the diagnostic and let SafePrep build your personal study plan. Smart move.,0
+3,Category,FirstCategoryMastered,85,,Categories Scored 85%+,Celebrating,✅,Every category at 85% or above counts. You are building something real.,0
+4,Category,FirstPerfectCategory,100,,100% Club,Celebrating,💯,100% on a category. You didn't just learn it — you owned it.,0
+5,Special,AllCategoriesMastered,85,,All Categories Mastered,Celebrating,⭐,Every category at 85% or above. You didn't leave anything on the table.,0
+6,Score,ExamPassed,85,,SafePrep Certified,Celebrating,🏆,You passed the SafePrep® final exam. You're ready for the real thing.,0
+7,Score,ExpertClub,95,,Expert Club,Elite,🎯,Top 5%. You scored 95% or higher on the diagnostic. The exam is yours.,1
+8,Score,PerfectFinalExam,100,,Perfect Score,Elite,🌟,100% on the final exam. Flawless. That's rare and you earned it.,1

@@ -1,0 +1,123 @@
+ID,Category,Fact
+1,Time & Temperature,The temperature danger zone for TCS food is between 41°F and 135°F.
+2,Time & Temperature,TCS food must be cooled from 135°F to 70°F within 2 hours.
+3,Time & Temperature,After reaching 70°F food must continue cooling to 41°F within 4 more hours.
+4,Time & Temperature,The total cooling window for TCS food is 6 hours from 135°F to 41°F.
+5,Time & Temperature,Hot TCS food must be held at 135°F or above at all times.
+6,Time & Temperature,Cold TCS food must be held at 41°F or below at all times.
+7,Time & Temperature,Poultry must reach a minimum internal cooking temperature of 165°F for 15 seconds.
+8,Time & Temperature,Ground meat must reach a minimum internal cooking temperature of 155°F for 15 seconds.
+9,Time & Temperature,Whole muscle beef pork and seafood must reach 145°F for 15 seconds.
+10,Time & Temperature,All TCS food reheated for service must reach 165°F for 15 seconds.
+11,Time & Temperature,Food reheated in a microwave must reach 165°F and rest covered for 2 minutes.
+12,Time & Temperature,Stuffed meats and stuffed poultry must reach 165°F because the stuffing contacts raw proteins.
+13,Time & Temperature,Ready-to-eat TCS food held at 41°F or below may be kept for a maximum of 7 days.
+14,Time & Temperature,TCS food that has been in the danger zone for more than 4 cumulative hours must be discarded.
+15,Time & Temperature,Shallow pans ice baths and blast chillers are all approved methods for rapid cooling.
+16,Cross-Contamination,Cross-contamination occurs when pathogens are transferred from one food or surface to another.
+17,Cross-Contamination,Raw poultry must always be stored on the lowest shelf in a cooler.
+18,Cross-Contamination,Foods in a cooler are stored from top to bottom by minimum required cooking temperature.
+19,Cross-Contamination,Ready-to-eat food must always be stored above all raw proteins in a refrigerator.
+20,Cross-Contamination,Cross-contact refers specifically to the transfer of allergen proteins from one food to another.
+21,Cross-Contamination,Even a trace amount of an allergen can trigger a life-threatening reaction in a sensitive individual.
+22,Cross-Contamination,The nine major food allergens are milk eggs fish shellfish tree nuts peanuts wheat soybeans and sesame.
+23,Cross-Contamination,Dedicated color-coded cutting boards help prevent cross-contamination between different food types.
+24,Cross-Contamination,Gloves must be changed and hands must be washed when switching between raw and ready-to-eat foods.
+25,Cross-Contamination,Food-contact surfaces must be cleaned and sanitized immediately after contact with a raw protein.
+26,Cross-Contamination,Allergen-free meals must be prepared first or on completely separate equipment to prevent cross-contact.
+27,Cross-Contamination,A food slicer used continuously must be cleaned and sanitized every 4 hours.
+28,Cross-Contamination,Chemicals must always be stored in original labeled containers away from all food and equipment.
+29,Personal Hygiene,Food handlers must wash their hands for a minimum of 20 seconds using soap and warm water.
+30,Personal Hygiene,Hands must be washed after using the restroom handling raw meat touching the face and handling garbage.
+31,Personal Hygiene,Hand sanitizer may only be used after proper handwashing — it is a supplement not a substitute.
+32,Personal Hygiene,Handwashing must occur at a designated handwashing sink only — never in a prep or dish sink.
+33,Personal Hygiene,Water for handwashing must be at a minimum temperature of 100°F.
+34,Personal Hygiene,Hands must be dried with a single-use paper towel or air dryer after washing.
+35,Personal Hygiene,A plain band ring is the only jewelry permitted for food handlers.
+36,Personal Hygiene,Fingernails must be kept short clean and unpolished to prevent harboring pathogens.
+37,Personal Hygiene,A food handler with vomiting or diarrhea must be excluded from the operation immediately.
+38,Personal Hygiene,The five reportable illnesses in food service are Norovirus Hepatitis A Salmonella Typhi Shigella and E. coli O157:H7.
+39,Personal Hygiene,Jaundice is a symptom of Hepatitis A and requires immediate exclusion and reporting to the regulatory authority.
+40,Personal Hygiene,An infected wound on the hand must be covered with a bandage and protected with a single-use glove.
+41,Personal Hygiene,Food handlers may drink in food prep areas only from a covered container with a straw.
+42,Receiving & Storage,Cold TCS food must be received at 41°F or below.
+43,Receiving & Storage,Shell eggs and shucked shellfish may be received at 45°F or below.
+44,Receiving & Storage,Live shellfish must be received at an air temperature of 45°F or below.
+45,Receiving & Storage,Hot TCS food received during a hot delivery must arrive at 135°F or above.
+46,Receiving & Storage,Frozen food must be received completely solid with no signs of thawing or refreezing.
+47,Receiving & Storage,Dented swollen rusted or leaking canned goods must always be rejected at receiving.
+48,Receiving & Storage,Shellfish tags must be kept on file for 90 days from the date the last shellfish was sold.
+49,Receiving & Storage,The FIFO method — First In First Out — ensures older stock is used before newer stock.
+50,Receiving & Storage,Dry goods must be stored at least 6 inches off the floor to allow cleaning and deter pests.
+51,Receiving & Storage,Raw chicken must be stored on the lowest shelf of any refrigerator or walk-in cooler.
+52,Receiving & Storage,Ready-to-eat fruit and cooked food must be stored on the top shelf above all raw proteins.
+53,Receiving & Storage,Large ice crystals on frozen food indicate it thawed and refroze during transport and must be rejected.
+54,Receiving & Storage,Refrigerators holding TCS food must maintain a temperature of 41°F or below at all times.
+55,Receiving & Storage,A delivery that arrives with tampered or broken packaging must be rejected regardless of temperature.
+56,Food Preparation,The four approved thawing methods are refrigeration running cold water microwave and cooking from frozen.
+57,Food Preparation,Food thawed in a microwave must be cooked immediately after thawing.
+58,Food Preparation,Food thawed under running water must be kept under water at 70°F or below.
+59,Food Preparation,Produce must be washed under cool running water before cutting peeling or cooking.
+60,Food Preparation,Ice must always be handled with a scoop — never with bare hands or a glass.
+61,Food Preparation,Separate utensils must be used for raw proteins and ready-to-eat foods to prevent cross-contamination.
+62,Food Preparation,Food contaminated by chemicals glass or other physical hazards must be discarded immediately.
+63,Food Preparation,Partial cooking must be limited to no more than 60 minutes before the food is finished cooking.
+64,Food Preparation,Whole muscle beef roasts may be cooked to 145°F but must be held at that temperature for 4 minutes.
+65,Food Preparation,Time-temperature abused food must be discarded — reheating or chilling does not make it safe again.
+66,Cleaning & Sanitizing,Cleaning removes dirt and organic matter while sanitizing reduces pathogens to safe levels.
+67,Cleaning & Sanitizing,A surface must always be cleaned before it can be effectively sanitized.
+68,Cleaning & Sanitizing,The correct order for a three-compartment sink is wash rinse sanitize and air-dry.
+69,Cleaning & Sanitizing,The wash compartment of a three-compartment sink must be at least 110°F.
+70,Cleaning & Sanitizing,Chlorine sanitizer must be maintained between 50 and 99 ppm to be effective and safe.
+71,Cleaning & Sanitizing,Iodine sanitizer must be maintained between 12.5 and 25 ppm.
+72,Cleaning & Sanitizing,Quaternary ammonium sanitizer concentration must follow the manufacturer's instructions.
+73,Cleaning & Sanitizing,Food-contact surfaces in continuous use must be cleaned and sanitized at least every 4 hours.
+74,Cleaning & Sanitizing,Sanitized equipment must always be allowed to air-dry — never dried with a towel.
+75,Cleaning & Sanitizing,A high-temperature dish machine must reach 180°F on the surface of dishes during the final rinse.
+76,Cleaning & Sanitizing,A low-temperature dish machine relies on chemical sanitizer and requires a minimum rinse of 120°F.
+77,Cleaning & Sanitizing,Wiping cloths must be stored in sanitizing solution between uses — never in plain water.
+78,Cleaning & Sanitizing,Test strips must be used to verify sanitizer concentration — always check the strip expiration date first.
+79,Cleaning & Sanitizing,A cutting board with deep knife scars cannot be effectively sanitized and must be replaced.
+80,Cleaning & Sanitizing,Ice machines must be cleaned regularly per manufacturer instructions to prevent mold and bacterial buildup.
+81,Facility & Equipment,Handwashing sinks must be used for handwashing only — never for food prep or equipment rinsing.
+82,Facility & Equipment,Every handwashing sink must be stocked with soap single-use towels and a waste bin at all times.
+83,Facility & Equipment,A handwashing sink must provide running water at a minimum temperature of 100°F.
+84,Facility & Equipment,A handwashing reminder sign must be posted at every handwashing sink.
+85,Facility & Equipment,Floor-mounted equipment must be elevated at least 6 inches off the floor to allow cleaning underneath.
+86,Facility & Equipment,Light fixtures in food prep areas must have shatter-resistant covers to prevent glass contamination.
+87,Facility & Equipment,Adequate lighting in a walk-in cooler allows staff to read labels check dates and identify spoilage.
+88,Facility & Equipment,A backed-up drain in a food prep area is an immediate health hazard — food prep must stop.
+89,Facility & Equipment,Garbage containers in food prep areas must have tight-fitting lids to deter pests.
+90,Facility & Equipment,A backflow prevention device stops contaminated water from reversing into the potable water supply.
+91,Pest Management,The most effective pest prevention strategy is eliminating food water and shelter sources.
+92,Pest Management,All gaps cracks and openings in exterior walls floors and doors must be sealed to prevent pest entry.
+93,Pest Management,Self-closing doors and door sweeps work together to prevent pests from entering through exterior doors.
+94,Pest Management,Window screens must be tight-fitting and in good repair in any food prep area with operable windows.
+95,Pest Management,Droppings nesting materials and gnaw marks are the most common early signs of a pest infestation.
+96,Pest Management,Only a licensed pest control operator may apply pesticides in a food service facility.
+97,Pest Management,Cardboard boxes provide ideal harborage for cockroaches and must be removed from the facility promptly.
+98,Pest Management,Cockroach infestations often produce a distinctive musty oily odor in addition to visible droppings.
+99,Pest Management,Rodents can enter through a gap as small as a dime — all openings must be sealed regardless of size.
+100,Pest Management,Fruit flies breed in floor drains and drain pans — keeping these clean eliminates their breeding sites.
+101,Pest Management,Fly light traps must be positioned away from food to prevent dead insects from falling into food.
+102,Pest Management,Pest control inspection reports must be reviewed after each visit and findings acted upon promptly.
+103,Food Safety Management,The person in charge must be present and knowledgeable about food safety at all times during operation.
+104,Food Safety Management,Active managerial control means identifying and correcting food safety risks before they cause illness.
+105,Food Safety Management,HACCP stands for Hazard Analysis Critical Control Points.
+106,Food Safety Management,The three types of food safety hazards are biological chemical and physical.
+107,Food Safety Management,A critical control point is a step in food handling where a hazard can be prevented eliminated or reduced.
+108,Food Safety Management,When a critical control point is not met corrective action must be taken immediately.
+109,Food Safety Management,Food safety records provide written proof that monitoring and corrective actions were performed.
+110,Food Safety Management,A food recall requires the immediate removal of affected product from service.
+111,Food Safety Management,Multiple employees reporting stomach illness on the same day may indicate a foodborne illness outbreak.
+112,Food Safety Management,The difference between restriction and exclusion is that restriction limits duties while exclusion removes the food handler entirely.
+113,General,Foodborne illness affects an estimated 48 million Americans every year.
+114,General,The top five risk factors for foodborne illness are improper holding temperatures inadequate cooking poor personal hygiene contaminated equipment and unsafe food sources.
+115,General,Most foodborne illnesses are preventable with consistent application of basic food safety practices.
+116,General,Norovirus is the most common cause of foodborne illness in the United States.
+117,General,Bacteria multiply most rapidly between 70°F and 125°F — the middle of the temperature danger zone.
+118,General,Under ideal conditions a single bacterium can multiply to over one million in just 10 hours.
+119,General,TCS stands for Temperature Control for Safety.
+120,General,The ServSafe exam consists of 90 questions and requires a score of 75% or higher to pass.
+121,General,A food safety culture starts with management — when managers take food safety seriously staff follow.
+122,General,When in doubt throw it out — the cost of discarding food is always less than the cost of a foodborne illness outbreak.

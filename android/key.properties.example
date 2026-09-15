@@ -1,0 +1,9 @@
+# Copy this file to android/key.properties (gitignored — never commit
+# the real one) and fill in the real values from the release keystore.
+# Without this file, release builds fall back to debug signing, which
+# Google Play will reject.
+storePassword=REPLACE_ME
+keyPassword=REPLACE_ME
+keyAlias=safeprep
+# Path can be relative to android/ or absolute.
+storeFile=/absolute/path/to/safeprep-release.jks
