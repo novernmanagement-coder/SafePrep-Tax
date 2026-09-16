@@ -68,9 +68,7 @@ class _OnboardIntroState extends State<OnboardIntro>
   // line is now a proper user-audience line in this same list (typed
   // out, gold), not a separate special-cased static line.
   static const List<_FsmeLine> _beatTwoScript = [
-    _FsmeLine(
-      '\u2014 oops. Didn\u2019t see you come in.',
-    ),
+    _FsmeLine('\u2014 oops. Didn\u2019t see you come in.'),
     _FsmeLine(
       '\u2026Ahem \u2014 \u201CWelcome to Tax Starter. We will prepare you '
       'for the Intuit Tax exam.\u201D',
@@ -215,7 +213,7 @@ class _OnboardIntroState extends State<OnboardIntro>
               const SizedBox(height: 20),
 
               Text(
-                'We\u2019ll have you exam-ready\nin under 4 hours',
+                'We\u2019ll have you\nexam-ready, faster',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 22,
@@ -232,9 +230,7 @@ class _OnboardIntroState extends State<OnboardIntro>
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Expanded(
-                      child: _statTile('300+', 'targeted questions'),
-                    ),
+                    Expanded(child: _statTile('300+', 'targeted questions')),
                     const SizedBox(width: 10),
                     Expanded(child: _statTile('8', 'tax topics covered')),
                   ],
@@ -286,9 +282,7 @@ class _OnboardIntroState extends State<OnboardIntro>
 
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) => const OnboardTrust(),
-                      ),
+                      MaterialPageRoute(builder: (_) => const OnboardTrust()),
                     );
                   },
                   style: ElevatedButton.styleFrom(

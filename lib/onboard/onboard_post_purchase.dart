@@ -360,8 +360,8 @@ class _OnboardPostPurchaseState extends State<OnboardPostPurchase> {
                         'plans. No fake milestones. We take pride in the '
                         'easiest app to navigate \u2014 one that actually '
                         'adapts to how you learn.\n\n'
-                        'We\u2019ll have you prepared in 4 hours or less. '
-                        'Not weeks.',
+                        'We study your weak spots first, so your time '
+                        'actually moves the needle. Not weeks.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 11.5,
