@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'constants.dart';
 import 'app_state.dart';
@@ -14,7 +13,6 @@ import 'about_proctors_page.dart';
 import 'final_exam_intro_page.dart';
 import 'peace_of_mind_page.dart';
 import 'fsme_help_box.dart';
-import 'fsme_eye.dart'; // FsmeEyePair, EyeMood
 import 'mixpanel_service.dart';
 import 'safe_prep_nav_bar.dart';
 
@@ -36,13 +34,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   final AppState _state = AppState();
   String _currentFact = '';
   List<MilestoneModel> _milestones = [];
-
-  // --- FSME renewal explainer (daysRemaining <= 2, one-time) ---
-  final GlobalKey<FsmeEyePairState> _explainerEyeKey =
-      GlobalKey<FsmeEyePairState>();
-  bool _showFsmeBeat1 = false;
-  bool _showFsmeBeat2 = false;
-  final List<Timer> _explainerTimers = [];
 
   // Mirrors the five stops from FsmePostPurchaseLanding / the list in
   // settings_page.dart — same clusters, same labels/icons. Home isn't
@@ -83,28 +74,17 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     MixpanelService.instance.track(
       'session_start',
-      properties: {
-        'is_unlocked': _state.hasUnlockedApp,
-        'app_name': 'SP',
-        'days_remaining': _state.daysRemaining,
-      },
+      properties: {'is_unlocked': _state.hasUnlockedApp, 'app_name': 'ST'},
     );
     MixpanelService.instance.track(
       'home_viewed',
-      properties: {
-        'is_unlocked': _state.hasUnlockedApp,
-        'app_name': 'SP',
-        'days_remaining': _state.daysRemaining,
-      },
+      properties: {'is_unlocked': _state.hasUnlockedApp, 'app_name': 'ST'},
     );
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    for (final t in _explainerTimers) {
-      t.cancel();
-    }
     super.dispose();
   }
 
@@ -113,7 +93,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     if (state == AppLifecycleState.paused) {
       MixpanelService.instance.track(
         'session_end',
-        properties: {'app_name': 'SP'},
+        properties: {'app_name': 'ST'},
       );
     }
   }
@@ -121,7 +101,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void _checkUnlockTrophy() {
     if (_state.hasUnlockedApp &&
         !_state.earnedTrophyIds.contains('AppUnlocked')) {
-      _state.addEarnedMilestone('AppUnlocked', 'SafePrep Unlocked');
+      _state.addEarnedMilestone('AppUnlocked', 'Tax Starter Unlocked');
       AppStatePersistence.save();
     }
   }
@@ -166,162 +146,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         _state.readinessScore,
       );
       setState(() => _milestones = all);
-      _maybeStartRenewalExplainer();
     }
-  }
-
-  // Fires once, only when the Renew button is actually showing
-  // (daysRemaining <= 2 through expiry) and the user hasn't seen this
-  // explainer before. Two-beat sequence, not a modal:
-  //   Beat 1: under the header, "follow me" line, eyes point down.
-  //   Beat 2: above the footer/nav bar, full days-left/readiness/
-  //   discount script, holds 10s, then self-clears.
-  //
-  // TODO: AppState needs a `hasSeenRenewalExplainer` bool (default
-  // false) persisted via AppStatePersistence — added here as a
-  // field reference; wire the real field/persistence in app_state.dart.
-  // TODO: reset hasSeenRenewalExplainer to false on the purchase-
-  // success path for buyRenewal(), so this can fire again on a
-  // future renewal cycle rather than only ever once, lifetime.
-  void _maybeStartRenewalExplainer() {
-    final eligible =
-        _state.isTimeLimited &&
-        !_state.isExpired &&
-        (_state.daysRemaining ?? 99) <= 2 &&
-        !_state.hasSeenRenewalExplainer; // TODO: add this field to AppState
-    if (!eligible) return;
-
-    _explainerTimers.add(
-      Timer(const Duration(milliseconds: 300), () {
-        if (!mounted) return;
-        setState(() => _showFsmeBeat1 = true);
-        // TODO: fsme_eye.dart doesn't yet have a Point(direction)
-        // one-shot — this was scoped as a general widget addition
-        // (up/down/left/right), first use case being this screen.
-        // Once built: _explainerEyeKey.currentState?.point(EyeDirection.down);
-      }),
-    );
-    _explainerTimers.add(
-      Timer(const Duration(milliseconds: 3300), () {
-        if (!mounted) return;
-        setState(() => _showFsmeBeat1 = false);
-      }),
-    );
-    _explainerTimers.add(
-      Timer(const Duration(milliseconds: 3700), () {
-        if (!mounted) return;
-        setState(() => _showFsmeBeat2 = true);
-      }),
-    );
-    _explainerTimers.add(
-      Timer(const Duration(milliseconds: 13700), () {
-        if (!mounted) return;
-        setState(() => _showFsmeBeat2 = false);
-        _state.hasSeenRenewalExplainer = true; // TODO: see field note above
-        AppStatePersistence.save();
-      }),
-    );
-  }
-
-  Widget _buildFsmeBeat1() {
-    return AnimatedSize(
-      duration: const Duration(milliseconds: 300),
-      child: !_showFsmeBeat1
-          ? const SizedBox(width: double.infinity)
-          : Container(
-              width: double.infinity,
-              margin: const EdgeInsets.only(bottom: 8),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFFFBF0),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: _goldDark),
-              ),
-              child: Row(
-                children: [
-                  FsmeEyePair(
-                    key: _explainerEyeKey,
-                    mood: EyeMood.idle,
-                    size: 20,
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      'Hey, follow me — I have something to show ya?',
-                      style: TextStyle(
-                        fontSize: 12.5,
-                        color: _goldText,
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-    );
-  }
-
-  Widget _buildFsmeBeat2() {
-    final daysLeft = _state.daysRemaining ?? 0;
-    final readiness = _state.readinessScore;
-    return AnimatedSize(
-      duration: const Duration(milliseconds: 300),
-      child: !_showFsmeBeat2
-          ? const SizedBox(width: double.infinity)
-          : Container(
-              width: double.infinity,
-              margin: const EdgeInsets.only(bottom: 8),
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-              decoration: BoxDecoration(
-                color: const Color(0xFFFFFBF0),
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: _goldDark, width: 1.5),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      const FsmeEyePair(mood: EyeMood.idle, size: 20),
-                      const SizedBox(width: 8),
-                      const Text(
-                        'F S M E',
-                        style: TextStyle(
-                          fontSize: 10,
-                          letterSpacing: 2,
-                          color: _goldText,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    "I see the Boss added the Renew button, so you've got "
-                    "$daysLeft day${daysLeft == 1 ? '' : 's'} left. You're "
-                    "at $readiness% readiness — want to add another week? "
-                    "If so, hit Renew.",
-                    style: const TextStyle(
-                      fontSize: 12.5,
-                      color: Color(0xFF4A3728),
-                      height: 1.5,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    "(I talked her into the friends and family discount — "
-                    "just \$2.99.)",
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: _goldText,
-                      fontStyle: FontStyle.italic,
-                      height: 1.4,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-    );
   }
 
   void _openCluster(AppCluster cluster) {
@@ -808,8 +633,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     return GestureDetector(
       onTap: () => _showInfoModal(
         context,
-        'ServSafe Readiness',
-        'Before you\'ve studied, this shows a national average — just something to compare against, not your real score. The moment you study a category or take the assessment, your actual data takes over and your Readiness Score updates to reflect you. 100% means you\'re ready. Take the SafePrep Final Exam to prove it.',
+        'Intuit Beginner Tax Readiness',
+        'Before you\'ve studied, this shows a national average — just something to compare against, not your real score. The moment you study a category or take the assessment, your actual data takes over and your Readiness Score updates to reflect you. 100% means you\'re ready. Take the Tax Starter Final Exam to prove it.',
       ),
       child: Container(
         padding: const EdgeInsets.fromLTRB(10, 10, 10, 14),
@@ -828,7 +653,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         child: Column(
           children: [
             const Text(
-              'ServSafe Readiness',
+              'Intuit Beginner Tax Readiness',
               style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w600,
@@ -1081,26 +906,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
   Widget _buildFooterSection() {
-    final state = _state;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
         spacing: 2,
         children: [
-          if (state.isTimeLimited && state.daysRemaining != null)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 4),
-              child: Text(
-                '${state.daysRemaining} day${state.daysRemaining == 1 ? '' : 's'} of access remaining',
-                style: TextStyle(
-                  fontSize: 11,
-                  color: state.daysRemaining! <= 2
-                      ? Colors.redAccent
-                      : AppColors.subtleText,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
           Text(
             AppStrings.footerLine1,
             style: TextStyle(
@@ -1145,7 +955,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Safe',
+                      'Tax',
                       style: TextStyle(
                         fontSize: AppFonts.header,
                         fontWeight: FontWeight.w600,
@@ -1156,7 +966,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     Image.asset('Assets/splash.png', width: 36, height: 36),
                     const SizedBox(width: 6),
                     Text(
-                      'Prep™',
+                      'Starter:',
                       style: TextStyle(
                         fontSize: AppFonts.header,
                         fontWeight: FontWeight.w600,
@@ -1166,8 +976,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   ],
                 ),
               ),
-              // FSME renewal-explainer beat 1 (under header)
-              _buildFsmeBeat1(),
               Container(
                 height: 32,
                 margin: const EdgeInsets.only(bottom: 8),
@@ -1210,7 +1018,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                               onPressed: () {
                                 MixpanelService.instance.track(
                                   'curriculum_tapped',
-                                  properties: {'app_name': 'SP'},
+                                  properties: {'app_name': 'ST'},
                                 );
                                 Navigator.push(
                                   context,
@@ -1252,7 +1060,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         spacing: 2,
                         children: [
                           _buildButton(
-                            'The SafePrep™ Dashboard',
+                            'The Tax Starter Dashboard',
                             () => Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -1303,7 +1111,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                 ),
                               ),
                               child: const Text(
-                                'When ready — take the SafePrep exam',
+                                'When ready — take the Tax Starter (Intuit®) exam',
                                 style: TextStyle(fontSize: AppFonts.button),
                               ),
                             ),
@@ -1412,7 +1220,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                 onPressed: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => const AboutProctorsPage(),
+                                    builder: (_) => const GlossaryPage(),
                                   ),
                                 ),
                                 style: ElevatedButton.styleFrom(
@@ -1425,7 +1233,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                   ),
                                 ),
                                 child: const Text(
-                                  '👤 About Proctors',
+                                  '📖 Glossary of Terms',
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
@@ -1444,8 +1252,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   ),
                 ),
               ),
-              // FSME renewal-explainer beat 2 (above the nav bar/footer)
-              _buildFsmeBeat2(),
               const SafePrepNavBar(),
             ],
           ),

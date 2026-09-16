@@ -19,7 +19,7 @@ class ExpertClubDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final displayName = userName.isNotEmpty ? userName : 'SafePrep';
+    final displayName = userName.isNotEmpty ? userName : 'Tax Starter';
 
     return Dialog(
       backgroundColor: Colors.transparent,

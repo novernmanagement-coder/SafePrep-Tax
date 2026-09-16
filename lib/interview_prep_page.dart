@@ -1,36 +1,39 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'constants.dart';
-import 'app_state.dart';
-import 'app_state_persistence.dart';
-import 'readiness_engine.dart';
 import 'csv_loader.dart';
 import 'fsme_eye.dart';
 import 'peace_of_mind_page.dart';
 import 'safe_prep_nav_bar.dart';
 import 'mixpanel_service.dart';
 
-class ScenarioDrillsPage extends StatefulWidget {
-  final String? filterCategory;
-  const ScenarioDrillsPage({super.key, this.filterCategory});
+// Interview Prep reuses the Scenario Drills template (schema, loader
+// pattern, and page structure) per Gerry's direction, but the answer
+// format is deliberately different: each question packs several
+// readiness tips into two bundled choices, with the correct answer
+// always being "All of the above" (a good-habits question) or "None
+// of the above" (a bad-habits question) rather than picking the one
+// best narrative answer. This lets each scenario teach more than one
+// tip at a time. MVP ships with 2 scenarios (InterviewPrep.csv) to
+// get into review quickly; content grows from there.
+class InterviewPrepPage extends StatefulWidget {
+  const InterviewPrepPage({super.key});
 
   @override
-  State<ScenarioDrillsPage> createState() => _ScenarioDrillsPageState();
+  State<InterviewPrepPage> createState() => _InterviewPrepPageState();
 }
 
-enum _Phase { scenario, choices, result }
+enum _Phase { question, choices, result }
 
-class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
-  List<ScenarioDrillModel> _scenarios = [];
+class _InterviewPrepPageState extends State<InterviewPrepPage> {
+  List<InterviewPrepModel> _prompts = [];
   int _currentIndex = 0;
-  ScenarioDrillModel? _current;
-  String _categoryLabel = '';
+  InterviewPrepModel? _current;
 
-  _Phase _phase = _Phase.scenario;
+  _Phase _phase = _Phase.question;
   bool? _wasCorrect;
   int _selectedChoice = 0;
 
-  double _scenarioOpacity = 0;
+  double _questionOpacity = 0;
   double _choicesOpacity = 0;
   double _resultOpacity = 0;
   double _explanationOpacity = 0;
@@ -40,26 +43,26 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
   final ScrollController _scrollController = ScrollController();
 
   // ── FSME ──────────────────────────────────────────────────────
-  // Same self-clearing header pattern as RapidFirePage/FlashCardsPage:
-  // types on entry, holds briefly, collapses to zero height. This
-  // line references the instructor/student character art on the page
-  // itself, rather than being a freestanding tall tale.
+  // Same self-clearing header pattern as Scenario Drills, reusing the
+  // interviewer/candidate character art (Assets/instructor_*.png and
+  // Assets/student_*.png) since those files were replaced with
+  // interview-themed art under the same names.
   final GlobalKey<FsmeEyePairState> _eyeKey = GlobalKey<FsmeEyePairState>();
   static const Duration _typeCharDelay = Duration(milliseconds: 18);
   static const Duration _introHold = Duration(milliseconds: 1800);
   static const String _introLine =
-      "Ok, this tool took a lot \u2014 I had to hire an instructor and "
-      "have a student who didn't mind being held here forever... "
-      "(She's one of the extra-smart do-gooders, who only wants to "
-      "make sure you pass the exam.)";
+      "Ok, this one took some doing too — I had to hire an "
+      "interviewer and find someone who didn't mind getting the same "
+      "job offer over and over. (He's one of the extra-prepared "
+      "candidates, who just wants you to nail this too.)";
 
   EyeMood _eyeMood = EyeMood.fibbing;
   String _introDisplayedText = '';
   bool _showIntro = true;
 
-  String get _instructorImage {
+  String get _interviewerImage {
     if (_wasCorrect == null) {
-      return _phase == _Phase.scenario
+      return _phase == _Phase.question
           ? 'Assets/instructor_asking.png'
           : 'Assets/instructor_waiting.png';
     }
@@ -69,8 +72,8 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
         : 'Assets/instructor_incorrect.png';
   }
 
-  String? get _studentImage {
-    if (_phase == _Phase.scenario) return null;
+  String? get _candidateImage {
+    if (_phase == _Phase.question) return null;
     if (_wasCorrect == null) {
       return _choicesOpacity > 0 ? 'Assets/student_thinking.png' : null;
     }
@@ -83,7 +86,6 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
   @override
   void initState() {
     super.initState();
-    _awardExtraCredit();
     _init();
     _playIntro();
   }
@@ -104,28 +106,8 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
     });
   }
 
-  void _awardExtraCredit() {
-    final state = AppState();
-    state.extraCreditPoints =
-        (state.extraCreditPoints +
-                ReadinessEngine.extraCreditForAction(
-                  ExtraCreditAction.scenarioDrills,
-                ))
-            .clamp(0.0, 10.0);
-    state.readinessScore = ReadinessEngine.calculate(state);
-    state.readinessCoachMessage = ReadinessEngine.coachMessage(
-      state,
-      state.readinessScore,
-    );
-    state.readinessCheerMessage = ReadinessEngine.cheerleaderMessage(
-      state,
-      state.readinessScore,
-    );
-    AppStatePersistence.save();
-  }
-
   Future<void> _init() async {
-    await _loadScenarios();
+    await _loadPrompts();
     _showPhase1();
   }
 
@@ -135,72 +117,20 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
     super.dispose();
   }
 
-  Future<void> _loadScenarios() async {
-    final all = await ScenarioDrillLoader.loadAll();
-    final state = AppState();
-    final rng = Random();
-
-    if (widget.filterCategory != null &&
-        widget.filterCategory!.trim().isNotEmpty) {
-      _scenarios = all
-          .where(
-            (s) =>
-                s.category.toLowerCase() ==
-                widget.filterCategory!.toLowerCase(),
-          )
-          .toList();
-      _categoryLabel = widget.filterCategory!;
-    } else {
-      final weakCategories = AppState.allCategories
-          .where(
-            (c) =>
-                state.hasScoreForCategory(c) &&
-                state.getCategoryScore(c) < AppState.masteryThreshold,
-          )
-          .toList();
-
-      if (weakCategories.isNotEmpty) {
-        final weak =
-            all
-                .where(
-                  (s) => weakCategories.any(
-                    (c) => c.toLowerCase() == s.category.toLowerCase(),
-                  ),
-                )
-                .toList()
-              ..shuffle(rng);
-        final rest =
-            all
-                .where(
-                  (s) => !weakCategories.any(
-                    (c) => c.toLowerCase() == s.category.toLowerCase(),
-                  ),
-                )
-                .toList()
-              ..shuffle(rng);
-        _scenarios = [...weak, ...rest];
-        _categoryLabel = 'Focused on your study areas';
-      } else {
-        const ver = ScenarioDrillLoader.currentVersion;
-        final mustHave = all.where((s) => s.servSafeVersion == ver).toList()
-          ..shuffle(rng);
-        final rest = all.where((s) => s.servSafeVersion != ver).toList()
-          ..shuffle(rng);
-        _scenarios = [...mustHave, ...rest];
-        _categoryLabel = 'All categories';
-      }
-    }
+  Future<void> _loadPrompts() async {
+    // Deliberately NOT shuffled — this walks the user through interview
+    // readiness in order (confidence/knowledge first, then presentation,
+    // tech, room, materials, opening, closing, follow-up), matching the
+    // linear flow Gerry asked for rather than a randomized drill pool.
+    _prompts = await InterviewPrepLoader.loadAll();
 
     _currentIndex = 0;
-    _current = _scenarios.isNotEmpty ? _scenarios[0] : null;
+    _current = _prompts.isNotEmpty ? _prompts[0] : null;
     if (mounted) {
       setState(() {});
       MixpanelService.instance.track(
-        'scenario_drills_started',
-        properties: {
-          'scenario_count': _scenarios.length,
-          'category_label': _categoryLabel,
-        },
+        'interview_prep_started',
+        properties: {'prompt_count': _prompts.length},
       );
     }
   }
@@ -208,11 +138,11 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
   void _showPhase1() {
     if (_current == null) return;
     setState(() {
-      _phase = _Phase.scenario;
+      _phase = _Phase.question;
       _wasCorrect = null;
       _selectedChoice = 0;
       _isExplaining = false;
-      _scenarioOpacity = 0;
+      _questionOpacity = 0;
       _choicesOpacity = 0;
       _resultOpacity = 0;
       _explanationOpacity = 0;
@@ -222,7 +152,7 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
     if (_scrollController.hasClients) _scrollController.jumpTo(0);
 
     Future.delayed(const Duration(milliseconds: 50), () {
-      if (mounted) setState(() => _scenarioOpacity = 1);
+      if (mounted) setState(() => _questionOpacity = 1);
     });
   }
 
@@ -241,9 +171,9 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
       _phase = _Phase.result;
     });
     MixpanelService.instance.track(
-      'scenario_drill_answered',
+      'interview_prep_answered',
       properties: {
-        'scenario_index': _currentIndex,
+        'prompt_index': _currentIndex,
         'category': _current?.category,
         'correct': isCorrect,
       },
@@ -276,13 +206,12 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
     setState(() => _nextButtonOpacity = 1);
   }
 
-  void _onNextScenario() {
+  void _onNextPrompt() {
     _currentIndex++;
-    if (_currentIndex >= _scenarios.length) {
+    if (_currentIndex >= _prompts.length) {
       _currentIndex = 0;
-      _scenarios.shuffle(Random());
     }
-    _current = _scenarios[_currentIndex];
+    _current = _prompts[_currentIndex];
     _showPhase1();
   }
 
@@ -295,9 +224,9 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
     return const Color(0xFF999999);
   }
 
-  String get _counterText => _scenarios.isEmpty
-      ? 'No scenarios available'
-      : 'Scenario ${_currentIndex + 1} of ${_scenarios.length}';
+  String get _counterText => _prompts.isEmpty
+      ? 'No questions available'
+      : 'Question ${_currentIndex + 1} of ${_prompts.length}';
 
   @override
   Widget build(BuildContext context) {
@@ -360,7 +289,7 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
           ),
           const SizedBox(height: 4),
           const Text(
-            '\ud83c\udfaf Scenario Drills',
+            '💼 Interview Prep',
             style: TextStyle(
               fontSize: AppFonts.header,
               fontWeight: FontWeight.bold,
@@ -368,9 +297,9 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
             ),
           ),
           const SizedBox(height: 2),
-          Text(
-            _categoryLabel,
-            style: const TextStyle(
+          const Text(
+            'Get ready for the real conversation',
+            style: TextStyle(
               fontSize: AppFonts.caption,
               color: AppColors.subtleText,
             ),
@@ -382,7 +311,7 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
 
   /// Self-clearing — collapses to zero height via AnimatedSize once
   /// the intro line finishes its hold, so it never permanently steals
-  /// vertical space from the character panel / scenario area below.
+  /// vertical space from the character panel / question area below.
   Widget _buildFsmeIntroBanner() {
     return AnimatedSize(
       duration: const Duration(milliseconds: 300),
@@ -405,7 +334,7 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
   }
 
   Widget _buildCharacterPanel() {
-    final studentAsset = _studentImage;
+    final candidateAsset = _candidateImage;
     return Column(
       children: [
         SizedBox(
@@ -416,10 +345,10 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
             children: [
               AnimatedSwitcher(
                 duration: const Duration(milliseconds: 300),
-                child: studentAsset != null
+                child: candidateAsset != null
                     ? Image.asset(
-                        studentAsset,
-                        key: ValueKey(studentAsset),
+                        candidateAsset,
+                        key: ValueKey(candidateAsset),
                         height: 148,
                         fit: BoxFit.contain,
                       )
@@ -429,8 +358,8 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
               AnimatedSwitcher(
                 duration: const Duration(milliseconds: 300),
                 child: Image.asset(
-                  _instructorImage,
-                  key: ValueKey(_instructorImage),
+                  _interviewerImage,
+                  key: ValueKey(_interviewerImage),
                   height: 148,
                   fit: BoxFit.contain,
                 ),
@@ -438,7 +367,7 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
             ],
           ),
         ),
-        if (studentAsset != null)
+        if (candidateAsset != null)
           Padding(
             padding: const EdgeInsets.only(top: 4),
             child: Row(
@@ -459,7 +388,7 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
                 SizedBox(
                   width: 90,
                   child: Text(
-                    'Instructor',
+                    'Interviewer',
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       fontSize: 10,
@@ -485,7 +414,7 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
               children: [
                 _buildCharacterPanel(),
                 const SizedBox(height: 8),
-                _buildScenarioBubble(),
+                _buildQuestionBubble(),
                 const SizedBox(height: 12),
                 if (_phase == _Phase.choices) _buildChoices(),
                 if (_wasCorrect != null) ...[
@@ -506,9 +435,9 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
     );
   }
 
-  Widget _buildScenarioBubble() {
+  Widget _buildQuestionBubble() {
     return AnimatedOpacity(
-      opacity: _scenarioOpacity,
+      opacity: _questionOpacity,
       duration: const Duration(milliseconds: 300),
       child: Container(
         width: double.infinity,
@@ -521,7 +450,7 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
         child: Column(
           children: [
             Text(
-              _current?.scenario ?? 'Loading...',
+              _current?.question ?? 'Loading...',
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: AppFonts.question,
@@ -552,15 +481,8 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
           _choiceButton(2, 'B.  ${_current?.choice2 ?? ''}', enabled),
           const SizedBox(height: 8),
           _choiceButton(3, 'C.  ${_current?.choice3 ?? ''}', enabled),
-          const SizedBox(height: 4),
-          const Text(
-            'Which is the BEST response?',
-            style: TextStyle(
-              fontSize: 11,
-              fontStyle: FontStyle.italic,
-              color: AppColors.subtleText,
-            ),
-          ),
+          const SizedBox(height: 8),
+          _choiceButton(4, 'D.  ${_current?.choice4 ?? ''}', enabled),
         ],
       ),
     );
@@ -605,8 +527,8 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
         ),
         child: Text(
           isCorrect
-              ? '\u2713  Correct!'
-              : '\u2717  Not quite \u2014 see the explanation below',
+              ? '✓  Correct!'
+              : '✗  Not quite — see the explanation below',
           textAlign: TextAlign.center,
           style: const TextStyle(
             fontSize: AppFonts.subheader,
@@ -634,7 +556,7 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              '\ud83d\udcd6  Explanation',
+              '📖  Explanation',
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
@@ -661,7 +583,7 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
       padding: const EdgeInsets.fromLTRB(16, 6, 16, 6),
       child: Stack(
         children: [
-          if (_phase == _Phase.scenario)
+          if (_phase == _Phase.question)
             SizedBox(
               width: double.infinity,
               height: 44,
@@ -676,7 +598,7 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
                   ),
                   textStyle: const TextStyle(fontSize: AppFonts.body),
                 ),
-                child: const Text('Show me my choices  \u2192'),
+                child: const Text('Show me my choices  →'),
               ),
             ),
           if (_nextButtonOpacity > 0)
@@ -687,7 +609,7 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
                 width: double.infinity,
                 height: 44,
                 child: ElevatedButton(
-                  onPressed: _onNextScenario,
+                  onPressed: _onNextPrompt,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryButton,
                     foregroundColor: AppColors.primaryButtonForeground,
@@ -697,7 +619,7 @@ class _ScenarioDrillsPageState extends State<ScenarioDrillsPage> {
                     ),
                     textStyle: const TextStyle(fontSize: AppFonts.body),
                   ),
-                  child: const Text('Next Scenario  \u2192'),
+                  child: const Text('Next Question  →'),
                 ),
               ),
             ),

@@ -77,7 +77,7 @@ class _FinalExamReviewPageState extends State<FinalExamReviewPage> {
                             child: Row(
                               children: [
                                 Text(
-                                  'Safe',
+                                  'Tax',
                                   style: TextStyle(
                                     fontSize: AppFonts.header,
                                     fontWeight: FontWeight.w600,
@@ -92,7 +92,7 @@ class _FinalExamReviewPageState extends State<FinalExamReviewPage> {
                                 ),
                                 const SizedBox(width: 6),
                                 Text(
-                                  'Prep™',
+                                  'Starter',
                                   style: TextStyle(
                                     fontSize: AppFonts.header,
                                     fontWeight: FontWeight.w600,

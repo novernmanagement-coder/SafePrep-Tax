@@ -64,7 +64,7 @@ class _OnboardKnowledgeLevelState extends State<OnboardKnowledgeLevel> {
 
     MixpanelService.instance.track(
       'SpOn_Knowledge_Selected',
-      properties: {'app_name': 'SP', 'level': level.tag},
+      properties: {'app_name': 'ST', 'level': level.tag},
     );
   }
 
@@ -75,7 +75,7 @@ class _OnboardKnowledgeLevelState extends State<OnboardKnowledgeLevel> {
 
     MixpanelService.instance.track(
       'SpOn_Knowledge_Continue',
-      properties: {'app_name': 'SP', 'level': _selected!.tag},
+      properties: {'app_name': 'ST', 'level': _selected!.tag},
     );
 
     Navigator.push(

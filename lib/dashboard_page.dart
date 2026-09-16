@@ -48,15 +48,17 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
+  // Ordered to follow the Form 1040 entry sequence — see the matching
+  // comment on AppState.allCategories for the full reasoning.
   static const List<String> categoryOrder = [
-    'Time & Temperature',
-    'Cross-Contamination',
-    'Food Preparation',
-    'Receiving & Storage',
-    'Personal Hygiene',
-    'Cleaning & Sanitizing',
-    'Facility & Equipment',
-    'Food Safety Management',
+    'Filing Basics & Dependents',
+    'Income',
+    'Retirement Accounts & Distributions',
+    'Adjustments to Income',
+    'Health Savings Accounts',
+    'Deductions',
+    'Tax Credits & Calculations',
+    'Residency & Multi-State Filing',
   ];
 
   // ── National average seed values (DISPLAY-ONLY) ─────────────────────
@@ -65,15 +67,18 @@ class _DashboardPageState extends State<DashboardPage> {
   // they exist purely so the Dashboard doesn't look empty before a user
   // has generated any real data. The moment a category has a real score
   // (hasScoreForCategory == true), its seeded value is ignored entirely.
+  // Flattened to one value for the Tax fork: unlike ServSafe, there is no
+  // even best-guess benchmark yet for Intuit Tax Level 1 test-takers —
+  // revisit if/when real numbers exist.
   static const Map<String, int> _nationalAverages = {
-    'Time & Temperature': 68,
-    'Cross-Contamination': 74,
-    'Food Preparation': 78,
-    'Receiving & Storage': 76,
-    'Personal Hygiene': 82,
-    'Cleaning & Sanitizing': 80,
-    'Facility & Equipment': 85,
-    'Food Safety Management': 71,
+    'Filing Basics & Dependents': 75,
+    'Income': 75,
+    'Retirement Accounts & Distributions': 75,
+    'Adjustments to Income': 75,
+    'Health Savings Accounts': 75,
+    'Deductions': 75,
+    'Tax Credits & Calculations': 75,
+    'Residency & Multi-State Filing': 75,
   };
 
   int get _nationalAverageOverall {
@@ -84,15 +89,10 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   void initState() {
     super.initState();
-    // Gated on real purchase state — either never purchased, or a
-    // sevenDay/fourteenDay purchase whose calendar expiry has passed
-    // (AppState.isExpired). This replaces the old TrialTimerService-
-    // based check, which stopped meaning anything once the trial
-    // system was removed and is the exact same dead-check pattern
-    // already found and fixed in safe_prep_nav_bar.dart's
-    // _goDashboard() — kept deliberately strict here too rather than
-    // just deleted, so an expired purchaser can't slip past the gate.
-    final bool locked = !_state.hasUnlockedApp || _state.isExpired;
+    // Gated on real purchase state — lifetime is the only tier, so
+    // this is just "never purchased." Matches safe_prep_nav_bar.dart's
+    // _goDashboard() gate.
+    final bool locked = !_state.hasUnlockedApp;
     if (locked) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
@@ -119,11 +119,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
     MixpanelService.instance.track(
       'dashboard_viewed',
-      properties: {
-        'app_name': 'SP',
-        'readiness_score': readiness,
-        'days_remaining': _state.daysRemaining,
-      },
+      properties: {'app_name': 'ST', 'readiness_score': readiness},
     );
 
     if (readiness >= 90 && !_state.hasSeenReviewPrompt) {
@@ -205,7 +201,7 @@ class _DashboardPageState extends State<DashboardPage> {
             child: Row(
               children: [
                 Text(
-                  'Safe',
+                  'Tax',
                   style: TextStyle(
                     fontSize: AppFonts.header,
                     fontWeight: FontWeight.w600,
@@ -216,7 +212,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 Image.asset('Assets/splash.png', width: 36, height: 36),
                 const SizedBox(width: 6),
                 Text(
-                  'Prep™',
+                  'Starter',
                   style: TextStyle(
                     fontSize: AppFonts.header,
                     fontWeight: FontWeight.w600,
@@ -709,8 +705,8 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget build(BuildContext context) {
     final userName = _state.userName;
     final dashTitle = userName.isNotEmpty
-        ? 'SafePrep™ $userName\'s Dashboard'
-        : 'SafePrep™ Dashboard';
+        ? 'Tax Starter $userName\'s Dashboard'
+        : 'Tax Starter Dashboard';
 
     return Scaffold(
       backgroundColor: AppColors.servSafeBlue,

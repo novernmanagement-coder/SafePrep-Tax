@@ -107,7 +107,7 @@ class _CategoryStudyPageState extends State<CategoryStudyPage> {
 
       MixpanelService.instance.track(
         'assessment_prompt_shown',
-        properties: {'app_name': 'SP', 'from_category': widget.category},
+        properties: {'app_name': 'ST', 'from_category': widget.category},
       );
 
       final takeAssessment = await showDialog<bool>(
@@ -200,7 +200,7 @@ class _CategoryStudyPageState extends State<CategoryStudyPage> {
       if (takeAssessment == true) {
         MixpanelService.instance.track(
           'assessment_prompt_accepted',
-          properties: {'app_name': 'SP'},
+          properties: {'app_name': 'ST'},
         );
         Navigator.pushReplacement(
           context,
@@ -211,7 +211,7 @@ class _CategoryStudyPageState extends State<CategoryStudyPage> {
 
       MixpanelService.instance.track(
         'assessment_prompt_declined',
-        properties: {'app_name': 'SP'},
+        properties: {'app_name': 'ST'},
       );
     }
 
@@ -331,7 +331,7 @@ class _CategoryStudyPageState extends State<CategoryStudyPage> {
                 child: Row(
                   children: [
                     Text(
-                      'Safe',
+                      'Tax',
                       style: TextStyle(
                         fontSize: AppFonts.header,
                         fontWeight: FontWeight.w600,
@@ -342,7 +342,7 @@ class _CategoryStudyPageState extends State<CategoryStudyPage> {
                     Image.asset('Assets/splash.png', width: 36, height: 36),
                     const SizedBox(width: 6),
                     Text(
-                      'Prep™',
+                      'Starter',
                       style: TextStyle(
                         fontSize: AppFonts.header,
                         fontWeight: FontWeight.w600,

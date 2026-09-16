@@ -2,14 +2,14 @@ import 'app_state.dart';
 
 class ReadinessEngine {
   static const Map<String, double> _examWeights = {
-    'Time & Temperature': 0.23,
-    'Cross-Contamination': 0.15,
-    'Receiving & Storage': 0.15,
-    'Personal Hygiene': 0.14,
-    'Cleaning & Sanitizing': 0.12,
-    'Food Preparation': 0.12,
-    'Food Safety Management': 0.05,
-    'Facility & Equipment': 0.02,
+    'Filing Basics & Dependents': 0.18,
+    'Income': 0.16,
+    'Retirement Accounts & Distributions': 0.22,
+    'Adjustments to Income': 0.09,
+    'Health Savings Accounts': 0.05,
+    'Deductions': 0.06,
+    'Tax Credits & Calculations': 0.17,
+    'Residency & Multi-State Filing': 0.07,
   };
 
   static const double _ecFlashCards = 1.0;
@@ -156,7 +156,7 @@ class ReadinessEngine {
     }
 
     if (state.finalExamScore == null && readinessScore >= 85) {
-      return 'You\'re ready — take the SafePrep Final Exam to complete your readiness score.';
+      return 'You\'re ready — take the Tax Starter Final Exam to complete your readiness score.';
     }
 
     if (readinessScore >= 80 && readinessScore < 100) {
@@ -186,7 +186,7 @@ class ReadinessEngine {
     if (state.hasTakenAssessment) {
       return 'You showed up and took the assessment. That\'s how every success story starts.';
     }
-    return 'SafePrep was built for one purpose — to get you ready. Let\'s get started.';
+    return 'Tax Starter was built for one purpose — to get you ready. Let\'s get started.';
   }
 
   static String? _focusCategory(AppState state) {

@@ -48,14 +48,22 @@ class _FlashCardsPageState extends State<FlashCardsPage>
   bool _showIntro = true;
 
   static const Map<String, _Suit> _categorySuits = {
-    'Time & Temperature': _Suit('🌡', Color(0xFFC0392B), 'T&T'),
-    'Cross-Contamination': _Suit('⚠', Color(0xFFE67E22), 'CC'),
-    'Food Preparation': _Suit('✦', Color(0xFF27AE60), 'FP'),
-    'Receiving & Storage': _Suit('◈', Color(0xFF2980B9), 'R&S'),
-    'Personal Hygiene': _Suit('❋', Color(0xFF8E44AD), 'PH'),
-    'Cleaning & Sanitizing': _Suit('✺', Color(0xFF16A085), 'C&S'),
-    'Facility & Equipment': _Suit('⚙', Color(0xFF2C3E50), 'F&E'),
-    'Food Safety Management': _Suit('◉', Color(0xFFB7950B), 'FSM'),
+    'Filing Basics & Dependents': _Suit('📋', Color(0xFFC0392B), 'FB&D'),
+    'Income': _Suit('\$', Color(0xFFE67E22), 'INC'),
+    'Adjustments to Income': _Suit('±', Color(0xFF27AE60), 'ADJ'),
+    'Deductions': _Suit('−', Color(0xFF2980B9), 'DED'),
+    'Retirement Accounts & Distributions': _Suit(
+      '🏦',
+      Color(0xFF8E44AD),
+      'RET',
+    ),
+    'Health Savings Accounts': _Suit('⚕', Color(0xFF16A085), 'HSA'),
+    'Tax Credits & Calculations': _Suit('✓', Color(0xFF2C3E50), 'TC&C'),
+    'Residency & Multi-State Filing': _Suit(
+      '📍',
+      Color(0xFFB7950B),
+      'R&MS',
+    ),
   };
 
   @override
@@ -218,12 +226,8 @@ class _FlashCardsPageState extends State<FlashCardsPage>
     _flipCard(() => setState(() => _state = _CardState.question));
   }
 
-  static String _normalizeCategory(String cat) =>
-      cat.toLowerCase() == 'pest management' ? 'Food Safety Management' : cat;
-
   _Suit _suitFor(String category) =>
-      _categorySuits[_normalizeCategory(category)] ??
-      const _Suit('◆', Color(0xFF4A6FA5), '??');
+      _categorySuits[category] ?? const _Suit('◆', Color(0xFF4A6FA5), '??');
 
   String get _progressText {
     if (_cards.isEmpty) return 'Loading...';
@@ -268,7 +272,7 @@ class _FlashCardsPageState extends State<FlashCardsPage>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                'Safe',
+                'Tax',
                 style: TextStyle(
                   fontSize: AppFonts.header,
                   fontWeight: FontWeight.w600,
@@ -292,7 +296,7 @@ class _FlashCardsPageState extends State<FlashCardsPage>
               FsmeEyePair(key: _eyeKey, mood: _eyeMood, size: 22, spacing: 6),
               const SizedBox(width: 8),
               const Text(
-                'Prep™',
+                'Starter',
                 style: TextStyle(
                   fontSize: AppFonts.header,
                   fontWeight: FontWeight.w600,
@@ -443,7 +447,7 @@ class _FlashCardsPageState extends State<FlashCardsPage>
                 ),
                 const SizedBox(height: 10),
                 const Text(
-                  'SafePrep™',
+                  'Tax Starter',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -467,7 +471,7 @@ class _FlashCardsPageState extends State<FlashCardsPage>
     if (_cards.isEmpty) return const SizedBox();
     final q = _cards[_currentIndex];
     final suit = _suitFor(q.category);
-    final normCat = _normalizeCategory(q.category);
+    final normCat = q.category;
 
     return Column(
       children: [

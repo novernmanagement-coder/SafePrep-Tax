@@ -77,7 +77,7 @@ class _OnboardContentPreferenceState extends State<OnboardContentPreference> {
 
     MixpanelService.instance.track(
       'SpOn_ContentPref_Selected',
-      properties: {'app_name': 'SP', 'content_preference': preference.tag},
+      properties: {'app_name': 'ST', 'content_preference': preference.tag},
     );
   }
 
@@ -88,7 +88,7 @@ class _OnboardContentPreferenceState extends State<OnboardContentPreference> {
 
     MixpanelService.instance.track(
       'SpOn_ContentPref_Continue',
-      properties: {'app_name': 'SP', 'content_preference': _selected!.tag},
+      properties: {'app_name': 'ST', 'content_preference': _selected!.tag},
     );
 
     Navigator.push(

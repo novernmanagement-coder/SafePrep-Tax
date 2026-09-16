@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants.dart';
-import '../app_state.dart';
 import '../mixpanel_service.dart';
 import '../iap_service.dart';
 import '../fsme_post_purchase_landing.dart';
 import '../redeem_code_service.dart';
 import 'onboard_answers.dart';
 import 'onboard_trust.dart';
-import '../rapid_fire_limited_intro.dart';
 
 /// Onboarding paywall — redesigned for the self-report funnel, then
 /// redesigned again to add a personalized recap, then redesigned a
 /// third time (Sept 2026) into this long-form version.
 ///
-/// One product now ($4.99, 7 days full access) since the Refresher
-/// tier has been eliminated entirely — there's nothing to price-game
-/// toward, so the screen is a single clean ask rather than two priced
-/// options.
+/// One product now — a $19.99 lifetime unlock — per Gerry's Sept 2026
+/// call: this is a career-gateway certification (a shot at a higher-
+/// paying job), not a subscription-shaped thing, so a single durable
+/// purchase fits the niche better than a time-limited access window.
+/// Uses the existing kProductUnlockApp / IAPService.buyUnlockApp()
+/// product (formerly offered as a $9.99 upsell after a 7-day trial;
+/// now the front-door offer at $19.99). A cheaper "Level 2" tier may
+/// be added later as its own separate product — this screen still
+/// only ever asks once, for one thing.
 ///
 /// LONG-FORM EXPERIMENT (Sept 2026): the short version of this screen
 /// (recap card straight into the price) is the one confirmed real leak
@@ -76,7 +79,7 @@ class _OnboardPaywallState extends State<OnboardPaywall> {
   static const Color _softWhite = Color(0xFFF0EDE8);
   static const Color _cardBg = Color(0xFF13130F);
 
-  static const String _price = '\$4.99';
+  static const String _price = '\$19.99';
 
   bool _purchasing = false;
   bool _restoring = false;
@@ -158,7 +161,7 @@ class _OnboardPaywallState extends State<OnboardPaywall> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Your personalized ServSafe curriculum is ready',
+            'Your personalized Tax exam prep is ready',
             style: TextStyle(
               fontSize: 10.5,
               fontWeight: FontWeight.w700,
@@ -292,7 +295,7 @@ class _OnboardPaywallState extends State<OnboardPaywall> {
   void _startOver() {
     MixpanelService.instance.track(
       'SpOn_Pay_StartOver',
-      properties: {'app_name': 'SP'},
+      properties: {'app_name': 'ST'},
     );
     OnboardingAnswers.instance.reset();
     Navigator.pushAndRemoveUntil(
@@ -308,7 +311,7 @@ class _OnboardPaywallState extends State<OnboardPaywall> {
     MixpanelService.instance.track(
       'SpOn_Pay_Viewed',
       properties: {
-        'app_name': 'SP',
+        'app_name': 'ST',
         'content_preference':
             OnboardingAnswers.instance.contentPreference?.tag ?? 'unknown',
       },
@@ -333,7 +336,7 @@ class _OnboardPaywallState extends State<OnboardPaywall> {
     MixpanelService.instance.track(
       'SpOn_Purchase',
       properties: {
-        'app_name': 'SP',
+        'app_name': 'ST',
         'source': 'paywall',
         'price': _price,
         'content_preference':
@@ -341,7 +344,7 @@ class _OnboardPaywallState extends State<OnboardPaywall> {
       },
     );
 
-    var result = await IAPService.instance.buySevenDay();
+    var result = await IAPService.instance.buyUnlockApp();
 
     if (!mounted) return;
 
@@ -396,7 +399,7 @@ class _OnboardPaywallState extends State<OnboardPaywall> {
 
     MixpanelService.instance.track(
       'SpOn_Pay_Restore',
-      properties: {'app_name': 'SP'},
+      properties: {'app_name': 'ST'},
     );
 
     final unlocked = await IAPService.instance.restoreAndWait();
@@ -424,10 +427,9 @@ class _OnboardPaywallState extends State<OnboardPaywall> {
     }
   }
 
-  // Entry point for a student who bought an in-person ServSafe class
-  // through Food Safety Made Easy / Indiana Safe Food and got a free
-  // unlock code from their instructor instead of buying the $4.99 IAP
-  // directly. See RedeemCodeService for the offline validation scheme.
+  // Entry point for anyone who got a free unlock code from an
+  // instructor/partner instead of buying the IAP directly. See
+  // RedeemCodeService for the offline validation scheme.
   Future<void> _showRedeemDialog() async {
     final controller = TextEditingController();
     String? errorText;
@@ -543,17 +545,6 @@ class _OnboardPaywallState extends State<OnboardPaywall> {
     );
   }
 
-  void _showMeMore() {
-    MixpanelService.instance.track(
-      'SpOn_Pay_ShowMeMore',
-      properties: {'app_name': 'SP'},
-    );
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const RapidFireLimitedIntro()),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -630,7 +621,7 @@ class _OnboardPaywallState extends State<OnboardPaywall> {
                 icon: Icons.bolt,
                 title: '60-Second Trainer',
                 description:
-                    'A fast primer that hits the core ServSafe concepts.',
+                    'A fast primer that hits the core Tax concepts.',
               ),
               _unlockItem(
                 icon: Icons.quiz,
@@ -639,8 +630,8 @@ class _OnboardPaywallState extends State<OnboardPaywall> {
               ),
               _unlockItem(
                 icon: Icons.fact_check,
-                title: 'Full 90-Question Exam',
-                description: 'A complete ServSafe-aligned simulation.',
+                title: 'Full 217-Question Exam',
+                description: 'A complete Intuit Tax-aligned simulation.',
               ),
               _unlockItem(
                 icon: Icons.all_inclusive,
@@ -687,10 +678,10 @@ class _OnboardPaywallState extends State<OnboardPaywall> {
                             color: _softWhite.withValues(alpha: 0.75),
                           ),
                           children: const [
-                            TextSpan(text: 'Every question written by '),
+                            TextSpan(text: 'Every question mapped to '),
                             TextSpan(
-                              text: 'a certified ServSafe instructor with '
-                                  '20+ years in the classroom',
+                              text: 'the official Intuit Tax Academy '
+                                  'Level 1 curriculum',
                               style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 color: _softWhite,
@@ -721,10 +712,11 @@ class _OnboardPaywallState extends State<OnboardPaywall> {
                 ),
                 child: Column(
                   children: [
-                    _accessRow('7 days full access'),
-                    _accessRow('500+ aligned questions'),
+                    _accessRow('Lifetime access'),
+                    _accessRow('300+ aligned questions'),
                     _accessRow('Adaptive progress tracking'),
                     _accessRow('Exam-weighted study flow'),
+                    _accessRow('Exclusive Intuit Interview Prep'),
                   ],
                 ),
               ),
@@ -767,7 +759,7 @@ class _OnboardPaywallState extends State<OnboardPaywall> {
                               ),
                             ),
                             Text(
-                              'Full access for 7 days. No limits.',
+                              'Lifetime access. No limits.',
                               style: TextStyle(
                                 fontSize: 10.5,
                                 fontWeight: FontWeight.w400,
@@ -780,27 +772,6 @@ class _OnboardPaywallState extends State<OnboardPaywall> {
               ),
 
               const SizedBox(height: 10),
-
-              // Hidden once both free "show me more" rounds are spent \u2014
-              // no dead-end tap on an offer that's already used up. See
-              // AppState.hasLimitedRapidFireRoundsLeft; rounds are
-              // consumed in rapid_fire_limited_intro.dart on Start.
-              if (AppState().hasLimitedRapidFireRoundsLeft)
-                GestureDetector(
-                  onTap: _showMeMore,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: Text(
-                      'Not ready to commit yet? Try this first  \u2192',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        color: _gold,
-                      ),
-                    ),
-                  ),
-                ),
 
               GestureDetector(
                 onTap: _restorePurchases,

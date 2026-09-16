@@ -27,7 +27,7 @@ class _FinalStepExamPageState extends State<FinalStepExamPage> {
   // This page IS the finalExam cluster, so its FsmeHelpBox opens that
   // cluster's explanation directly.
   static const List<String> _fsmeHelpMessages = [
-    "90 questions, scored exactly like the real ServSafe exam.",
+    "217 questions, scored exactly like the real Intuit exam.",
     "Whatever you get, results feed back into your curriculum.",
     "Tap me — I'll 'splain what this whole thing is for.",
   ];
@@ -45,23 +45,24 @@ class _FinalStepExamPageState extends State<FinalStepExamPage> {
   }
 
   static const Map<String, double> categoryWeights = {
-    'Time & Temperature': 0.23,
-    'Cross-Contamination': 0.15,
-    'Receiving & Storage': 0.15,
-    'Personal Hygiene': 0.14,
-    'Cleaning & Sanitizing': 0.12,
-    'Food Preparation': 0.12,
-    'Food Safety Management': 0.05,
-    'Facility & Equipment': 0.02,
-    'Pest Management': 0.02,
+    'Filing Basics & Dependents': 0.18,
+    'Income': 0.16,
+    'Adjustments to Income': 0.09,
+    'Deductions': 0.06,
+    'Retirement Accounts & Distributions': 0.22,
+    'Health Savings Accounts': 0.05,
+    'Tax Credits & Calculations': 0.17,
+    'Residency & Multi-State Filing': 0.07,
   };
 
-  static const int totalQuestions = 90;
+  // Question count now lives in AppConstants.finalExamQuestions (single
+  // source of truth — matches the full question bank, no repeats).
+  static const int totalQuestions = AppConstants.finalExamQuestions;
   static const double hardWeight = 0.40;
   static const double mediumWeight = 0.40;
 
   // The Final Exam is the true readiness checkpoint — matches the
-  // real ServSafe exam pass mark, same 75% used by the category-quiz
+  // real Intuit exam pass mark, same 75% used by the category-quiz
   // fail-streak safety net elsewhere (see category_quiz_results_page
   // .dart's _failThreshold). Not an arbitrary number.
   static const int _passThreshold = 75;
@@ -90,13 +91,13 @@ class _FinalStepExamPageState extends State<FinalStepExamPage> {
     }
 
     while (allocated < totalQuestions) {
-      categoryCounts['Time & Temperature'] =
-          categoryCounts['Time & Temperature']! + 1;
+      categoryCounts['Retirement Accounts & Distributions'] =
+          categoryCounts['Retirement Accounts & Distributions']! + 1;
       allocated++;
     }
     while (allocated > totalQuestions) {
-      categoryCounts['Time & Temperature'] =
-          categoryCounts['Time & Temperature']! - 1;
+      categoryCounts['Retirement Accounts & Distributions'] =
+          categoryCounts['Retirement Accounts & Distributions']! - 1;
       allocated--;
     }
 
@@ -104,10 +105,7 @@ class _FinalStepExamPageState extends State<FinalStepExamPage> {
       final needed = categoryCounts[cat]!;
       final pool = all
           .where(
-            (q) =>
-                (q.category.toLowerCase() == cat.toLowerCase() ||
-                    (cat == 'Food Safety Management' &&
-                        q.category.toLowerCase() == 'pest management')) &&
+            (q) => q.category.toLowerCase() == cat.toLowerCase() &&
                 !usedIds.contains(q.id),
           )
           .toList();
@@ -364,7 +362,7 @@ class _FinalStepExamPageState extends State<FinalStepExamPage> {
                             child: Row(
                               children: [
                                 Text(
-                                  'Safe',
+                                  'Tax',
                                   style: TextStyle(
                                     fontSize: AppFonts.header,
                                     fontWeight: FontWeight.w600,
@@ -379,7 +377,7 @@ class _FinalStepExamPageState extends State<FinalStepExamPage> {
                                 ),
                                 const SizedBox(width: 6),
                                 Text(
-                                  'Prep™',
+                                  'Starter',
                                   style: TextStyle(
                                     fontSize: AppFonts.header,
                                     fontWeight: FontWeight.w600,
@@ -400,7 +398,7 @@ class _FinalStepExamPageState extends State<FinalStepExamPage> {
                     ),
 
                     Text(
-                      'SafePrep™ Final Exam',
+                      'Tax Starter Final Exam',
                       style: TextStyle(
                         fontSize: AppFonts.header,
                         fontWeight: FontWeight.w600,

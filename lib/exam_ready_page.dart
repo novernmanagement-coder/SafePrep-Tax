@@ -126,7 +126,7 @@ class _ExamReadyPageState extends State<ExamReadyPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'Safe',
+                                'Tax',
                                 style: TextStyle(
                                   fontSize: AppFonts.header,
                                   fontWeight: FontWeight.w600,
@@ -141,7 +141,7 @@ class _ExamReadyPageState extends State<ExamReadyPage> {
                               ),
                               const SizedBox(width: 6),
                               Text(
-                                'Prep™',
+                                'Starter',
                                 style: TextStyle(
                                   fontSize: AppFonts.header,
                                   fontWeight: FontWeight.w600,
@@ -297,7 +297,7 @@ class _ExamReadyPageState extends State<ExamReadyPage> {
                                   ),
                                 ),
                                 Text(
-                                  "If SafePrep helped you get here, we'd love to hear about it.",
+                                  "If Tax Starter helped you get here, we'd love to hear about it.",
                                   style: TextStyle(
                                     fontSize: 11,
                                     color: AppColors.subtleText,

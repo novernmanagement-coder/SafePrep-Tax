@@ -6,12 +6,12 @@ import 'onboard_content_preference.dart';
 /// Onboarding screen 2 of the new flow — the trust page.
 ///
 /// Sits between the credential-based Intro screen and Content
-/// Preference. Where Intro earns trust through credentials (20+ years,
-/// certifications, FSME's greeting), this screen earns trust through
-/// capability — a plain, concrete statement of what the app actually
-/// does: unlimited randomized quizzes, a real question bank, a full
-/// mock exam, and a category breakdown weighted to match the real
-/// ServSafe exam blueprint.
+/// Preference. Where Intro earns trust through credentials, this
+/// screen earns trust through capability — a plain, concrete
+/// statement of what the app actually does: unlimited randomized
+/// quizzes, a real question bank, a full mock exam, and a category
+/// breakdown weighted to match the real Intuit Tax Level 1 exam
+/// blueprint.
 ///
 /// Deliberately static — no FSME here. Per the redesigned funnel his
 /// role is being trimmed way down; this screen has no natural comedy
@@ -24,21 +24,19 @@ class OnboardTrust extends StatelessWidget {
   static const Color _softWhite = Color(0xFFF0EDE8);
   static const Color _cardBg = Color(0xFF13130F);
 
-  /// Category weight, ordered highest-to-lowest, matching the real
-  /// question-bank distribution noted in the diagnostic spec (Time &
-  /// Temperature 70, Receiving & Storage 44, Cross-Contamination 42,
-  /// Cleaning & Sanitizing 38, Personal Hygiene 36, Food Preparation
-  /// 34, Facility & Equipment 22, Food Safety Management 20 — out of
-  /// 306 across these 8). Percentages rounded for display.
+  /// Category weight, ordered to follow the Form 1040 entry sequence
+  /// — same order as AppState.allCategories (see its comment for the
+  /// full reasoning), not sorted by weight. Short labels match the
+  /// ones used in rapid_fire_limited_page.
   static const List<_CategoryWeight> _categoryWeights = [
-    _CategoryWeight('Time and temp.', 23),
-    _CategoryWeight('Receiving/storage', 14),
-    _CategoryWeight('Cross-contam.', 14),
-    _CategoryWeight('Cleaning/sanit.', 12),
-    _CategoryWeight('Personal hygiene', 12),
-    _CategoryWeight('Food prep.', 11),
-    _CategoryWeight('Facility/equip.', 7),
-    _CategoryWeight('Management', 6),
+    _CategoryWeight('Filing Basics', 18),
+    _CategoryWeight('Income', 16),
+    _CategoryWeight('Retirement', 22),
+    _CategoryWeight('Adjustments', 9),
+    _CategoryWeight('HSA', 5),
+    _CategoryWeight('Deductions', 6),
+    _CategoryWeight('Tax Credits', 17),
+    _CategoryWeight('Multi-State', 7),
   ];
 
   /// Header row: back chevron, centred progress, balancing spacer.
@@ -112,6 +110,47 @@ class OnboardTrust extends StatelessWidget {
     );
   }
 
+  /// Full-width callout for the Interview Primer feature — sits below
+  /// the 2x2 capability grid since it's a standout differentiator,
+  /// not just another stat tile.
+  Widget _interviewPrepBox() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+      decoration: BoxDecoration(
+        color: _cardBg,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: _gold.withValues(alpha: 0.25), width: 1),
+      ),
+      child: Column(
+        children: [
+          Icon(Icons.record_voice_over_outlined, size: 20, color: _gold),
+          const SizedBox(height: 8),
+          Text(
+            'Our exclusive Intuit interview Prep module',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: _softWhite,
+              height: 1.3,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Secrets to acing the interview',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 11.5,
+              fontStyle: FontStyle.italic,
+              color: _gold.withValues(alpha: 0.8),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   /// One category-weight row — name, percentage, proportional bar.
   Widget _categoryRow(_CategoryWeight cat, int maxPercent) {
     final double fraction = cat.percent / maxPercent;
@@ -174,7 +213,11 @@ class OnboardTrust extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int maxPercent = _categoryWeights.first.percent;
+    // No longer sorted highest-to-lowest (now in 1040 order), so the
+    // max has to be computed rather than assumed to be the first item.
+    final int maxPercent = _categoryWeights
+        .map((c) => c.percent)
+        .reduce((a, b) => a > b ? a : b);
 
     return Scaffold(
       backgroundColor: _darkBg,
@@ -244,14 +287,18 @@ class OnboardTrust extends StatelessWidget {
                   ),
                   _capabilityTile(
                     Icons.checklist_rtl_outlined,
-                    '500+ ServSafe aligned questions',
+                    '300+ Intuit Tax aligned questions',
                   ),
                   _capabilityTile(
                     Icons.workspace_premium_outlined,
-                    'Full 90 question exam',
+                    'Full 217 question exam',
                   ),
                 ],
               ),
+
+              const SizedBox(height: 8),
+
+              _interviewPrepBox(),
 
               const SizedBox(height: 12),
 
@@ -300,7 +347,7 @@ class OnboardTrust extends StatelessWidget {
                   onPressed: () {
                     MixpanelService.instance.track(
                       'SpOn_Trust_Next',
-                      properties: {'app_name': 'SP'},
+                      properties: {'app_name': 'ST'},
                     );
 
                     Navigator.push(
@@ -334,7 +381,7 @@ class OnboardTrust extends StatelessWidget {
               const SizedBox(height: 14),
 
               Text(
-                'Curriculum based on ServSafe material',
+                'Curriculum based on Intuit Tax Academy Level 1 material',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 11,

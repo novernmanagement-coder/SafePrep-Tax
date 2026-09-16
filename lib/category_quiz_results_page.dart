@@ -233,7 +233,7 @@ class _CategoryQuizResultsPageState extends State<CategoryQuizResultsPage> {
                             child: Row(
                               children: [
                                 Text(
-                                  'Safe',
+                                  'Tax',
                                   style: TextStyle(
                                     fontSize: AppFonts.header,
                                     fontWeight: FontWeight.w600,
@@ -248,7 +248,7 @@ class _CategoryQuizResultsPageState extends State<CategoryQuizResultsPage> {
                                 ),
                                 const SizedBox(width: 6),
                                 Text(
-                                  'Prep™',
+                                  'Starter',
                                   style: TextStyle(
                                     fontSize: AppFonts.header,
                                     fontWeight: FontWeight.w600,

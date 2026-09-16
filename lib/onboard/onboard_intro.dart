@@ -72,8 +72,8 @@ class _OnboardIntroState extends State<OnboardIntro>
       '\u2014 oops. Didn\u2019t see you come in.',
     ),
     _FsmeLine(
-      '\u2026Ahem \u2014 \u201CWelcome to SafePrep. We will prepare you '
-      'for the ServSafe exam.\u201D',
+      '\u2026Ahem \u2014 \u201CWelcome to Tax Starter. We will prepare you '
+      'for the Intuit Tax exam.\u201D',
     ),
   ];
 
@@ -199,7 +199,7 @@ class _OnboardIntroState extends State<OnboardIntro>
               const SizedBox(height: 12),
 
               Text(
-                'SafePrep\u2122',
+                'Tax Starter:',
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.w700,
@@ -232,27 +232,19 @@ class _OnboardIntroState extends State<OnboardIntro>
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Expanded(child: _statTile('20+', 'years experience')),
+                    Expanded(
+                      child: _statTile('300+', 'targeted questions'),
+                    ),
                     const SizedBox(width: 10),
-                    Expanded(child: _statTile('1,000+', 'students taught')),
+                    Expanded(child: _statTile('8', 'tax topics covered')),
                   ],
                 ),
               ),
 
               const SizedBox(height: 10),
 
-              // Bottom row: 500+ tile beside the FSME intro tile,
-              // equal height.
-              IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Expanded(child: _statTile('500+', 'targeted questions')),
-                    const SizedBox(width: 10),
-                    Expanded(child: _fsmeTile()),
-                  ],
-                ),
-              ),
+              // FSME intro tile, full width.
+              _fsmeTile(),
 
               const SizedBox(height: 10),
 
@@ -266,25 +258,14 @@ class _OnboardIntroState extends State<OnboardIntro>
                 child: Column(
                   children: [
                     Text(
-                      'Built by Certified ServSafe\u00AE Instructors '
-                      'and Registered Proctors.\n'
+                      'Curriculum based on the Intuit Tax Academy '
+                      'Level 1 Curriculum.\n'
                       'If it\u2019s not on the test, it\u2019s not in here.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 12,
                         color: _softWhite.withValues(alpha: 0.55),
                         height: 1.6,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'Student pass rate exceeds 95%.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 12.5,
-                        fontWeight: FontWeight.w600,
-                        color: _gold.withValues(alpha: 0.85),
-                        height: 1.5,
                       ),
                     ),
                   ],
@@ -300,7 +281,7 @@ class _OnboardIntroState extends State<OnboardIntro>
                   onPressed: () {
                     MixpanelService.instance.track(
                       'SpOn_Intro_Next',
-                      properties: {'app_name': 'SP'},
+                      properties: {'app_name': 'ST'},
                     );
 
                     Navigator.push(
@@ -483,7 +464,7 @@ class _OnboardIntroState extends State<OnboardIntro>
       child: Column(
         children: [
           Text(
-            'THE SAFEPREP SYSTEM',
+            'THE TAX STARTER SYSTEM',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 10,
@@ -494,24 +475,14 @@ class _OnboardIntroState extends State<OnboardIntro>
           ),
           const SizedBox(height: 8),
           Text(
-            'SafePrep  \u00B7  SafePrep Alcohol  \u00B7  '
-            'SafePrep Refresher  \u00B7  SafePrep Espa\u00F1ol',
+            'Powered by the same adaptive study engine used '
+            'across the Tax Starter platform.',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
               height: 1.5,
               color: _softWhite.withValues(alpha: 0.8),
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            'FoodSafetyMadeEasy.com',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: _gold.withValues(alpha: 0.7),
             ),
           ),
         ],

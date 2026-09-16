@@ -21,7 +21,7 @@ class _FinalExamIntroPageState extends State<FinalExamIntroPage> {
   // Same finalExam cluster as FinalStepExamPage — this intro page and
   // the actual exam share one explanation.
   static const List<String> _fsmeHelpMessages = [
-    "90 questions, scored exactly like the real ServSafe exam.",
+    "217 questions, scored exactly like the real Intuit exam.",
     "Whatever you get, results feed back into your curriculum.",
     "Tap me — I'll 'splain what this whole thing is for.",
   ];
@@ -76,7 +76,7 @@ class _FinalExamIntroPageState extends State<FinalExamIntroPage> {
                           child: Row(
                             children: [
                               Text(
-                                'Safe',
+                                'Tax',
                                 style: TextStyle(
                                   fontSize: AppFonts.header,
                                   fontWeight: FontWeight.w600,
@@ -91,7 +91,7 @@ class _FinalExamIntroPageState extends State<FinalExamIntroPage> {
                               ),
                               const SizedBox(width: 6),
                               Text(
-                                'Prep™',
+                                'Starter',
                                 style: TextStyle(
                                   fontSize: AppFonts.header,
                                   fontWeight: FontWeight.w600,
@@ -104,7 +104,7 @@ class _FinalExamIntroPageState extends State<FinalExamIntroPage> {
                       ],
                     ),
                     Text(
-                      'The SafePrep™ Exam',
+                      'The Tax Starter Exam',
                       style: TextStyle(
                         fontSize: AppFonts.header,
                         fontWeight: FontWeight.w600,
@@ -159,7 +159,7 @@ class _FinalExamIntroPageState extends State<FinalExamIntroPage> {
                       textAlign: TextAlign.center,
                     ),
                     Text(
-                      '90 questions covering everything in the ServSafe® curriculum.',
+                      '217 questions covering everything in the Intuit Tax curriculum.',
                       style: TextStyle(
                         fontSize: AppFonts.body,
                         color: AppColors.subtleText,

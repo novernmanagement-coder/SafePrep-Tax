@@ -50,7 +50,7 @@ class _AssessmentInfoPageState extends State<AssessmentInfoPage> {
                       child: Row(
                         children: [
                           Text(
-                            'Safe',
+                            'Tax',
                             style: TextStyle(
                               fontSize: AppFonts.header,
                               fontWeight: FontWeight.w600,
@@ -65,7 +65,7 @@ class _AssessmentInfoPageState extends State<AssessmentInfoPage> {
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            'Prep™',
+                            'Starter',
                             style: TextStyle(
                               fontSize: AppFonts.header,
                               fontWeight: FontWeight.w600,
@@ -118,7 +118,7 @@ class _AssessmentInfoPageState extends State<AssessmentInfoPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Text(
-                        '30 questions. We analyze your answers. We build your curriculum.',
+                        '${AppConstants.diagnosticQuestionsFull} questions. We analyze your answers. We build your curriculum.',
                         style: TextStyle(
                           fontSize: 14,
                           color: AppColors.bodyText,

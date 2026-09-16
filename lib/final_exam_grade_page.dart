@@ -31,7 +31,7 @@ class FinalExamGradePage extends StatelessWidget {
     if (score <= 99) {
       return "You're good to go. Come back and review anytime you like, we've added that option on the 60-Second Refresh.";
     }
-    return "You're ready for the ServSafe® exam. The 60-Second Refresh will be waiting whenever you're ready.";
+    return "You're ready for the Intuit® exam. The 60-Second Refresh will be waiting whenever you're ready.";
   }
 
   String _primaryButtonLabel(int score) {
@@ -93,16 +93,9 @@ class FinalExamGradePage extends StatelessWidget {
       });
     }
 
-    final categories = [
-      'Time & Temperature',
-      'Cross-Contamination',
-      'Food Preparation',
-      'Receiving & Storage',
-      'Personal Hygiene',
-      'Cleaning & Sanitizing',
-      'Facility & Equipment',
-      'Food Safety Management',
-    ];
+    // Single source of truth for ordering now — see the Form 1040
+    // sequencing comment on AppState.allCategories.
+    final categories = AppState.allCategories;
 
     return Scaffold(
       backgroundColor: AppColors.servSafeBlue,
@@ -121,7 +114,7 @@ class FinalExamGradePage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Safe',
+                            'Tax',
                             style: TextStyle(
                               fontSize: AppFonts.header,
                               fontWeight: FontWeight.w600,
@@ -136,7 +129,7 @@ class FinalExamGradePage extends StatelessWidget {
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            'Prep™',
+                            'Starter',
                             style: TextStyle(
                               fontSize: AppFonts.header,
                               fontWeight: FontWeight.w600,

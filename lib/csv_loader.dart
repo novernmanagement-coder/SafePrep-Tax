@@ -15,13 +15,30 @@ const String _baseUrl =
 const String _versionUrl = '$_baseUrl/version.json';
 
 const List<String> _remoteFiles = [
-  'FinalTestQuestions5.csv',
-  'MarqueeFacts.csv',
-  'ServSafeCurriculum.csv',
+  'SafePrepIntuitTax_Questions.csv',
   'ServSafeMilestones.csv',
-  'ServSafeProTips.csv',
-  'ScenarioDrills.csv',
 ];
+
+// ServSafeProTips.csv, MarqueeFacts.csv, ScenarioDrills.csv, and
+// ServSafeCurriculum.csv were deliberately DROPPED from the remote-sync
+// list above (Sept 2026): each has been rewritten on-disk with Tax-only
+// content (the Glossary Quiz question bank, the marquee fact ticker,
+// the scenario-drill trainer, and the category curriculum, respectively)
+// that has no equivalent in the shared
+// novernmanagement-coder/SafePrep_Content repo used by every sibling
+// SafePrep app. Left in the sync list, this app would silently
+// re-download the OLD ServSafe content over each one the next time
+// that shared repo's version.json bumped, wiping the rewrite. Add a
+// file back to this list only if its content should track the shared
+// repo again.
+//
+// ServSafeCurriculum.csv is being rewritten one category at a time;
+// even the partially-rewritten file needs this protection so a sync
+// can't clobber the categories already done. Update this note once
+// all categories are finished.
+// ServSafeMilestones.csv's copy is already brand-generic (no
+// ServSafe-specific wording), so tracking the shared repo is harmless
+// and it was left on the list.
 
 // Every SafePrep sibling app (Manager, Alcohol, Español, Refresher) is
 // built from this same shared codebase and downloads the exact same
@@ -274,19 +291,65 @@ class MilestoneModel {
   });
 }
 
-class ProTipModel {
+// NOTE: ProTipModel/ProTipLoader (old ServSafe "pro tips" feature) were
+// replaced (Sept 2026) by GlossaryQuizQuestion/GlossaryQuizLoader below
+// when ServSafeProTips.csv and instructor_tips_page.dart were repurposed
+// into the Tax Glossary of Terms Quiz.
+class GlossaryQuizQuestion {
   final String id;
-  final String type;
-  final String category;
-  final String content;
-  final bool mustHave;
+  final String question;
+  final List<String> answers;
+  final int correctAnswer; // 0-indexed
+  final String term;
 
-  ProTipModel({
+  GlossaryQuizQuestion({
     required this.id,
-    required this.type,
+    required this.question,
+    required this.answers,
+    required this.correctAnswer,
+    required this.term,
+  });
+}
+
+class GlossaryTermModel {
+  final int id;
+  final String category;
+  final String term;
+  final String definition;
+
+  GlossaryTermModel({
+    required this.id,
     required this.category,
-    required this.content,
-    required this.mustHave,
+    required this.term,
+    required this.definition,
+  });
+}
+
+class InterviewPrepModel {
+  final String id;
+  final String category;
+  final int difficulty;
+  final String version;
+  final String question;
+  final String choice1;
+  final String choice2;
+  final String choice3;
+  final String choice4;
+  final int correctChoice;
+  final String explanation;
+
+  InterviewPrepModel({
+    required this.id,
+    required this.category,
+    required this.difficulty,
+    required this.version,
+    required this.question,
+    required this.choice1,
+    required this.choice2,
+    required this.choice3,
+    required this.choice4,
+    required this.correctChoice,
+    required this.explanation,
   });
 }
 
@@ -321,7 +384,7 @@ class ScenarioDrillModel {
 // ─────────────────────────────────────────────────────────────────
 class QuestionLoader {
   static Future<List<QuestionModel>> loadAll({bool shuffle = true}) async {
-    final lines = await readCsvLines('FinalTestQuestions5.csv');
+    final lines = await readCsvLines('SafePrepIntuitTax_Questions.csv');
     final questions = <QuestionModel>[];
 
     for (int i = 1; i < lines.length; i++) {
@@ -499,68 +562,34 @@ class CurriculumLoader {
 }
 
 // ─────────────────────────────────────────────────────────────────
-// PRO TIP LOADER
+// GLOSSARY QUIZ LOADER
 // ─────────────────────────────────────────────────────────────────
-class ProTipLoader {
-  static Future<List<ProTipModel>> loadAll({bool shuffle = false}) async {
+class GlossaryQuizLoader {
+  static Future<List<GlossaryQuizQuestion>> loadAll({
+    bool shuffle = false,
+  }) async {
     final lines = await readCsvLines('ServSafeProTips.csv');
-    final tips = <ProTipModel>[];
+    final questions = <GlossaryQuizQuestion>[];
 
     for (int i = 1; i < lines.length; i++) {
       final parts = splitCsvLine(lines[i]);
-      if (parts.length < 5) continue;
+      if (parts.length < 8) continue;
 
-      tips.add(
-        ProTipModel(
+      final correct = int.tryParse(parts[6]) ?? 1;
+
+      questions.add(
+        GlossaryQuizQuestion(
           id: parts[0],
-          type: parts[1],
-          category: parts[2],
-          content: parts[3],
-          mustHave: parts[4] == '1',
+          question: parts[1],
+          answers: [parts[2], parts[3], parts[4], parts[5]],
+          correctAnswer: (correct - 1).clamp(0, 3),
+          term: parts[7],
         ),
       );
     }
 
-    if (shuffle) tips.shuffle();
-    return tips;
-  }
-
-  static Future<List<ProTipModel>> loadPersonalized() async {
-    final all = await loadAll(shuffle: false);
-    final state = AppState();
-
-    final weakCategories = AppState.allCategories
-        .where(
-          (c) =>
-              state.hasScoreForCategory(c) &&
-              state.getCategoryScore(c) < AppState.masteryThreshold,
-        )
-        .map((c) => c.toLowerCase())
-        .toSet();
-
-    if (weakCategories.isEmpty) return all..shuffle();
-
-    final mustHave = all.where((t) => t.mustHave).toList()..shuffle();
-    final weakTips =
-        all
-            .where(
-              (t) =>
-                  !t.mustHave &&
-                  weakCategories.contains(t.category.toLowerCase()),
-            )
-            .toList()
-          ..shuffle();
-    final rest =
-        all
-            .where(
-              (t) =>
-                  !t.mustHave &&
-                  !weakCategories.contains(t.category.toLowerCase()),
-            )
-            .toList()
-          ..shuffle();
-
-    return [...mustHave, ...weakTips, ...rest];
+    if (shuffle) questions.shuffle();
+    return questions;
   }
 }
 
@@ -597,6 +626,81 @@ class ScenarioDrillLoader {
     }
 
     return drills;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────
+// GLOSSARY TERM LOADER
+// ─────────────────────────────────────────────────────────────────
+// GlossaryTerms.csv backs the Glossary of Terms reference page
+// (GlossaryPage, in about_proctors_page.dart) — a plain grouped
+// reference list, distinct from the Glossary of Terms QUIZ
+// (GlossaryQuizLoader above, reading ServSafeProTips.csv). The two
+// used to be separate hardcoded/CSV sources with duplicated content
+// that could drift out of sync; this file is new (Sept 2026) so
+// there's no equivalent in the shared SafePrep_Content repo and
+// nothing to sync against.
+class GlossaryTermLoader {
+  static Future<List<GlossaryTermModel>> loadAll() async {
+    final lines = await readCsvLines('GlossaryTerms.csv');
+    final terms = <GlossaryTermModel>[];
+
+    for (int i = 1; i < lines.length; i++) {
+      final parts = splitCsvLine(lines[i]);
+      if (parts.length < 4) continue;
+
+      final id = int.tryParse(parts[0]);
+      if (id == null) continue;
+
+      terms.add(
+        GlossaryTermModel(
+          id: id,
+          category: parts[1],
+          term: parts[2],
+          definition: parts[3],
+        ),
+      );
+    }
+
+    return terms;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────
+// INTERVIEW PREP LOADER
+// ─────────────────────────────────────────────────────────────────
+// InterviewPrep.csv is a new, Tax-only file (Sept 2026) with no
+// equivalent in the shared SafePrep_Content repo, so it's never added
+// to _remoteFiles above — there's nothing to sync it against.
+class InterviewPrepLoader {
+  static Future<List<InterviewPrepModel>> loadAll() async {
+    final lines = await readCsvLines('InterviewPrep.csv');
+    final prompts = <InterviewPrepModel>[];
+
+    for (int i = 1; i < lines.length; i++) {
+      final parts = splitCsvLine(lines[i]);
+      if (parts.length < 11) continue;
+
+      final correct = int.tryParse(parts[9]) ?? 1;
+
+      prompts.add(
+        InterviewPrepModel(
+          id: parts[0],
+          category: parts[1],
+          difficulty: int.tryParse(parts[2]) ?? 1,
+          version: parts[3],
+          question: parts[4],
+          choice1: parts[5],
+          choice2: parts[6],
+          choice3: parts[7],
+          choice4: parts[8],
+          correctChoice: correct.clamp(1, 4),
+          explanation: parts[10],
+        ),
+      );
+    }
+
+    return prompts;
   }
 }
 

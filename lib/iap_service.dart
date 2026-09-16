@@ -14,44 +14,23 @@ import 'mixpanel_service.dart';
 // already live there — do not change these). Google Play product
 // IDs cannot contain any uppercase letters at all (Play Console
 // rejects them outright at creation time), so Android gets its own
-// lowercase-only IDs below — same underlying product, a different
-// ID string per store. Everything else in this file just uses these
-// constants and never needs to branch on platform itself.
+// lowercase-only ID below — same underlying product, a different ID
+// string per store. Everything else in this file just uses this
+// constant and never needs to branch on platform itself.
+//
+// Sept 2026 — this is now the ONLY product SafePrep Tax sells. The
+// old sevenDay/fourteenDay/upgrade/renewal/Android-lifetime-offer
+// tiers were removed wholesale (dead the moment the app went
+// lifetime-only) — see the app's memory file if you need the old
+// pricing/product-ID history.
 // ─────────────────────────────────────────────────────────────────
-final String kProductSevenDay = Platform.isAndroid
-    ? 'android_st_sevenday'
-    : 'SafePrepTaxSevenDay'; // $4.99 — 7 days
-final String kProductFourteenDay = Platform.isAndroid
-    ? 'android_st_fourteenday'
-    : 'SafePrepTaxFourteenDay'; // $8.99 — 14 days
 final String kProductUnlockApp = Platform.isAndroid
     ? 'android_st_unlock'
-    : 'SafePrepTaxUnlock'; // $9.99 — lifetime
-const String kProductUpgrade =
-    'com.geraldmiller.safepreptax.upgrade'; // $4.99 — upgrade to lifetime — already lowercase, same ID works on both stores
-final String kProductRenewal = Platform.isAndroid
-    ? 'android_st_renewalweek'
-    : 'SafePrepTaxRenewalWeek'; // $2.99 — +7 days, existing purchasers only (iOS)
-
-// Android-only replacement for the day-5 renewal offer above. Rather
-// than a repeatable +7-day extension (which relies on the app calling
-// Play Billing's consume API correctly — see the long discussion this
-// replaced), this grants LIFETIME access outright for a one-time,
-// non-consumable purchase, same simple pattern as kProductUnlockApp /
-// kProductUpgrade. iOS keeps its real, live $2.99 renewal
-// (kProductRenewal / SafePrepRenewalWeek) untouched — this constant is
-// never queried or purchased on iOS. Deliberately no price baked into
-// the ID (just "lifetime", not "lifetime299") so the price can change
-// in Play Console later without the ID looking stale.
-const String kProductLifetimeOfferAndroid = 'android_st_lifetime';
-// TODO: confirm both the iOS and Android versions of this product ID
-// have actually been created in their respective stores before
-// shipping — buyRenewal() will resolve productNotFound until they
-// exist. IMPORTANT: must be created as a CONSUMABLE product type (Google
-// Play: a one-time product that "can be used and re-purchased"), not
-// durable/non-consumable — it's meant to be bought repeatedly, and
-// _purchase() below now routes it through buyConsumable() specifically
-// because of that.
+    : 'SafePrepTaxUnlock'; // $19.99 — lifetime, the only paywall offer.
+    // Price must also be set in App Store Connect / Play Console, since
+    // the store — not this file — is the source of truth for the
+    // actual charged amount; the fallback price string below is only
+    // what shows before the store's real price has loaded.
 
 // How long a buy* call will wait for StoreKit to resolve (purchased,
 // canceled, or errored) before giving up and returning IAPResult.timeout.
@@ -70,12 +49,7 @@ class IAPService {
   final InAppPurchase _iap = InAppPurchase.instance;
   StreamSubscription<List<PurchaseDetails>>? _subscription;
 
-  ProductDetails? _sevenDayProduct;
-  ProductDetails? _fourteenDayProduct;
   ProductDetails? _unlockProduct;
-  ProductDetails? _upgradeProduct;
-  ProductDetails? _renewalProduct;
-  ProductDetails? _lifetimeOfferProduct;
 
   bool _available = false;
   bool get isAvailable => _available;
@@ -148,14 +122,7 @@ class IAPService {
     final ProductDetailsResponse response;
     try {
       response = await _iap
-          .queryProductDetails({
-            kProductSevenDay,
-            kProductFourteenDay,
-            kProductUnlockApp,
-            kProductUpgrade,
-            kProductRenewal,
-            if (Platform.isAndroid) kProductLifetimeOfferAndroid,
-          })
+          .queryProductDetails({kProductUnlockApp})
           .timeout(const Duration(seconds: 15));
     } catch (e) {
       debugPrint('IAP product load timeout/error: $e');
@@ -176,23 +143,9 @@ class IAPService {
       );
     }
 
-    // NOTE: was a switch on p.id — switch case labels must be
-    // compile-time constants in Dart, and kProduct* are no longer
-    // const (they're platform-dependent at runtime now, see the
-    // declarations above), so this is an if/else chain instead.
     for (final p in response.productDetails) {
-      if (p.id == kProductSevenDay) {
-        _sevenDayProduct = p;
-      } else if (p.id == kProductFourteenDay) {
-        _fourteenDayProduct = p;
-      } else if (p.id == kProductUnlockApp) {
+      if (p.id == kProductUnlockApp) {
         _unlockProduct = p;
-      } else if (p.id == kProductUpgrade) {
-        _upgradeProduct = p;
-      } else if (p.id == kProductRenewal) {
-        _renewalProduct = p;
-      } else if (p.id == kProductLifetimeOfferAndroid) {
-        _lifetimeOfferProduct = p;
       }
     }
 
@@ -281,32 +234,6 @@ class IAPService {
   Future<void> _handleSuccess(PurchaseDetails purchase) async {
     final state = AppState();
 
-    // Renewal is handled separately from every other product below —
-    // it does NOT reset purchaseDate to now (that would hand back a
-    // full fresh 7 days regardless of how little time was left,
-    // silently deleting whatever they were about to lose). Instead
-    // it anchors the new purchaseDate at the CURRENT expiry (or now,
-    // only if access had already fully lapsed) so the +7 days from
-    // that point preserves any remaining time, per the earlier
-    // "currentExpiry + 7, not now + 7" decision.
-    if (purchase.productID == kProductRenewal) {
-      final currentExpiry = state.expiryDate;
-      final anchor =
-          (currentExpiry != null && currentExpiry.isAfter(DateTime.now()))
-          ? currentExpiry
-          : DateTime.now();
-      state.purchaseDate = anchor;
-      // purchaseType stays sevenDay — a renewal doesn't change the
-      // plan shape, just extends it.
-      state.purchaseType = PurchaseType.sevenDay;
-      // Let the HomePage renewal explainer fire again on a future
-      // cycle instead of staying permanently seen after one renewal.
-      state.hasSeenRenewalExplainer = false;
-      await AppStatePersistence.save();
-      debugPrint('IAP renewal success: new expiry ${state.expiryDate}');
-      return;
-    }
-
     // Clear trial history on first purchase only
     if (!state.hasUnlockedApp) {
       state.testHistory.clear();
@@ -316,25 +243,7 @@ class IAPService {
 
     state.hasUnlockedApp = true;
     state.purchaseDate = DateTime.now();
-
-    // NOTE: was a switch on purchase.productID — same reason as the
-    // one in _loadProducts above, kProduct* aren't compile-time
-    // constants anymore.
-    if (purchase.productID == kProductSevenDay) {
-      state.purchaseType = PurchaseType.sevenDay;
-    } else if (purchase.productID == kProductFourteenDay) {
-      state.purchaseType = PurchaseType.fourteenDay;
-    } else if (purchase.productID == kProductUnlockApp) {
-      state.purchaseType = PurchaseType.lifetime;
-    } else if (purchase.productID == kProductUpgrade) {
-      // Upgrade — keep purchase date, just elevate to lifetime
-      state.purchaseType = PurchaseType.lifetime;
-    } else if (purchase.productID == kProductLifetimeOfferAndroid) {
-      // Android's day-5 offer — a straight lifetime unlock, not an
-      // extension, so no special expiry math needed (unlike
-      // kProductRenewal above).
-      state.purchaseType = PurchaseType.lifetime;
-    }
+    state.purchaseType = PurchaseType.lifetime;
 
     await AppStatePersistence.save();
     debugPrint(
@@ -350,18 +259,11 @@ class IAPService {
   // to "do nothing" when a user backs out of the purchase sheet — the
   // caller now genuinely knows what happened.
   //
-  // isConsumable determines which StoreKit call gets used —
-  // buyNonConsumable() for one-time-forever products (seven day,
-  // fourteen day, unlock, upgrade — all still non-consumable, matches
-  // how they were purchased before) vs buyConsumable() for products
-  // meant to be bought repeatedly (currently just the renewal). This
-  // matters beyond semantics: Apple's own StoreKit validation can
-  // reject or mishandle a repeat purchase attempt on a product bought
-  // through the wrong call, so it's not just a style choice.
-  Future<IAPResult> _purchase(
-    ProductDetails? Function() getProduct, {
-    bool isConsumable = false,
-  }) async {
+  // The only product left (kProductUnlockApp) is a one-time-forever
+  // non-consumable, so this always goes through buyNonConsumable() —
+  // the old isConsumable branch (used only by the removed repeatable
+  // $2.99 renewal) is gone.
+  Future<IAPResult> _purchase(ProductDetails? Function() getProduct) async {
     if (!_available) return IAPResult.storeUnavailable;
 
     var product = getProduct();
@@ -376,11 +278,7 @@ class IAPService {
 
     try {
       final purchaseParam = PurchaseParam(productDetails: product);
-      if (isConsumable) {
-        await _iap.buyConsumable(purchaseParam: purchaseParam);
-      } else {
-        await _iap.buyNonConsumable(purchaseParam: purchaseParam);
-      }
+      await _iap.buyNonConsumable(purchaseParam: purchaseParam);
     } catch (e) {
       debugPrint('IAP buy error: $e');
       _pendingPurchases.remove(product.id);
@@ -396,32 +294,9 @@ class IAPService {
     );
   }
 
-  Future<IAPResult> buySevenDay() => _purchase(() => _sevenDayProduct);
-
-  Future<IAPResult> buyFourteenDay() => _purchase(() => _fourteenDayProduct);
-
   Future<IAPResult> buyUnlockApp() => _purchase(() => _unlockProduct);
 
-  Future<IAPResult> buyUpgrade() => _purchase(() => _upgradeProduct);
-
-  Future<IAPResult> buyRenewal() =>
-      _purchase(() => _renewalProduct, isConsumable: true);
-
-  // Android-only. Non-consumable — same call pattern as buyUnlockApp /
-  // buyUpgrade, since this is a one-time-forever purchase, not a
-  // repeatable one.
-  Future<IAPResult> buyLifetimeOffer() =>
-      _purchase(() => _lifetimeOfferProduct);
-
   // ── Restore ─────────────────────────────────────────────────
-  // NOTE: restorePurchases() only restores non-consumables (Apple
-  // doesn't track consumable purchase history for restore) — the
-  // renewal product being consumable means a reinstall/new-device
-  // user will NOT get their renewal back via Restore Purchases, only
-  // their original sevenDay/fourteenDay/unlock/upgrade purchase.
-  // That matches how a consumable extension is expected to behave
-  // (it's spent, not owned), but worth knowing if support questions
-  // come up about "I renewed and it didn't restore."
   Future<void> restorePurchases() async {
     if (!_available) return;
     await _iap.restorePurchases();
@@ -469,15 +344,12 @@ class IAPService {
   // App Review's own sandbox is slower than production and outlasted
   // the 90-second window.
   //
-  // Call one of these two after a timeout (or any non-success,
-  // non-canceled result) and treat `true` as success before finally
-  // giving up — see onboard_paywall.dart, safe_prep_nav_bar.dart,
-  // rapid_fire_limited_page.dart, lifetime_offer_page.dart, and
-  // renew_page.dart for the call sites.
-
-  // Covers every one-time-unlock product (seven day, fourteen day,
-  // unlock, upgrade, and Android's lifetime offer) — anything that
-  // sets AppState().hasUnlockedApp on success.
+  // Call this after a timeout (or any non-success, non-canceled
+  // result) and treat `true` as success before finally giving up —
+  // see onboard_paywall.dart, safe_prep_nav_bar.dart, and
+  // rapid_fire_limited_page.dart for the call sites.
+  //
+  // Sets AppState().hasUnlockedApp on success.
   Future<bool> waitForLateUnlock({
     Duration timeout = const Duration(seconds: 30),
   }) async {
@@ -490,38 +362,8 @@ class IAPService {
     return AppState().hasUnlockedApp;
   }
 
-  // The renewal purchase can't be detected with waitForLateUnlock above —
-  // hasUnlockedApp is already true for anyone eligible to renew. Instead
-  // the caller passes the expiryDate it observed right before starting
-  // the purchase, and this waits for that to actually move forward
-  // (per _handleSuccess's "currentExpiry + 7" anchor logic above).
-  Future<bool> waitForLateRenewal(
-    DateTime? previousExpiry, {
-    Duration timeout = const Duration(seconds: 30),
-  }) async {
-    bool renewed() {
-      final current = AppState().expiryDate;
-      if (current == null) return false;
-      if (previousExpiry == null) return true;
-      return current.isAfter(previousExpiry);
-    }
-
-    if (renewed()) return true;
-    final deadline = DateTime.now().add(timeout);
-    while (DateTime.now().isBefore(deadline)) {
-      if (renewed()) return true;
-      await Future.delayed(const Duration(milliseconds: 300));
-    }
-    return renewed();
-  }
-
   // ── Price strings ────────────────────────────────────────────
-  String get sevenDayPrice => _sevenDayProduct?.price ?? '\$4.99';
-  String get fourteenDayPrice => _fourteenDayProduct?.price ?? '\$8.99';
-  String get unlockPrice => _unlockProduct?.price ?? '\$9.99';
-  String get upgradePrice => _upgradeProduct?.price ?? '\$4.99';
-  String get renewalPrice => _renewalProduct?.price ?? '\$2.99';
-  String get lifetimeOfferPrice => _lifetimeOfferProduct?.price ?? '\$2.99';
+  String get unlockPrice => _unlockProduct?.price ?? '\$19.99';
 }
 
 // ── Result enum ──────────────────────────────────────────────

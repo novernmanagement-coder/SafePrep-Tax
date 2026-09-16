@@ -69,9 +69,9 @@ class _RapidFireLimitedIntroState extends State<RapidFireLimitedIntro>
   /// this, and this screen is a one-time taste, not somewhere users
   /// return to repeatedly — a fixed, meaningfully-chosen set is fine.
   static const List<String> _weakCategories = [
-    'Time & Temperature',
-    'Receiving & Storage',
-    'Cross-Contamination',
+    'Retirement Accounts & Distributions',
+    'Filing Basics & Dependents',
+    'Tax Credits & Calculations',
   ];
 
   // ── FSME popup ───────────────────────────────────────────────────
@@ -551,7 +551,7 @@ class _RapidFireLimitedIntroState extends State<RapidFireLimitedIntro>
                     MixpanelService.instance.track(
                       'rapid_fire_limited_intro_start',
                       properties: {
-                        'app_name': 'SP',
+                        'app_name': 'ST',
                         'rounds_used': AppState().limitedRapidFireRoundsUsed,
                       },
                     );

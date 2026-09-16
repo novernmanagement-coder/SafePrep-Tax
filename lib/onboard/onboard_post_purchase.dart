@@ -89,7 +89,7 @@ class _OnboardPostPurchaseState extends State<OnboardPostPurchase> {
 
     MixpanelService.instance.track(
       'onboarding_post_purchase_viewed',
-      properties: {'app_name': 'SP', 'top_category': _topCategory},
+      properties: {'app_name': 'ST', 'top_category': _topCategory},
     );
 
     _startTyping();
@@ -164,7 +164,7 @@ class _OnboardPostPurchaseState extends State<OnboardPostPurchase> {
 
     MixpanelService.instance.track(
       'onboarding_post_purchase_start',
-      properties: {'app_name': 'SP', 'category': _topCategory},
+      properties: {'app_name': 'ST', 'category': _topCategory},
     );
 
     Navigator.pushAndRemoveUntil(
@@ -179,7 +179,7 @@ class _OnboardPostPurchaseState extends State<OnboardPostPurchase> {
   void _fineTune() {
     MixpanelService.instance.track(
       'onboarding_post_purchase_fine_tune',
-      properties: {'app_name': 'SP'},
+      properties: {'app_name': 'ST'},
     );
 
     Navigator.pushAndRemoveUntil(

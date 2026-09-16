@@ -36,7 +36,7 @@ class _OnboardStudyStyleState extends State<OnboardStudyStyle> {
 
     MixpanelService.instance.track(
       'SpOn_Style_Selected',
-      properties: {'app_name': 'SP', 'study_style': style.tag},
+      properties: {'app_name': 'ST', 'study_style': style.tag},
     );
   }
 
@@ -93,11 +93,13 @@ class _OnboardStudyStyleState extends State<OnboardStudyStyle> {
   /// A single illustrative question, rendered differently per style so
   /// the user can see exactly what each mode looks like before they
   /// pick — not just read a one-line description of it.
-  static const String _exampleQuestion = 'What is the temperature danger zone?';
-  static const String _exampleWrong = '32\u00B0F \u2013 100\u00B0F';
-  static const String _exampleRight = '41\u00B0F \u2013 135\u00B0F';
+  static const String _exampleQuestion =
+      'Which filing status gets the largest standard deduction?';
+  static const String _exampleWrong = 'Single';
+  static const String _exampleRight = 'Married Filing Jointly';
   static const String _exampleWhy =
-      'Bacteria multiply fastest between 41\u00B0F and 135\u00B0F.';
+      'MFJ combines both spouses\u2019 standard deductions into one \u2014 '
+      'double a single filer\u2019s amount.';
 
   static const Color _green = Color(0xFF639922);
   static const Color _red = Color(0xFFE24B4A);

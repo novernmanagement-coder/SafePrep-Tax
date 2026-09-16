@@ -351,7 +351,7 @@ class _RecomputingModalState extends State<RecomputingModal>
             ),
             const SizedBox(height: 14),
             Text(
-              'SafePrep™ Engine',
+              'Tax Starter Engine',
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,

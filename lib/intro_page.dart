@@ -87,7 +87,7 @@ class _IntroductoryPageState extends State<IntroductoryPage>
               children: [
                 // Header
                 const Text(
-                  'SafePrep™',
+                  'Tax Starter',
                   style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.w700,
@@ -298,7 +298,7 @@ class _IntroductoryPageState extends State<IntroductoryPage>
 
                   // Core message
                   const Text(
-                    'You just made the smartest move toward passing your ServSafe® exam.\n\nSafePrep™ was built for one purpose — to get you ready. Not with generic questions and guesswork, but with a system that learns you, adapts to you, and builds a curriculum around your results.\n\nYou\'re not just studying. You\'re preparing.',
+                    'You just made the smartest move toward passing your ServSafe® exam.\n\nTax Starter was built for one purpose — to get you ready. Not with generic questions and guesswork, but with a system that learns you, adapts to you, and builds a curriculum around your results.\n\nYou\'re not just studying. You\'re preparing.',
                     style: TextStyle(
                       fontSize: AppFonts.body,
                       color: Colors.white70,

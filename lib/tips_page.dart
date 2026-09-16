@@ -131,7 +131,7 @@ class _TipsPageState extends State<TipsPage> {
                     child: Row(
                       children: [
                         Text(
-                          'Safe',
+                          'Tax',
                           style: TextStyle(
                             fontSize: AppFonts.header,
                             fontWeight: FontWeight.w600,
@@ -142,7 +142,7 @@ class _TipsPageState extends State<TipsPage> {
                         Image.asset('Assets/splash.png', width: 36, height: 36),
                         const SizedBox(width: 6),
                         Text(
-                          'Prep™',
+                          'Starter',
                           style: TextStyle(
                             fontSize: AppFonts.header,
                             fontWeight: FontWeight.w600,

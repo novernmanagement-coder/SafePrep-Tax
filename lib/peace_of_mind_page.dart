@@ -5,7 +5,7 @@ import 'fsme_eye.dart';
 import 'home_page.dart';
 import 'flash_cards_page.dart';
 import 'instructor_tips_page.dart';
-import 'mnemonics_page.dart';
+import 'interview_prep_page.dart';
 import 'rapid_fire_page.dart';
 import 'scenario_drills_page.dart';
 import 'safe_prep_nav_bar.dart';
@@ -30,6 +30,10 @@ class _PeaceOfMindPageState extends State<PeaceOfMindPage> {
   static const Duration _fadeGap = Duration(milliseconds: 320);
 
   static const Color _davGold = Color(0xFFD4AF37);
+  // Same gold used app-wide for onboarding/trust accents — this tool
+  // gets it too since FSME calls it out as a bonus, worth standing
+  // out from the other five tool buttons.
+  static const Color _glossaryQuizGold = Color(0xFFD4AF37);
   // Placeholder "processing" color for the opening hedge line — Gerry
   // to confirm the actual color to use; swap this constant once known.
   static const Color _processingColor = Color(0xFF9AA5B1);
@@ -55,12 +59,21 @@ class _PeaceOfMindPageState extends State<PeaceOfMindPage> {
           "me a bona-fide Tool.",
       mood: EyeMood.fibbing,
     ),
+    _GreetingLine(
+      text:
+          "Oh — I added the Glossary category here as a bonus. My "
+          "recommendation? Memorize those first, then study the rest. "
+          "You can thank me later.",
+      mood: EyeMood.fibbing,
+      lookUp: true,
+    ),
   ];
 
   int _lineIndex = -1;
   String _displayedText = '';
   EyeMood _mood = EyeMood.idle;
   Color _textColor = _davGold;
+  final GlobalKey<FsmeEyePairState> _eyeKey = GlobalKey<FsmeEyePairState>();
 
   static const Duration _holdDuration = Duration(milliseconds: 2600);
 
@@ -110,6 +123,10 @@ class _PeaceOfMindPageState extends State<PeaceOfMindPage> {
       if (!mounted) return;
     }
 
+    if (line.lookUp) {
+      unawaited(_eyeKey.currentState?.surprise());
+    }
+
     await _typeLine(line.text);
     if (!mounted) return;
 
@@ -155,7 +172,7 @@ class _PeaceOfMindPageState extends State<PeaceOfMindPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Safe',
+                              'Tax',
                               style: TextStyle(
                                 fontSize: AppFonts.header,
                                 fontWeight: FontWeight.w600,
@@ -170,7 +187,7 @@ class _PeaceOfMindPageState extends State<PeaceOfMindPage> {
                             ),
                             const SizedBox(width: 6),
                             Text(
-                              'Prep\u2122',
+                              'Starter',
                               style: TextStyle(
                                 fontSize: AppFonts.header,
                                 fontWeight: FontWeight.w600,
@@ -197,7 +214,7 @@ class _PeaceOfMindPageState extends State<PeaceOfMindPage> {
                     const SizedBox(height: 4),
 
                     Text(
-                      'SafePrep\u2122 exclusive study tools \u2014 get that extra boost in confidence',
+                      'Tax Starter exclusive study tools \u2014 get that extra boost in confidence',
                       style: TextStyle(
                         fontSize: 12,
                         color: AppColors.subtleText,
@@ -227,15 +244,29 @@ class _PeaceOfMindPageState extends State<PeaceOfMindPage> {
                       _go(context, const RapidFirePage());
                     }),
                     const SizedBox(height: 8),
-                    _buildToolButton(context, '\ud83e\udde0 Mnemonics', () {
-                      _trackTrainerSelected('mnemonics');
-                      _go(context, const MnemonicsPage());
-                    }),
+                    // Was "Proctor Tips" \u2014 repurposed (Sept 2026) into
+                    // the Glossary of Terms Quiz FSME calls out above.
+                    // Gold instead of the standard blue so it stands out
+                    // as the bonus tool.
+                    _buildToolButton(
+                      context,
+                      '\ud83e\udde0 Glossary of Terms Quiz',
+                      () {
+                        _trackTrainerSelected('glossary_quiz');
+                        _go(context, const GlossaryQuizPage());
+                      },
+                      backgroundColor: _glossaryQuizGold,
+                      foregroundColor: Colors.black87,
+                    ),
                     const SizedBox(height: 8),
-                    _buildToolButton(context, '\ud83d\udccc Proctor Tips', () {
-                      _trackTrainerSelected('proctor_tips');
-                      _go(context, const InstructorTipsPage());
-                    }),
+                    _buildToolButton(
+                      context,
+                      '💼 Interview Prep',
+                      () {
+                        _trackTrainerSelected('interview_prep');
+                        _go(context, const InterviewPrepPage());
+                      },
+                    ),
 
                     const SizedBox(height: 24),
                     _buildFsmeGreeting(),
@@ -254,7 +285,7 @@ class _PeaceOfMindPageState extends State<PeaceOfMindPage> {
   Widget _buildFsmeGreeting() {
     return Column(
       children: [
-        Center(child: FsmeEyePair(mood: _mood, size: 34)),
+        Center(child: FsmeEyePair(key: _eyeKey, mood: _mood, size: 34)),
         const SizedBox(height: 10),
         Container(
           width: double.infinity,
@@ -286,16 +317,18 @@ class _PeaceOfMindPageState extends State<PeaceOfMindPage> {
   Widget _buildToolButton(
     BuildContext context,
     String label,
-    VoidCallback onTap,
-  ) {
+    VoidCallback onTap, {
+    Color? backgroundColor,
+    Color? foregroundColor,
+  }) {
     return SizedBox(
       width: double.infinity,
       height: AppSizes.primaryButtonHeight,
       child: ElevatedButton(
         onPressed: onTap,
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primaryButton,
-          foregroundColor: Colors.white,
+          backgroundColor: backgroundColor ?? AppColors.primaryButton,
+          foregroundColor: foregroundColor ?? Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppSizes.buttonCornerRadius),
           ),
@@ -316,9 +349,15 @@ class _GreetingLine {
   final String text;
   final EyeMood mood;
   final Color color;
+  // When true, FSME plays a quick "look up" startle beat (the eyes'
+  // surprise() one-shot) right as this line starts typing — used for
+  // the bonus-tip line so it reads as him suddenly remembering
+  // something, not just another line in the sequence.
+  final bool lookUp;
   const _GreetingLine({
     required this.text,
     required this.mood,
     this.color = _PeaceOfMindPageState._davGold,
+    this.lookUp = false,
   });
 }

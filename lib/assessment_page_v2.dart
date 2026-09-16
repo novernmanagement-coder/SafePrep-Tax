@@ -47,15 +47,14 @@ class _AssessmentPageV2State extends State<AssessmentPageV2> {
   }
 
   static const Map<String, double> categoryWeights = {
-    'Time & Temperature': 0.23,
-    'Cross-Contamination': 0.15,
-    'Receiving & Storage': 0.15,
-    'Personal Hygiene': 0.14,
-    'Cleaning & Sanitizing': 0.12,
-    'Food Preparation': 0.12,
-    'Food Safety Management': 0.05,
-    'Facility & Equipment': 0.02,
-    'Pest Management': 0.02,
+    'Filing Basics & Dependents': 0.18,
+    'Income': 0.16,
+    'Adjustments to Income': 0.09,
+    'Deductions': 0.06,
+    'Retirement Accounts & Distributions': 0.22,
+    'Health Savings Accounts': 0.05,
+    'Tax Credits & Calculations': 0.17,
+    'Residency & Multi-State Filing': 0.07,
   };
 
   @override
@@ -64,7 +63,7 @@ class _AssessmentPageV2State extends State<AssessmentPageV2> {
     _loadQuestions();
     MixpanelService.instance.track(
       'assessment_started',
-      properties: {'app_name': 'SP'},
+      properties: {'app_name': 'ST'},
     );
   }
 
@@ -73,10 +72,8 @@ class _AssessmentPageV2State extends State<AssessmentPageV2> {
     final selected = <QuestionModel>[];
     final usedIds = <String>{};
 
-    // Trial users get 20 questions, paid users get 40
-    final target = AppState().hasUnlockedApp
-        ? AppConstants.diagnosticQuestionsFull
-        : AppConstants.diagnosticQuestions;
+    // No shorter trial version — everyone gets the full assessment.
+    const target = AppConstants.diagnosticQuestionsFull;
 
     final categoryCounts = <String, int>{};
     int allocated = 0;
@@ -88,13 +85,13 @@ class _AssessmentPageV2State extends State<AssessmentPageV2> {
     }
 
     while (allocated < target) {
-      categoryCounts['Time & Temperature'] =
-          categoryCounts['Time & Temperature']! + 1;
+      categoryCounts['Retirement Accounts & Distributions'] =
+          categoryCounts['Retirement Accounts & Distributions']! + 1;
       allocated++;
     }
     while (allocated > target) {
-      categoryCounts['Time & Temperature'] =
-          categoryCounts['Time & Temperature']! - 1;
+      categoryCounts['Retirement Accounts & Distributions'] =
+          categoryCounts['Retirement Accounts & Distributions']! - 1;
       allocated--;
     }
 
@@ -189,7 +186,7 @@ class _AssessmentPageV2State extends State<AssessmentPageV2> {
         'score': result.overallScore,
         'question_count': _questions.length,
         'is_unlocked': state.hasUnlockedApp,
-        'app_name': 'SP',
+        'app_name': 'ST',
       },
     );
 
@@ -204,6 +201,13 @@ class _AssessmentPageV2State extends State<AssessmentPageV2> {
       state.saveCategoryQuizScore(kvp.key, kvp.value);
       if (kvp.value >= AppState.masteryThreshold) {
         state.markCategoryStudied(kvp.key);
+      } else {
+        // A retake that no longer clears mastery on this category must
+        // not leave a stale "studied" flag from an earlier, luckier
+        // attempt — otherwise its Curriculum trophy never clears even
+        // after the score backing it drops below threshold. Mirrors
+        // the demote-on-miss logic in the Final Exam's fail branch.
+        state.studiedCategories.remove(kvp.key);
       }
     }
 
@@ -318,7 +322,7 @@ class _AssessmentPageV2State extends State<AssessmentPageV2> {
                             properties: {
                               'questions_answered': _currentIndex,
                               'total_questions': _questions.length,
-                              'app_name': 'SP',
+                              'app_name': 'ST',
                             },
                           );
                           Navigator.pushReplacement(
@@ -329,7 +333,7 @@ class _AssessmentPageV2State extends State<AssessmentPageV2> {
                         child: Row(
                           children: [
                             Text(
-                              'Safe',
+                              'Tax',
                               style: TextStyle(
                                 fontSize: AppFonts.header,
                                 fontWeight: FontWeight.w600,
@@ -344,7 +348,7 @@ class _AssessmentPageV2State extends State<AssessmentPageV2> {
                             ),
                             const SizedBox(width: 6),
                             Text(
-                              'Prep™',
+                              'Starter',
                               style: TextStyle(
                                 fontSize: AppFonts.header,
                                 fontWeight: FontWeight.w600,

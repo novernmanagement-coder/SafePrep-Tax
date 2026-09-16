@@ -172,7 +172,7 @@ class RedeemCodeService {
 
   /// Attempts to redeem [rawCode] (dashes/spaces tolerated — only the
   /// digits are checked). On success, unlocks the app with the same
-  /// 7-day access window a real purchase grants. On failure, state is
+  /// lifetime access a real purchase grants. On failure, state is
   /// left untouched and the specific [RedeemResult] tells the caller
   /// why, so the UI can show an accurate message instead of a generic
   /// failure.
@@ -183,7 +183,7 @@ class RedeemCodeService {
     if (!valid) {
       MixpanelService.instance.track(
         'redeem_code_attempt',
-        properties: {'app_name': 'SP', 'valid': false, 'reason': 'invalid'},
+        properties: {'app_name': 'ST', 'valid': false, 'reason': 'invalid'},
       );
       return RedeemResult.invalidCode;
     }
@@ -193,7 +193,7 @@ class RedeemCodeService {
     if (_isExpired(payload)) {
       MixpanelService.instance.track(
         'redeem_code_attempt',
-        properties: {'app_name': 'SP', 'valid': true, 'reason': 'expired'},
+        properties: {'app_name': 'ST', 'valid': true, 'reason': 'expired'},
       );
       return RedeemResult.expired;
     }
@@ -202,7 +202,7 @@ class RedeemCodeService {
       MixpanelService.instance.track(
         'redeem_code_attempt',
         properties: {
-          'app_name': 'SP',
+          'app_name': 'ST',
           'valid': true,
           'reason': 'already_redeemed',
         },
@@ -212,7 +212,7 @@ class RedeemCodeService {
 
     MixpanelService.instance.track(
       'redeem_code_attempt',
-      properties: {'app_name': 'SP', 'valid': true, 'reason': 'ok'},
+      properties: {'app_name': 'ST', 'valid': true, 'reason': 'ok'},
     );
 
     final state = AppState();
@@ -225,7 +225,7 @@ class RedeemCodeService {
       state.hasSeenIntro = false;
     }
     state.hasUnlockedApp = true;
-    state.purchaseType = PurchaseType.sevenDay;
+    state.purchaseType = PurchaseType.lifetime;
     state.purchaseDate = DateTime.now();
     state.isRedeemedAccess = true;
     await AppStatePersistence.save();
@@ -234,7 +234,7 @@ class RedeemCodeService {
 
     MixpanelService.instance.track(
       'redeem_code_success',
-      properties: {'app_name': 'SP'},
+      properties: {'app_name': 'ST'},
     );
     return RedeemResult.success;
   }

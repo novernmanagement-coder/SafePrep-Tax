@@ -4,7 +4,9 @@ import 'csv_loader.dart';
 enum TestType { diagnostic, finalExam }
 
 // ── Purchase type ─────────────────────────────────────────────
-enum PurchaseType { none, sevenDay, fourteenDay, lifetime }
+// Sept 2026 — sevenDay/fourteenDay removed. SafePrep Tax sells a
+// single lifetime unlock now; a value here is either none or lifetime.
+enum PurchaseType { none, lifetime }
 
 class TestResult {
   final DateTime timestamp;
@@ -95,20 +97,14 @@ class AppState {
   DateTime? purchaseDate;
 
   /// True when access came from a free instructor redeem code (see
-  /// RedeemCodeService) instead of a real $4.99 IAP purchase. Kept
+  /// RedeemCodeService) instead of a real $19.99 IAP purchase. Kept
   /// separate from purchaseType so revenue/Mixpanel purchase-funnel
-  /// reports aren't polluted by these free grants — access mechanics
-  /// (expiryDate/isExpired/daysRemaining below) are unaffected since
-  /// those only read purchaseType/purchaseDate.
+  /// reports aren't polluted by these free grants.
   bool isRedeemedAccess = false;
 
   bool get hasFullAccess => hasUnlockedApp;
   bool get hasUpgraded => hasUnlockedApp;
   bool get isLifetime => purchaseType == PurchaseType.lifetime;
-  bool get isTimeLimited =>
-      purchaseType == PurchaseType.sevenDay ||
-      purchaseType == PurchaseType.fourteenDay;
-  bool get canUpgradeToLifetime => isTimeLimited && hasUnlockedApp;
 
   // ── "Show me more" free taste (limited Rapid Fire) ─────────────
   // Capped at 2 total rounds, ever, to keep this a taste rather than
@@ -121,29 +117,11 @@ class AppState {
   bool get hasLimitedRapidFireRoundsLeft =>
       limitedRapidFireRoundsUsed < maxLimitedRapidFireRounds;
 
-  DateTime? get expiryDate {
-    if (!isTimeLimited || purchaseDate == null) return null;
-    // sevenDay's real length now lives in AppConstants.trialDurationDays
-    // (7 on iOS, 60 on an Android closed-testing build) so switching
-    // platforms never means hunting for a hardcoded number here.
-    final days = purchaseType == PurchaseType.sevenDay
-        ? AppConstants.trialDurationDays
-        : 14;
-    return purchaseDate!.add(Duration(days: days));
-  }
-
-  bool get isExpired {
-    final expiry = expiryDate;
-    if (expiry == null) return false;
-    return DateTime.now().isAfter(expiry);
-  }
-
-  int? get daysRemaining {
-    final expiry = expiryDate;
-    if (expiry == null) return null;
-    final remaining = expiry.difference(DateTime.now()).inDays;
-    return remaining < 0 ? 0 : remaining;
-  }
+  // expiryDate/isExpired/daysRemaining were removed (Sept 2026) along
+  // with the sevenDay/fourteenDay tiers — lifetime access never
+  // expires, so nothing in the app needs a calendar-based lock check
+  // anymore. Callers that used to gate on `!hasUnlockedApp ||
+  // isExpired` now just check `!hasUnlockedApp`.
   // ──────────────────────────────────────────────────────────
 
   // ── Trial tracking ──────────────────────────────────────────
@@ -152,10 +130,6 @@ class AppState {
 
   // ── FSME toggle ──────────────────────────────────────────────
   bool fsmeEnabled = true;
-  // ──────────────────────────────────────────────────────────
-
-  // ── Renewal explainer ─────────────────────────────────────────
-  bool hasSeenRenewalExplainer = false;
   // ──────────────────────────────────────────────────────────
 
   // ── Study landing modal ─────────────────────────────────────
@@ -169,8 +143,8 @@ class AppState {
   // ── Final Exam review prompt (FSME) ──────────────────────────
   // One-time, ever — fires once on a Final Exam pass at 85%+ (see
   // FinalExamGradePage / ReviewPromptDialog). Preserved across
-  // reset() same as hasSeenRenewalExplainer/hasSeenStudyLanding, so
-  // a data reset doesn't let the ask fire a second time.
+  // reset() same as hasSeenStudyLanding, so a data reset doesn't let
+  // the ask fire a second time.
   bool hasSeenReviewPrompt = false;
   // ──────────────────────────────────────────────────────────
 
@@ -301,7 +275,7 @@ class AppState {
   String readinessCoachMessage =
       'Take the diagnostic assessment to start building your readiness score.';
   String readinessCheerMessage =
-      'SafePrep was built for one purpose — to get you ready. Let\'s get started.';
+      'Tax Starter was built for one purpose — to get you ready. Let\'s get started.';
   double extraCreditPoints = 0.0;
   int? finalExamScore;
   // ──────────────────────────────────────────────────────────
@@ -338,51 +312,66 @@ class AppState {
   static const int masteryThreshold = 85;
   static const int minAnswersForRawScores = 30;
 
+  // Ordered to follow the Form 1040 entry sequence as closely as
+  // possible (per Gerry's call): Filing Basics/Dependents up top,
+  // then Income (which is where IRA/pension distributions are
+  // actually reported, so Retirement Accounts sits right after it),
+  // then Adjustments to Income (Schedule 1 Part II — the HSA
+  // deduction lives here too, so Health Savings Accounts follows),
+  // then Deductions, then Tax Credits & Calculations. Residency &
+  // Multi-State Filing isn't a 1040 line item at all (it's a
+  // separate state-filing concern), so it's placed last rather than
+  // forced into the federal-form sequence.
   static const List<String> allCategories = [
-    'Time & Temperature',
-    'Cross-Contamination',
-    'Food Preparation',
-    'Receiving & Storage',
-    'Personal Hygiene',
-    'Cleaning & Sanitizing',
-    'Facility & Equipment',
-    'Food Safety Management',
+    'Filing Basics & Dependents',
+    'Income',
+    'Retirement Accounts & Distributions',
+    'Adjustments to Income',
+    'Health Savings Accounts',
+    'Deductions',
+    'Tax Credits & Calculations',
+    'Residency & Multi-State Filing',
   ];
 
+  // PLACEHOLDER: ServSafe's baseline came from real industry pass-rate data.
+  // No equivalent external benchmark exists yet for Intuit Tax Level 1, so
+  // this is a flat placeholder (not a real "industry average") until Gerry
+  // decides on a real number or whether to show this comparison at all.
   static const Map<String, int> servSafeIndustryBaseline = {
-    'Time & Temperature': 52,
-    'Cross-Contamination': 58,
-    'Food Preparation': 55,
-    'Receiving & Storage': 64,
-    'Personal Hygiene': 71,
-    'Cleaning & Sanitizing': 49,
-    'Facility & Equipment': 68,
-    'Food Safety Management': 57,
-    'Pest Management': 72,
+    'Filing Basics & Dependents': 75,
+    'Income': 75,
+    'Retirement Accounts & Distributions': 75,
+    'Adjustments to Income': 75,
+    'Health Savings Accounts': 75,
+    'Deductions': 75,
+    'Tax Credits & Calculations': 75,
+    'Residency & Multi-State Filing': 75,
   };
 
+  // PLACEHOLDER: ServSafe's weights came from its published exam blueprint.
+  // Intuit Tax Level 1 has no public blueprint, so these are derived from
+  // this category's share of the 217-question bank instead — a reasonable
+  // proxy, not an official weighting. Revisit if Intuit publishes one.
   static const Map<String, double> categoryExamWeights = {
-    'Time & Temperature': 0.23,
-    'Cross-Contamination': 0.15,
-    'Receiving & Storage': 0.15,
-    'Personal Hygiene': 0.14,
-    'Cleaning & Sanitizing': 0.12,
-    'Food Preparation': 0.12,
-    'Food Safety Management': 0.05,
-    'Facility & Equipment': 0.02,
-    'Pest Management': 0.02,
+    'Filing Basics & Dependents': 0.18,
+    'Income': 0.16,
+    'Retirement Accounts & Distributions': 0.22,
+    'Adjustments to Income': 0.09,
+    'Health Savings Accounts': 0.05,
+    'Deductions': 0.06,
+    'Tax Credits & Calculations': 0.17,
+    'Residency & Multi-State Filing': 0.07,
   };
 
   static const Map<String, int> categoryMaxQuestions = {
-    'Time & Temperature': 9,
-    'Cross-Contamination': 6,
-    'Receiving & Storage': 6,
-    'Personal Hygiene': 5,
-    'Cleaning & Sanitizing': 5,
-    'Food Preparation': 5,
-    'Food Safety Management': 2,
-    'Facility & Equipment': 1,
-    'Pest Management': 1,
+    'Filing Basics & Dependents': 10,
+    'Income': 9,
+    'Retirement Accounts & Distributions': 12,
+    'Adjustments to Income': 6,
+    'Health Savings Accounts': 4,
+    'Deductions': 5,
+    'Tax Credits & Calculations': 9,
+    'Residency & Multi-State Filing': 5,
   };
 
   // Convenience getters
@@ -571,7 +560,6 @@ class AppState {
     final savedIsRedeemedAccess = isRedeemedAccess;
     final savedTrialStarted = trialStarted;
     final savedFsmeEnabled = fsmeEnabled;
-    final savedHasSeenRenewalExplainer = hasSeenRenewalExplainer;
     final savedHasSeenStudyLanding = hasSeenStudyLanding;
     final savedHasSeenReviewPrompt = hasSeenReviewPrompt;
     final savedLimitedRapidFireRoundsUsed = limitedRapidFireRoundsUsed;
@@ -587,7 +575,7 @@ class AppState {
     readinessCoachMessage =
         'Take the diagnostic assessment to start building your readiness score.';
     readinessCheerMessage =
-        'SafePrep was built for one purpose — to get you ready. Let\'s get started.';
+        'Tax Starter was built for one purpose — to get you ready. Let\'s get started.';
     extraCreditPoints = 0.0;
     finalExamScore = null;
     testHistory.clear();
@@ -619,7 +607,6 @@ class AppState {
     isRedeemedAccess = savedIsRedeemedAccess;
     trialStarted = savedTrialStarted;
     fsmeEnabled = savedFsmeEnabled;
-    hasSeenRenewalExplainer = savedHasSeenRenewalExplainer;
     hasSeenStudyLanding = savedHasSeenStudyLanding;
     hasSeenReviewPrompt = savedHasSeenReviewPrompt;
     limitedRapidFireRoundsUsed = savedLimitedRapidFireRoundsUsed;
@@ -635,7 +622,6 @@ class AppState {
     'isRedeemedAccess': isRedeemedAccess,
     'trialStarted': trialStarted,
     'fsmeEnabled': fsmeEnabled,
-    'hasSeenRenewalExplainer': hasSeenRenewalExplainer,
     'hasSeenStudyLanding': hasSeenStudyLanding,
     'hasSeenReviewPrompt': hasSeenReviewPrompt,
     'limitedRapidFireRoundsUsed': limitedRapidFireRoundsUsed,
@@ -696,7 +682,6 @@ class AppState {
     isRedeemedAccess = json['isRedeemedAccess'] ?? false;
     trialStarted = json['trialStarted'] ?? false;
     fsmeEnabled = json['fsmeEnabled'] ?? true;
-    hasSeenRenewalExplainer = json['hasSeenRenewalExplainer'] ?? false;
     hasSeenStudyLanding = json['hasSeenStudyLanding'] ?? false;
     hasSeenReviewPrompt = json['hasSeenReviewPrompt'] ?? false;
     limitedRapidFireRoundsUsed = json['limitedRapidFireRoundsUsed'] ?? 0;
@@ -712,7 +697,7 @@ class AppState {
         'Take the diagnostic assessment to start building your readiness score.';
     readinessCheerMessage =
         json['readinessCheerMessage'] ??
-        'SafePrep was built for one purpose — to get you ready. Let\'s get started.';
+        'Tax Starter was built for one purpose — to get you ready. Let\'s get started.';
     extraCreditPoints = (json['extraCreditPoints'] ?? 0.0).toDouble();
     finalExamScore = json['finalExamScore'];
     testHistory = (json['testHistory'] as List? ?? [])

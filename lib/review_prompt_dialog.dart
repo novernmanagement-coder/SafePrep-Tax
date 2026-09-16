@@ -84,7 +84,7 @@ class _ReviewPromptDialogState extends State<ReviewPromptDialog>
     MixpanelService.instance.track(
       'review_prompt_shown',
       properties: {
-        'app_name': 'SP',
+        'app_name': 'ST',
         'source': widget.source,
         if (widget.triggerValue != null) 'trigger_value': widget.triggerValue,
       },
@@ -233,7 +233,7 @@ class _ReviewPromptDialogState extends State<ReviewPromptDialog>
                   ),
                 ),
                 child: const Text(
-                  '\u2B50\u2B50\u2B50\u2B50\u2B50  Rate SafePrep',
+                  '\u2B50\u2B50\u2B50\u2B50\u2B50  Rate Tax Starter',
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
                 ),
               ),

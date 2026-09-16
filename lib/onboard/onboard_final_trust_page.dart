@@ -73,7 +73,7 @@ class _OnboardFinalTrustPageState extends State<OnboardFinalTrustPage> {
   static const Duration _beatHold = Duration(seconds: 4);
 
   static const int _yearsTeaching = 20; // TODO(gerry): confirm vs. 25
-  static const String _price = '\$4.99';
+  static const String _price = '\$19.99';
 
   // Real ally-bit sequence. Mood choices map onto the ACTUAL EyeMood
   // enum from fsme_eye.dart rather than inventing states that don't
@@ -133,7 +133,7 @@ class _OnboardFinalTrustPageState extends State<OnboardFinalTrustPage> {
     super.initState();
     MixpanelService.instance.track(
       'SpOn_FinalTrust_Viewed',
-      properties: {'app_name': 'SP'},
+      properties: {'app_name': 'ST'},
     );
     _playBeat(0);
   }
@@ -174,7 +174,7 @@ class _OnboardFinalTrustPageState extends State<OnboardFinalTrustPage> {
       } else {
         MixpanelService.instance.track(
           'SpOn_FinalTrust_FsmeDone',
-          properties: {'app_name': 'SP'},
+          properties: {'app_name': 'ST'},
         );
         setState(() => _unlocked = true);
       }
@@ -187,10 +187,10 @@ class _OnboardFinalTrustPageState extends State<OnboardFinalTrustPage> {
 
     MixpanelService.instance.track(
       'SpOn_FinalTrust_Purchase',
-      properties: {'app_name': 'SP', 'source': 'final_trust_page'},
+      properties: {'app_name': 'ST', 'source': 'final_trust_page'},
     );
 
-    final result = await IAPService.instance.buySevenDay();
+    final result = await IAPService.instance.buyUnlockApp();
 
     if (!mounted) return;
     setState(() => _purchasing = false);
@@ -225,7 +225,7 @@ class _OnboardFinalTrustPageState extends State<OnboardFinalTrustPage> {
 
     MixpanelService.instance.track(
       'SpOn_FinalTrust_Restore',
-      properties: {'app_name': 'SP'},
+      properties: {'app_name': 'ST'},
     );
 
     final unlocked = await IAPService.instance.restoreAndWait();
@@ -304,7 +304,7 @@ class _OnboardFinalTrustPageState extends State<OnboardFinalTrustPage> {
                           _EntryData(
                             'Traps',
                             "You won't find this anywhere else: we "
-                                "identify and show you ServSafe's actual "
+                                "identify and show you Intuit's actual "
                                 '"trap" answer patterns.',
                           ),
                           _EntryData(
@@ -324,12 +324,12 @@ class _OnboardFinalTrustPageState extends State<OnboardFinalTrustPage> {
                         entries: const [
                           _EntryData(
                             'No Wi-Fi Needed',
-                            "Once it's downloaded, it's yours — a "
-                                'walk-in cooler, a break room, wherever.',
+                            "Once it's downloaded, it's yours — your "
+                                'desk, between clients, wherever.',
                           ),
                           _EntryData(
                             '60-Second Trainers',
-                            'Bite-sized drills built to keep ServSafe '
+                            'Bite-sized drills built to keep the material '
                                 'top of mind while you wait for test day.',
                           ),
                           _EntryData(
@@ -528,7 +528,7 @@ class _OnboardFinalTrustPageState extends State<OnboardFinalTrustPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            "WHEN SAFEPREP SAYS YOU'RE READY...",
+            "WHEN TAX STARTER SAYS YOU'RE READY...",
             style: TextStyle(
               fontSize: 15.5,
               fontWeight: FontWeight.w700,
@@ -575,7 +575,7 @@ class _OnboardFinalTrustPageState extends State<OnboardFinalTrustPage> {
                 ),
               )
             : Text(
-                'Unlock SafePrep — $_price',
+                'Unlock Tax Starter — $_price',
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,

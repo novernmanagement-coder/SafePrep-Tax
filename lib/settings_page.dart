@@ -7,7 +7,6 @@ import 'cluster_info_page.dart';
 import 'fsme_eye.dart';
 import 'home_page.dart';
 import 'splash_page.dart';
-import 'tips_page.dart';
 import 'safe_prep_nav_bar.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -403,7 +402,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     child: Row(
                       children: [
                         Text(
-                          'Safe',
+                          'Tax',
                           style: TextStyle(
                             fontSize: AppFonts.header,
                             fontWeight: FontWeight.w600,
@@ -414,7 +413,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         Image.asset('Assets/splash.png', width: 36, height: 36),
                         const SizedBox(width: 6),
                         Text(
-                          'Prep™',
+                          'Starter',
                           style: TextStyle(
                             fontSize: AppFonts.header,
                             fontWeight: FontWeight.w600,
@@ -437,14 +436,14 @@ class _SettingsPageState extends State<SettingsPage> {
                     _buildFsmeCard(),
 
                     _buildSectionCard(
-                      title: 'About SafePrep™',
+                      title: 'About Tax Starter',
                       children: [
                         _buildInfoRow('Version', '1.3.7'),
                         _buildInfoRow('Build', 'June 2026'),
                         _buildInfoRow('Platform', 'Flutter'),
                         const SizedBox(height: 4),
                         Text(
-                          'SafePrep™ is a psychologically adaptive learning system for ServSafe® Manager exam preparation.',
+                          'Tax Starter is a psychologically adaptive learning system for Intuit® tax certification exam preparation.',
                           style: TextStyle(
                             fontSize: AppFonts.caption,
                             color: AppColors.bodyText,
@@ -546,40 +545,6 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
 
                     _buildSectionCard(
-                      title: 'Tips and Information',
-                      children: [
-                        Text(
-                          'Exam-day tips, study strategies, and ServSafe® insights.',
-                          style: TextStyle(
-                            fontSize: AppFonts.caption,
-                            color: AppColors.bodyText,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 44,
-                          child: OutlinedButton(
-                            onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const TipsPage(),
-                              ),
-                            ),
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: AppColors.primaryButton,
-                              side: BorderSide(color: AppColors.primaryButton),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            child: const Text('Open Tips and Information'),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    _buildSectionCard(
                       title: 'Contact & Support',
                       children: [
                         Text(
@@ -618,11 +583,11 @@ class _SettingsPageState extends State<SettingsPage> {
                       children: [
                         _buildLegalSection(
                           'Trademark Notice',
-                          'ServSafe® is a registered trademark of the National Restaurant Association Educational Foundation. SafePrep™ is not affiliated with, endorsed by, or officially connected to the National Restaurant Association or ServSafe®. All references to ServSafe® are for descriptive purposes only.',
+                          'Intuit® is a registered trademark of Intuit Inc. Tax Starter is not affiliated with, endorsed by, or officially connected to Intuit Inc. All references to Intuit® are for descriptive purposes only.',
                         ),
                         _buildLegalSection(
                           'Disclaimer',
-                          'SafePrep™ is an independent educational resource and is not affiliated with ServSafe® or the National Restaurant Association. For our guarantee policy, see below.',
+                          'Tax Starter is an independent educational resource and is not affiliated with Intuit Inc. For our guarantee policy, see below.',
                         ),
                         _buildLegalSection(
                           'Terms of Use',

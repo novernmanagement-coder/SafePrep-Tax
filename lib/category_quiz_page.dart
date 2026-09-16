@@ -428,7 +428,7 @@ class _CategoryQuizPageState extends State<CategoryQuizPage> {
                                   child: Row(
                                     children: [
                                       Text(
-                                        'Safe',
+                                        'Tax',
                                         style: TextStyle(
                                           fontSize: AppFonts.header,
                                           fontWeight: FontWeight.w600,
@@ -443,7 +443,7 @@ class _CategoryQuizPageState extends State<CategoryQuizPage> {
                                       ),
                                       const SizedBox(width: 6),
                                       Text(
-                                        'Prep™',
+                                        'Starter',
                                         style: TextStyle(
                                           fontSize: AppFonts.header,
                                           fontWeight: FontWeight.w600,

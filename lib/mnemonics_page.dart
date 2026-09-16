@@ -176,7 +176,7 @@ class _MnemonicsPageState extends State<MnemonicsPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                'Safe',
+                'Tax',
                 style: TextStyle(
                   fontSize: AppFonts.header,
                   fontWeight: FontWeight.w600,
@@ -200,7 +200,7 @@ class _MnemonicsPageState extends State<MnemonicsPage> {
               FsmeEyePair(key: _eyeKey, mood: _eyeMood, size: 22, spacing: 6),
               const SizedBox(width: 8),
               const Text(
-                'Prep™',
+                'Starter',
                 style: TextStyle(
                   fontSize: AppFonts.header,
                   fontWeight: FontWeight.w600,

@@ -31,14 +31,14 @@ class _SixtySecondRefreshPageState extends State<SixtySecondRefreshPage> {
   static const int categoryBursts = 5;
 
   static const Map<String, Color> categoryColors = {
-    'Time & Temperature': Color(0xFFC0392B),
-    'Cross-Contamination': Color(0xFFE67E22),
-    'Food Preparation': Color(0xFF27AE60),
-    'Receiving & Storage': Color(0xFF2980B9),
-    'Personal Hygiene': Color(0xFF8E44AD),
-    'Cleaning & Sanitizing': Color(0xFF16A085),
-    'Facility & Equipment': Color(0xFF34495E),
-    'Food Safety Management': Color(0xFFB7950B),
+    'Filing Basics & Dependents': Color(0xFFC0392B),
+    'Income': Color(0xFFE67E22),
+    'Retirement Accounts & Distributions': Color(0xFF8E44AD),
+    'Adjustments to Income': Color(0xFF27AE60),
+    'Health Savings Accounts': Color(0xFF16A085),
+    'Deductions': Color(0xFF2980B9),
+    'Tax Credits & Calculations': Color(0xFF34495E),
+    'Residency & Multi-State Filing': Color(0xFFB7950B),
   };
 
   bool _isStopped = false;
@@ -354,7 +354,7 @@ class _SixtySecondRefreshPageState extends State<SixtySecondRefreshPage> {
                         child: Row(
                           children: [
                             Text(
-                              'Safe',
+                              'Tax',
                               style: TextStyle(
                                 fontSize: AppFonts.header,
                                 fontWeight: FontWeight.w600,
@@ -369,7 +369,7 @@ class _SixtySecondRefreshPageState extends State<SixtySecondRefreshPage> {
                             ),
                             const SizedBox(width: 6),
                             Text(
-                              'Prep™',
+                              'Starter',
                               style: TextStyle(
                                 fontSize: AppFonts.header,
                                 fontWeight: FontWeight.w600,

@@ -10,7 +10,7 @@ import 'fsme_eye.dart';
 import 'onboard/onboard_final_trust_page.dart';
 import 'fsme_post_purchase_landing.dart';
 
-/// Limited Rapid Fire — the $4.99 decline path's free taste.
+/// Limited Rapid Fire — the $19.99 decline path's free taste.
 ///
 /// This is a SELLING PAGE that happens to be a working tool. It runs a
 /// capped version of Rapid Fire (3 weakest categories × 5 questions each
@@ -81,9 +81,12 @@ class _RapidFireLimitedPageState extends State<RapidFireLimitedPage>
   /// Short labels for the category-clear pill row — the real category
   /// names are too long to fit three across.
   static const Map<String, String> _shortLabels = {
-    'Time & Temperature': 'Time & Temp',
-    'Receiving & Storage': 'Receiving',
-    'Cross-Contamination': 'Cross-Contam',
+    'Filing Basics & Dependents': 'Filing Basics',
+    'Adjustments to Income': 'Adjustments',
+    'Retirement Accounts & Distributions': 'Retirement',
+    'Health Savings Accounts': 'HSA',
+    'Tax Credits & Calculations': 'Tax Credits',
+    'Residency & Multi-State Filing': 'Multi-State',
   };
   static const int _slideInMs = 320;
   static const int _slideOutMs = 260;
@@ -91,14 +94,14 @@ class _RapidFireLimitedPageState extends State<RapidFireLimitedPage>
   /// Category color map — matched to the real RapidFirePage so the
   /// speech bubble reads the same per category.
   static const Map<String, Color> _categoryColors = {
-    'Time & Temperature': Color(0xFFC0392B),
-    'Cross-Contamination': Color(0xFFE67E22),
-    'Food Preparation': Color(0xFF27AE60),
-    'Receiving & Storage': Color(0xFF2980B9),
-    'Personal Hygiene': Color(0xFF8E44AD),
-    'Cleaning & Sanitizing': Color(0xFF16A085),
-    'Facility & Equipment': Color(0xFF34495E),
-    'Food Safety Management': Color(0xFFB7950B),
+    'Filing Basics & Dependents': Color(0xFFC0392B),
+    'Income': Color(0xFFE67E22),
+    'Adjustments to Income': Color(0xFF27AE60),
+    'Deductions': Color(0xFF2980B9),
+    'Retirement Accounts & Distributions': Color(0xFF8E44AD),
+    'Health Savings Accounts': Color(0xFF16A085),
+    'Tax Credits & Calculations': Color(0xFF34495E),
+    'Residency & Multi-State Filing': Color(0xFFB7950B),
   };
 
   /// FSME's free Find a Proctor service — offered on the completion
@@ -112,17 +115,14 @@ class _RapidFireLimitedPageState extends State<RapidFireLimitedPage>
   /// to show how many more are available. Approximate is fine; these
   /// come from the bank distribution noted in the diagnostic spec.
   static const Map<String, int> _bankCounts = {
-    'Time & Temperature': 70,
-    'Cross-Contamination': 42,
-    'Cleaning & Sanitizing': 38,
-    'Personal Hygiene': 36,
-    'Food Preparation': 34,
-    'Receiving & Storage': 44,
-    'Facility & Equipment': 22,
-    'Food Safety Management': 20,
-    'Food Safety Foundations': 12,
-    'Pathogens': 12,
-    'Pest Management': 6,
+    'Filing Basics & Dependents': 39,
+    'Income': 36,
+    'Adjustments to Income': 19,
+    'Deductions': 13,
+    'Retirement Accounts & Distributions': 47,
+    'Health Savings Accounts': 10,
+    'Tax Credits & Calculations': 37,
+    'Residency & Multi-State Filing': 16,
   };
 
   List<String> _categories = [];
@@ -271,7 +271,7 @@ class _RapidFireLimitedPageState extends State<RapidFireLimitedPage>
   /// - The opening line and the closing hand-off are addressed to the
   ///   user — default `user`, type out.
   static const List<_FsmeLine> _fsmeScript = [
-    _FsmeLine('Okay. You got a taste of the SafePrep experience.'),
+    _FsmeLine('Okay. You got a taste of the Tax Starter experience.'),
     _FsmeLine(
       'Running assessment script ..........',
       audience: _FsmeAudience.processing,
@@ -310,9 +310,9 @@ class _RapidFireLimitedPageState extends State<RapidFireLimitedPage>
   /// weighted breakdown) — fixed for everyone now that there's no
   /// diagnostic to personalize against.
   static const List<String> _topCategories = [
-    'Time & Temperature',
-    'Receiving & Storage',
-    'Cross-Contamination',
+    'Retirement Accounts & Distributions',
+    'Filing Basics & Dependents',
+    'Tax Credits & Calculations',
   ];
 
   Color get _currentColor {
@@ -327,7 +327,7 @@ class _RapidFireLimitedPageState extends State<RapidFireLimitedPage>
     super.initState();
     MixpanelService.instance.track(
       'SpOn_RefLtd_Viewed',
-      properties: {'app_name': 'SP'},
+      properties: {'app_name': 'ST'},
     );
     _loadDecks();
   }
@@ -853,7 +853,7 @@ class _RapidFireLimitedPageState extends State<RapidFireLimitedPage>
   Future<void> _launchProctor() async {
     MixpanelService.instance.track(
       'SpOn_RefLtd_ProctorFinder',
-      properties: {'app_name': 'SP'},
+      properties: {'app_name': 'ST'},
     );
     final uri = Uri.parse(_fsmeProctorUrl);
     if (await canLaunchUrl(uri)) {
@@ -868,7 +868,7 @@ class _RapidFireLimitedPageState extends State<RapidFireLimitedPage>
   void _seeMore() {
     MixpanelService.instance.track(
       'SpOn_RefLtd_SeeMore',
-      properties: {'app_name': 'SP'},
+      properties: {'app_name': 'ST'},
     );
     Navigator.push(
       context,
@@ -1034,7 +1034,7 @@ class _RapidFireLimitedPageState extends State<RapidFireLimitedPage>
     MixpanelService.instance.track(
       'SpOn_RefLtd_Answered',
       properties: {
-        'app_name': 'SP',
+        'app_name': 'ST',
         'category': cat,
         'correct': isCorrect,
         'question_in_category': _categoryProgress[cat],
@@ -1077,7 +1077,7 @@ class _RapidFireLimitedPageState extends State<RapidFireLimitedPage>
   void _continueToNextCategory() {
     MixpanelService.instance.track(
       'SpOn_RefLtd_CatLimit',
-      properties: {'app_name': 'SP', 'category': _categories[_currentCatIndex]},
+      properties: {'app_name': 'ST', 'category': _categories[_currentCatIndex]},
     );
 
     setState(() {
@@ -1087,10 +1087,10 @@ class _RapidFireLimitedPageState extends State<RapidFireLimitedPage>
     _loadQuestion();
   }
 
-  /// Shared $4.99 unlock. Triggers the real IAP; only a VERIFIED success
-  /// opens the app — routed to FsmePostPurchaseLanding, same destination
-  /// as every other purchase entry point (paywall, trust page). Cancel or
-  /// failure returns to the paywall.
+  /// Shared $19.99 lifetime unlock. Triggers the real IAP; only a
+  /// VERIFIED success opens the app — routed to FsmePostPurchaseLanding,
+  /// same destination as every other purchase entry point (paywall,
+  /// trust page). Cancel or failure returns to the paywall.
   bool _purchasing = false;
 
   Future<void> _unlock(String source) async {
@@ -1100,14 +1100,14 @@ class _RapidFireLimitedPageState extends State<RapidFireLimitedPage>
     MixpanelService.instance.track(
       'SpOn_Purchase',
       properties: {
-        'app_name': 'SP',
+        'app_name': 'ST',
         'tier': 'sp',
         'source': source,
-        'price': '\$4.99',
+        'price': '\$19.99',
       },
     );
 
-    var result = await IAPService.instance.buySevenDay();
+    var result = await IAPService.instance.buyUnlockApp();
     if (!mounted) return;
 
     // See IAPService.waitForLateUnlock — a timeout doesn't necessarily
@@ -1530,7 +1530,7 @@ class _RapidFireLimitedPageState extends State<RapidFireLimitedPage>
           const SizedBox(height: 10),
 
           Text(
-            'There are $remaining more — and ServSafe will hammer '
+            'There are $remaining more — and Intuit will hammer '
             'home this category on the test.',
             textAlign: TextAlign.center,
             style: TextStyle(
@@ -1565,7 +1565,7 @@ class _RapidFireLimitedPageState extends State<RapidFireLimitedPage>
                 ),
               ),
               child: const Text(
-                'Unlock SafePrep  —  \$4.99',
+                'Unlock Tax Starter  —  \$19.99',
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
               ),
             ),
@@ -1864,7 +1864,7 @@ class _RapidFireLimitedPageState extends State<RapidFireLimitedPage>
                 ),
               ),
               child: const Text(
-                'Unlock SafePrep  —  \$4.99',
+                'Unlock Tax Starter  —  \$19.99',
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
               ),
             ),

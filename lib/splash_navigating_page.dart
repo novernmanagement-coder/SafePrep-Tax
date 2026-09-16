@@ -39,52 +39,6 @@ class SplashNavigatingPage extends StatelessWidget {
     AppState().purchaseType = PurchaseType.lifetime;
   }
 
-  // TEMP DEBUG (Aug 2026) — the Renew/Lifetime nav button only shows
-  // once daysRemaining <= 2 on a real 7-day purchase (see
-  // safe_prep_nav_bar.dart's showRenew), which normally means waiting
-  // 5 real days after a real purchase before that flow is reachable
-  // at all. Backdating purchaseDate here lets the REAL purchase code
-  // path (Play Billing, kProductLifetimeOfferAndroid, etc. — not the
-  // force-unlock stub below, which is fake and kDebugMode-only) be
-  // tested on a release build without the wait. Requires an existing
-  // real purchase already in progress (hasUnlockedApp + a time-limited
-  // purchaseType) — does nothing to a never-purchased or lifetime
-  // account. NOT kDebugMode-gated, same reasoning as the rest of this
-  // page: it's only reachable via the access-code prompt already.
-  // Remove this button once the $2.99 lifetime offer has been
-  // confirmed working.
-  Future<void> _fastForwardPurchaseForDebug(BuildContext context) async {
-    final state = AppState();
-    if (!state.hasUnlockedApp ||
-        !state.isTimeLimited ||
-        state.purchaseDate == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'No active 7-day/14-day purchase to fast-forward — buy the '
-            '\$4.99 seven-day first.',
-          ),
-        ),
-      );
-      return;
-    }
-    state.purchaseDate = state.purchaseDate!.subtract(
-      const Duration(days: 5),
-    );
-    await AppStatePersistence.save();
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Purchase backdated 5 days — daysRemaining is now '
-          '${state.daysRemaining}. Renew/Lifetime button should show on '
-          'Home.',
-        ),
-      ),
-    );
-    _go(context, const HomePage());
-  }
-
   // TEMP DEBUG (Aug 2026) — AppState.reset() deliberately preserves
   // limitedRapidFireRoundsUsed (see app_state.dart) so a normal
   // "reset progress" action can't be used to farm free show-me-more
@@ -182,28 +136,6 @@ class SplashNavigatingPage extends StatelessWidget {
                         ),
                       ),
                       child: const Text('Dashboard (force-unlocked)'),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: SizedBox(
-                    height: AppSizes.primaryButtonHeight,
-                    child: ElevatedButton(
-                      onPressed: () => _fastForwardPurchaseForDebug(context),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF13130F),
-                        foregroundColor: const Color(0xFFF0EDE8),
-                        side: const BorderSide(color: Color(0xFFD4AF37)),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                            AppSizes.buttonCornerRadius,
-                          ),
-                        ),
-                      ),
-                      child: const Text(
-                        'Fast-forward purchase 5 days (test Renew/Lifetime)',
-                      ),
                     ),
                   ),
                 ),

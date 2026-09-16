@@ -1,11 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'app_state.dart';
 import 'app_state_persistence.dart';
 import 'csv_loader.dart';
 import 'iap_service.dart';
 import 'splash_page.dart';
-import 'trial_timer_service.dart';
 import 'mixpanel_service.dart';
 
 void main() async {
@@ -16,19 +14,6 @@ void main() async {
 
   // Load persisted user state first
   await AppStatePersistence.load();
-
-  // Init trial timer for non-unlocked users. Guarded like every other
-  // startup call above/below — this reads from the iOS Keychain (via
-  // flutter_secure_storage), and a Keychain access failure here would
-  // otherwise be an unguarded way to crash on launch instead of just
-  // losing the trial-timer feature for that session.
-  if (!AppState().hasUnlockedApp) {
-    try {
-      await TrialTimerService.instance.init();
-    } catch (e) {
-      debugPrint('TrialTimerService init failed: $e');
-    }
-  }
 
   // Sync CSVs from GitHub in the background.
   // Won't block launch — if offline, bundled/cached files are used.
@@ -60,7 +45,7 @@ class SafePrepApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'SafePrep Tax',
+      title: 'Tax Starter',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF0077C8)),

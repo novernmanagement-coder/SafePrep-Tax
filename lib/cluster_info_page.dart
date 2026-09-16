@@ -162,7 +162,7 @@ class ClusterInfoPage extends StatelessWidget {
       blocks: [
         _Paragraph(
           'The Final Exam is a full-length simulation built to '
-          'mirror the real ServSafe exam — same question count, same '
+          'mirror the real Intuit exam — same question count, same '
           'category distribution.',
         ),
         _Paragraph(
@@ -288,7 +288,7 @@ class ClusterInfoPage extends StatelessWidget {
                           'cluster': cluster.name,
                           'source': _mixpanelSource,
                           'method': 'back_arrow',
-                          'app_name': 'SP',
+                          'app_name': 'ST',
                         },
                       );
                       Navigator.of(context).pop();
@@ -381,7 +381,7 @@ class ClusterInfoPage extends StatelessWidget {
                         'cluster': cluster.name,
                         'source': _mixpanelSource,
                         'method': 'button',
-                        'app_name': 'SP',
+                        'app_name': 'ST',
                       },
                     );
                     Navigator.of(context).pop();

@@ -214,12 +214,12 @@ class _SplashPageState extends State<SplashPage> {
     // Fine-tuning cohort (passed final exam or 85%+ readiness) skips
     // Dashboard and lands straight on Peace of Mind (the 60-Second
     // Trainers hub) instead — everyone else's routing is unchanged.
-    if (state.hasUnlockedApp && !state.isExpired) {
+    if (state.hasUnlockedApp) {
       _navigated = true;
       MixpanelService.instance.track(
         'SpOn_Splash_Route',
         properties: {
-          'app_name': 'SP',
+          'app_name': 'ST',
           'path': _fineTuning ? 'purchased_fine_tuning' : 'purchased',
         },
       );
@@ -233,12 +233,6 @@ class _SplashPageState extends State<SplashPage> {
       return;
     }
 
-    if (state.hasUnlockedApp && state.isExpired) {
-      state.hasUnlockedApp = false;
-      AppStatePersistence.save();
-    }
-    if (!mounted || _navigated) return;
-
     // ── Path 2: everyone else → funnel, every time ────────────────────
     // No run cap. The run counter (kOnboardingRunsKey) still increments
     // in OnboardPaywall.initState purely as an analytics signal — it no
@@ -249,7 +243,7 @@ class _SplashPageState extends State<SplashPage> {
     final runs = prefs.getInt(kOnboardingRunsKey) ?? 0;
     MixpanelService.instance.track(
       'SpOn_Splash_Route',
-      properties: {'app_name': 'SP', 'path': 'free_attempt', 'runs': runs},
+      properties: {'app_name': 'ST', 'path': 'free_attempt', 'runs': runs},
     );
     if (!mounted) return;
     Navigator.pushReplacement(
@@ -287,7 +281,7 @@ class _SplashPageState extends State<SplashPage> {
       OnboardingAnswers.instance.reset();
       MixpanelService.instance.track(
         'SpOn_Splash_Route',
-        properties: {'app_name': 'SP', 'path': 'debug_nav_longpress'},
+        properties: {'app_name': 'ST', 'path': 'debug_nav_longpress'},
       );
       Navigator.pushReplacement(
         context,
@@ -367,7 +361,7 @@ class _SplashPageState extends State<SplashPage> {
               const SizedBox(height: 24),
 
               const Text(
-                '100% Guaranteed.',
+                'Exam-Ready.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Color(0xFFB8860B),
@@ -378,7 +372,7 @@ class _SplashPageState extends State<SplashPage> {
               ),
               const SizedBox(height: 6),
               Text(
-                'Pass the ServSafe® exam or your money back.\nWe will prepare you for the ServSafe exam.',
+                'We will prepare you for the Intuit Tax exam.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: AppColors.strongText,

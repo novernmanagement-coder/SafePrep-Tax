@@ -154,7 +154,7 @@ class _FsmePostPurchaseLandingState extends State<FsmePostPurchaseLanding>
       properties: {
         'content_preference':
             OnboardingAnswers.instance.contentPreference?.tag ?? 'unknown',
-        'app_name': 'SP',
+        'app_name': 'ST',
       },
     );
     Navigator.pushAndRemoveUntil(
@@ -199,7 +199,7 @@ class _FsmePostPurchaseLandingState extends State<FsmePostPurchaseLanding>
           "reinforce information, you can actually learn everything "
           "you need to without even realizing it. Best of all, "
           "anytime, day or night, you pop in and within 60 seconds "
-          "or less you just got your brain back in ServSafe test "
+          "or less you just got your brain back in Intuit test "
           "mode.",
     ),
     _ClusterStop(
@@ -218,7 +218,7 @@ class _FsmePostPurchaseLandingState extends State<FsmePostPurchaseLanding>
       icon: Icons.workspace_premium_outlined,
       line:
           "The Final Exam: your Ahab \u2014 this is the whale. 90 "
-          "questions, scored exactly like the real ServSafe exam. "
+          "questions, scored exactly like the real Intuit exam. "
           "And here's the best part: whatever your results, I use "
           "them to hone your curriculum.",
     ),
@@ -254,7 +254,7 @@ class _FsmePostPurchaseLandingState extends State<FsmePostPurchaseLanding>
     MixpanelService.instance.track(
       'post_purchase_landing_viewed',
       properties: {
-        'app_name': 'SP',
+        'app_name': 'ST',
         'content_preference':
             OnboardingAnswers.instance.contentPreference?.tag ?? 'unknown',
       },
@@ -384,7 +384,7 @@ class _FsmePostPurchaseLandingState extends State<FsmePostPurchaseLanding>
       properties: {
         'cluster': cluster.name,
         'source': 'post_purchase_landing',
-        'app_name': 'SP',
+        'app_name': 'ST',
       },
     );
     Navigator.push(
@@ -401,7 +401,7 @@ class _FsmePostPurchaseLandingState extends State<FsmePostPurchaseLanding>
   void _continue() {
     MixpanelService.instance.track(
       'post_purchase_landing_continue',
-      properties: {'app_name': 'SP'},
+      properties: {'app_name': 'ST'},
     );
     Navigator.pushAndRemoveUntil(
       context,
@@ -413,7 +413,7 @@ class _FsmePostPurchaseLandingState extends State<FsmePostPurchaseLanding>
   void _skipTour() {
     MixpanelService.instance.track(
       'post_purchase_landing_skipped',
-      properties: {'stops_seen': _revealedStops.length, 'app_name': 'SP'},
+      properties: {'stops_seen': _revealedStops.length, 'app_name': 'ST'},
     );
     Navigator.pushAndRemoveUntil(
       context,

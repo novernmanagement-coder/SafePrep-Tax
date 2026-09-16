@@ -1,4 +1,3 @@
-import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 
 class AppColors {
@@ -122,7 +121,7 @@ class AppFonts {
 
 class AppStrings {
   static const String footerLine1 = 'Designed for you ~ in every detail.';
-  static const String footerLine2 = 'SafePrep™: ServSafe® & NRA® trademarks.';
+  static const String footerLine2 = 'Tax Starter: Intuit® is a trademark of Intuit Inc.';
   static const String footerLine3 = '⋆⋆⋆⋆⋆';
 
   static const String navHome = 'Home';
@@ -139,22 +138,9 @@ class AppStrings {
 }
 
 class AppConstants {
-  // ── Trial / Access ─────────────────────────────────────────
-  // The real, live number for paying customers is 7 days (matches
-  // the $4.99 initial-purchase / $2.99-per-week-renewal model). For
-  // an Android closed-testing build, testers need to stay opted in
-  // well past 7 days without hitting the paywall, so this resolves
-  // automatically by platform instead of being a value someone has
-  // to remember to flip back before shipping a real iOS build.
-  //
-  // To change what testers get during closed testing, edit the
-  // Android-side number below — nothing else needs to change.
-  static final int trialDurationDays = Platform.isAndroid ? 60 : 7;
-
   // Exam Engine
-  static const int totalQuestions = 91;
-  static const int diagnosticQuestions = 20; // trial
-  static const int diagnosticQuestionsFull = 31; // paid
+  static const int diagnosticQuestionsFull = 90; // Assessment (diagnostic) — no trial-length version
+  static const int finalExamQuestions = 217; // Final Exam — matches the full question bank, no repeats
   static const int passingScorePercent = 85;
   static const int expertThreshold = 95;
   static const int upgradePromptThreshold = 60;

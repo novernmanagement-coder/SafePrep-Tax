@@ -71,11 +71,11 @@ class _OnboardExamDateState extends State<OnboardExamDate>
   static String _bandTag(ExamWindow w) {
     switch (w) {
       case ExamWindow.oneToThree:
-        return '1-2';
+        return '1wk';
       case ExamWindow.fourToTen:
-        return '3-4';
+        return '2wk';
       case ExamWindow.tenPlus:
-        return '5+';
+        return '3wk+';
       case ExamWindow.notScheduled:
         return 'not_scheduled';
     }
@@ -93,7 +93,7 @@ class _OnboardExamDateState extends State<OnboardExamDate>
     MixpanelService.instance.track(
       'SpOn_Date_Selected',
       properties: {
-        'app_name': 'SP',
+        'app_name': 'ST',
         'exam_window': window.tag,
         'band': _bandTag(window),
       },
@@ -273,9 +273,9 @@ class _OnboardExamDateState extends State<OnboardExamDate>
 
               const SizedBox(height: 26),
 
-              _option(ExamWindow.oneToThree, '1\u20132 days'),
-              _option(ExamWindow.fourToTen, '3\u20134 days'),
-              _option(ExamWindow.tenPlus, '5+ days'),
+              _option(ExamWindow.oneToThree, '1 week'),
+              _option(ExamWindow.fourToTen, '2 weeks'),
+              _option(ExamWindow.tenPlus, '3+ weeks'),
 
               if (_selected != null) ...[
                 const SizedBox(height: 10),

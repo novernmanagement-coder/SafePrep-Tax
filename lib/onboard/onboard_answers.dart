@@ -52,11 +52,11 @@ enum ExamWindow {
   String get tag {
     switch (this) {
       case ExamWindow.oneToThree:
-        return '1-3_days';
+        return '1_week';
       case ExamWindow.fourToTen:
-        return '4-10_days';
+        return '2_weeks';
       case ExamWindow.tenPlus:
-        return '10+_days';
+        return '3+_weeks';
       case ExamWindow.notScheduled:
         return 'not_scheduled';
     }
@@ -64,14 +64,16 @@ enum ExamWindow {
 
   /// Rough day count for the "X minutes a day" math on the results
   /// screen. Null when nothing is booked — no deadline, no pacing.
+  /// Bands are now week-based (per Gerry's call — Tax content is
+  /// heavier than ServSafe's, so a day-based timeline didn't fit).
   int? get daysToExam {
     switch (this) {
       case ExamWindow.oneToThree:
-        return 2;
-      case ExamWindow.fourToTen:
         return 7;
-      case ExamWindow.tenPlus:
+      case ExamWindow.fourToTen:
         return 14;
+      case ExamWindow.tenPlus:
+        return 21;
       case ExamWindow.notScheduled:
         return null;
     }
@@ -83,11 +85,11 @@ enum ExamWindow {
   String get label {
     switch (this) {
       case ExamWindow.oneToThree:
-        return '1–2 days';
+        return '1 week';
       case ExamWindow.fourToTen:
-        return '3–4 days';
+        return '2 weeks';
       case ExamWindow.tenPlus:
-        return '5+ days';
+        return '3+ weeks';
       case ExamWindow.notScheduled:
         return 'Not scheduled yet';
     }
