@@ -1254,12 +1254,25 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                             width: double.infinity,
                             height: AppSizes.primaryButtonHeight,
                             child: ElevatedButton(
-                              onPressed: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const Tax1040BasicsPage(),
-                                ),
-                              ),
+                              // Sept 2026: temporarily taken out of
+                              // navigation everywhere (mobile and web) —
+                              // Gerry's call, not tied to the web-compile
+                              // work above. Still tappable (not disabled)
+                              // so it doesn't look broken/greyed-out — a
+                              // tap just shows a "coming soon" message
+                              // instead of opening Tax1040BasicsPage.
+                              // Restore the real navigation below once
+                              // this is ready to ship again.
+                              onPressed: () {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                      '1040 Basics is coming soon!',
+                                    ),
+                                    duration: Duration(seconds: 2),
+                                  ),
+                                );
+                              },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primaryButton,
                                 foregroundColor: Colors.white,
@@ -1270,11 +1283,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                 ),
                               ),
                               child: const Text(
-                                '🧾 1040 Basics',
+                                '🧾 1040 Basics — Coming Soon',
                                 style: TextStyle(
                                   fontSize: AppFonts.button,
                                   fontWeight: FontWeight.w700,
                                 ),
+                                textAlign: TextAlign.center,
                               ),
                             ),
                           ),

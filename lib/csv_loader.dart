@@ -1,10 +1,16 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
 import 'app_state.dart';
+// dart:io and path_provider don't exist/work on web — the actual
+// File/Directory operations live behind this conditional import
+// instead, so this file (and everything that imports it, including
+// main.dart's transitive graph) can still compile for `flutter build
+// web`. See csv_cache_io.dart (real, non-web platforms) and
+// csv_cache_stub.dart (web: no local cache, always falls through to
+// the bundled asset below).
+import 'csv_cache_stub.dart' if (dart.library.io) 'csv_cache_io.dart';
 
 // ─────────────────────────────────────────────────────────────────
 // REMOTE CSV CONFIG
@@ -65,15 +71,6 @@ const List<String> _remoteFiles = [
 //   SafePrep Tax        → 'SafePrepTax'
 const String _contentSubfolder = 'SafePrepTax';
 
-Future<Directory> _contentDir() async {
-  final docs = await getApplicationDocumentsDirectory();
-  final dir = Directory('${docs.path}/$_contentSubfolder');
-  if (!await dir.exists()) {
-    await dir.create(recursive: true);
-  }
-  return dir;
-}
-
 // ─────────────────────────────────────────────────────────────────
 // CSV UPDATER
 // ─────────────────────────────────────────────────────────────────
@@ -113,9 +110,7 @@ class CsvUpdater {
 
       if (response.statusCode != 200) return false;
 
-      final dir = await _contentDir();
-      final file = File('${dir.path}/$fileName');
-      await file.writeAsString(response.body, encoding: utf8);
+      await writeCachedContent(_contentSubfolder, fileName, response.body);
       debugPrint('CSV updated: $fileName');
       return true;
     } catch (e) {
@@ -126,10 +121,11 @@ class CsvUpdater {
 
   static Future<Map<String, dynamic>> _loadLocalVersion() async {
     try {
-      final dir = await _contentDir();
-      final file = File('${dir.path}/csv_version.json');
-      if (!await file.exists()) return {};
-      final content = await file.readAsString();
+      final content = await readCachedContent(
+        _contentSubfolder,
+        'csv_version.json',
+      );
+      if (content == null) return {};
       return jsonDecode(content) as Map<String, dynamic>;
     } catch (_) {
       return {};
@@ -137,11 +133,11 @@ class CsvUpdater {
   }
 
   static Future<void> _saveLocalVersion(Map<String, dynamic> version) async {
-    try {
-      final dir = await _contentDir();
-      final file = File('${dir.path}/csv_version.json');
-      await file.writeAsString(jsonEncode(version));
-    } catch (_) {}
+    await writeCachedContent(
+      _contentSubfolder,
+      'csv_version.json',
+      jsonEncode(version),
+    );
   }
 }
 
@@ -150,10 +146,8 @@ class CsvUpdater {
 // ─────────────────────────────────────────────────────────────────
 Future<List<String>> readCsvLines(String fileName) async {
   try {
-    final dir = await _contentDir();
-    final file = File('${dir.path}/$fileName');
-    if (await file.exists()) {
-      final content = await file.readAsString(encoding: utf8);
+    final content = await readCachedContent(_contentSubfolder, fileName);
+    if (content != null) {
       return content
           .split('\n')
           .map((l) => l.trim())

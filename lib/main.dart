@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'app_state_persistence.dart';
 import 'csv_loader.dart';
@@ -32,7 +32,13 @@ void main() async {
   // just above — the paywall already handles products not being
   // loaded yet (IAPResult.productNotFound) and retries _loadProducts()
   // itself if a product is missing when a purchase is attempted.
-  if (Platform.isIOS || Platform.isAndroid) {
+  //
+  // Sept 2026 — web build: there is no Apple/Google IAP in a browser
+  // at all (the package isn't even usable there), and the web edition
+  // is sold via a Square payment link on the website instead, with a
+  // redeem code unlocking the app — see RedeemCodeService. Skip IAP
+  // entirely on web rather than letting it fail every launch.
+  if (!kIsWeb) {
     IAPService.instance.initialize();
   }
 

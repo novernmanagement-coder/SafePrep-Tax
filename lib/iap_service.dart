@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -23,14 +23,22 @@ import 'mixpanel_service.dart';
 // tiers were removed wholesale (dead the moment the app went
 // lifetime-only) — see the app's memory file if you need the old
 // pricing/product-ID history.
+//
+// Uses defaultTargetPlatform (flutter/foundation.dart) rather than
+// dart:io's Platform.isAndroid — this file is still imported on the
+// web build (even though IAPService.initialize() itself is never
+// called there, see main.dart), and dart:io does not exist on web at
+// all: importing it is a hard compile-time failure for `flutter build
+// web`, not just a runtime one. defaultTargetPlatform is safe on
+// every platform, web included.
 // ─────────────────────────────────────────────────────────────────
-final String kProductUnlockApp = Platform.isAndroid
+final String kProductUnlockApp = defaultTargetPlatform == TargetPlatform.android
     ? 'android_st_unlock'
     : 'SafePrepTaxUnlock'; // $19.99 — lifetime, the only paywall offer.
-    // Price must also be set in App Store Connect / Play Console, since
-    // the store — not this file — is the source of truth for the
-    // actual charged amount; the fallback price string below is only
-    // what shows before the store's real price has loaded.
+// Price must also be set in App Store Connect / Play Console, since
+// the store — not this file — is the source of truth for the
+// actual charged amount; the fallback price string below is only
+// what shows before the store's real price has loaded.
 
 // How long a buy* call will wait for StoreKit to resolve (purchased,
 // canceled, or errored) before giving up and returning IAPResult.timeout.
