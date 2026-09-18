@@ -15,6 +15,7 @@ import 'peace_of_mind_page.dart';
 import 'fsme_help_box.dart';
 import 'mixpanel_service.dart';
 import 'safe_prep_nav_bar.dart';
+import 'tax_1040_basics_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -1241,6 +1242,48 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                                   textAlign: TextAlign.center,
                                 ),
                               ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      Column(
+                        spacing: 2,
+                        children: [
+                          SizedBox(
+                            width: double.infinity,
+                            height: AppSizes.primaryButtonHeight,
+                            child: ElevatedButton(
+                              onPressed: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const Tax1040BasicsPage(),
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.primaryButton,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    AppSizes.buttonCornerRadius,
+                                  ),
+                                ),
+                              ),
+                              child: const Text(
+                                '🧾 1040 Basics',
+                                style: TextStyle(
+                                  fontSize: AppFonts.button,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            'Learn the exam by learning the form',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: AppColors.subtleText,
+                              fontStyle: FontStyle.italic,
                             ),
                           ),
                         ],
