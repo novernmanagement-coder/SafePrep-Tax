@@ -13,6 +13,14 @@ import 'safe_prep_nav_bar.dart';
 // no name used — why each item belongs where it just landed, citing the
 // real source document. Pushed from Tax1040BasicsPage; the system back
 // gesture (and the explicit link at the top) both return there.
+//
+// Sept 2026: split into 3 short "parts" of ~4 form lines each (Gerry's
+// feedback — the single-page version stacked a header, section tag,
+// title, subtitle, progress bar, and all 11 form lines before the
+// draggable tray ever appeared, which read as "the choices aren't
+// showing up" when it was really just buried under too much page).
+// Placed items and the running total persist across parts — only what's
+// ON SCREEN at once got smaller.
 class Tax1040IncomeDragPage extends StatefulWidget {
   const Tax1040IncomeDragPage({super.key});
 
@@ -211,6 +219,14 @@ const List<_FormLineSpec> _kFormLines = [
   ),
 ];
 
+// 3 parts of ~4 form lines each: [1a,1z,2a,2b] / [3b,4b,5b,6b] / [7a,8,9].
+// Half-open [start, end) index ranges into _kFormLines.
+const List<List<int>> _kPageRanges = [
+  [0, 4],
+  [4, 8],
+  [8, 11],
+];
+
 class _Tax1040IncomeDragPageState extends State<Tax1040IncomeDragPage> {
   static const Color _paper = Color(0xFFDCECE6);
   static const Color _fillBorder = Color(0xFF9AA1D6);
@@ -230,11 +246,27 @@ class _Tax1040IncomeDragPageState extends State<Tax1040IncomeDragPage> {
   int _runningTotal = 0;
   bool _done = false;
   String? _flashWrongLine;
+  int _currentPage = 0;
 
   String _consoleText = _introLine;
   EyeMood _eyeMood = EyeMood.idle;
   int _typeGeneration = 0;
   final GlobalKey<FsmeEyePairState> _eyeKey = GlobalKey<FsmeEyePairState>();
+
+  List<_FormLineSpec> get _currentPageLines {
+    final range = _kPageRanges[_currentPage];
+    return _kFormLines.sublist(range[0], range[1]);
+  }
+
+  Set<String> get _currentPageDraggableLines => _currentPageLines
+      .where((l) => !l.computed)
+      .map((l) => l.dataLine!)
+      .toSet();
+
+  bool get _currentPageComplete =>
+      _currentPageDraggableLines.every((line) => _placed.containsKey(line));
+
+  bool get _isLastPage => _currentPage == _kPageRanges.length - 1;
 
   @override
   void initState() {
@@ -251,6 +283,7 @@ class _Tax1040IncomeDragPageState extends State<Tax1040IncomeDragPage> {
       _runningTotal = 0;
       _done = false;
       _flashWrongLine = null;
+      _currentPage = 0;
       _consoleText = _introLine;
       _eyeMood = EyeMood.idle;
     });
@@ -327,9 +360,13 @@ class _Tax1040IncomeDragPageState extends State<Tax1040IncomeDragPage> {
     }
   }
 
+  void _nextPage() {
+    setState(() => _currentPage++);
+  }
+
   Widget _buildHeader() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -343,18 +380,18 @@ class _Tax1040IncomeDragPageState extends State<Tax1040IncomeDragPage> {
                 Text(
                   'Tax',
                   style: TextStyle(
-                    fontSize: AppFonts.header,
+                    fontSize: 15,
                     fontWeight: FontWeight.w600,
                     color: AppColors.bodyText,
                   ),
                 ),
-                const SizedBox(width: 6),
-                Image.asset('Assets/splash.png', width: 36, height: 36),
-                const SizedBox(width: 6),
+                const SizedBox(width: 4),
+                Image.asset('Assets/splash.png', width: 22, height: 22),
+                const SizedBox(width: 4),
                 Text(
                   'Starter:',
                   style: TextStyle(
-                    fontSize: AppFonts.header,
+                    fontSize: 15,
                     fontWeight: FontWeight.w600,
                     color: AppColors.bodyText,
                   ),
@@ -367,25 +404,37 @@ class _Tax1040IncomeDragPageState extends State<Tax1040IncomeDragPage> {
     );
   }
 
-  Widget _buildBackLink() {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: TextButton(
-        onPressed: () => Navigator.pop(context),
-        style: TextButton.styleFrom(
-          padding: const EdgeInsets.symmetric(horizontal: 4),
-          minimumSize: const Size(0, 0),
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        ),
-        child: Text(
-          '‹ Back to 1040 Basics',
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            color: AppColors.primaryButton,
+  Widget _buildTopRow() {
+    return Row(
+      children: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          style: TextButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            minimumSize: const Size(0, 0),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
+          child: Text(
+            '‹ 1040 Basics',
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: AppColors.primaryButton,
+            ),
           ),
         ),
-      ),
+        Expanded(
+          child: Text(
+            'Income — Part ${_currentPage + 1} of ${_kPageRanges.length}',
+            textAlign: TextAlign.right,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+              color: AppColors.strongText,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -561,6 +610,9 @@ class _Tax1040IncomeDragPageState extends State<Tax1040IncomeDragPage> {
   }
 
   Widget _buildForm() {
+    final lines = _currentPageLines;
+    final showSidebar = lines.any((l) => l.dataLine == '1a');
+
     return Container(
       decoration: BoxDecoration(
         color: _paper,
@@ -581,50 +633,45 @@ class _Tax1040IncomeDragPageState extends State<Tax1040IncomeDragPage> {
               style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
             ),
           ),
-          // NOTE: deliberately NOT wrapped in IntrinsicHeight (it was
-          // originally, to make the sidebar stretch to match the table's
-          // height) — IntrinsicHeight forces every descendant to support
-          // intrinsic-dimension sizing, and _buildDottedLine() below uses
-          // a LayoutBuilder, which explicitly does not support that and
-          // throws on every layout pass. That was producing a blank
-          // screen with the layout exception (plus a cascading
-          // mouse_tracker assertion once the render tree never
-          // successfully completed a frame). CrossAxisAlignment.stretch
-          // on the Row alone still stretches the sidebar to the table's
-          // real height via normal two-pass flex layout — no intrinsic
-          // query involved, so LayoutBuilder underneath is safe again.
+          // NOTE: deliberately NOT wrapped in IntrinsicHeight — that
+          // forces every descendant to support intrinsic-dimension
+          // sizing, and _buildDottedLine() uses a LayoutBuilder, which
+          // explicitly does not support that and throws on every layout
+          // pass (this was the earlier blank-screen bug). Plain
+          // CrossAxisAlignment.stretch on the Row still stretches the
+          // sidebar to the table's real height via normal two-pass flex
+          // layout — no intrinsic query involved.
           Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Container(
-                width: 82,
-                padding: const EdgeInsets.fromLTRB(6, 6, 6, 6),
-                decoration: const BoxDecoration(
-                  border: Border(
-                    right: BorderSide(color: Colors.black, width: 1.5),
+              if (showSidebar)
+                Container(
+                  width: 82,
+                  padding: const EdgeInsets.fromLTRB(6, 6, 6, 6),
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      right: BorderSide(color: Colors.black, width: 1.5),
+                    ),
+                  ),
+                  child: const Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Attach Form(s) W-2 here.\n',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        TextSpan(
+                          text:
+                              'Also attach Forms W-2G and 1099-R if tax '
+                              'was withheld.',
+                        ),
+                      ],
+                    ),
+                    style: TextStyle(fontSize: 9.5, height: 1.3),
                   ),
                 ),
-                child: const Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'Attach Form(s) W-2 here.\n',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      TextSpan(
-                        text:
-                            'Also attach Forms W-2G and 1099-R if tax '
-                            'was withheld.',
-                      ),
-                    ],
-                  ),
-                  style: TextStyle(fontSize: 9.5, height: 1.3),
-                ),
-              ),
               Expanded(
-                child: Column(
-                  children: _kFormLines.map(_buildFormLineRow).toList(),
-                ),
+                child: Column(children: lines.map(_buildFormLineRow).toList()),
               ),
             ],
           ),
@@ -678,7 +725,7 @@ class _Tax1040IncomeDragPageState extends State<Tax1040IncomeDragPage> {
     );
   }
 
-  Widget _buildTray() {
+  Widget _buildTray(List<_IncomeItem> pageItems) {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -689,7 +736,7 @@ class _Tax1040IncomeDragPageState extends State<Tax1040IncomeDragPage> {
       child: Wrap(
         spacing: 8,
         runSpacing: 8,
-        children: _tray.map(_buildTrayCard).toList(),
+        children: pageItems.map(_buildTrayCard).toList(),
       ),
     );
   }
@@ -727,6 +774,27 @@ class _Tax1040IncomeDragPageState extends State<Tax1040IncomeDragPage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildContinuePrompt() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 4),
+      child: Center(
+        child: ElevatedButton(
+          onPressed: _nextPage,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primaryButton,
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppSizes.buttonCornerRadius),
+            ),
+          ),
+          child: Text(
+            'Continue — Part ${_currentPage + 2} of ${_kPageRanges.length} →',
+          ),
+        ),
       ),
     );
   }
@@ -799,6 +867,12 @@ class _Tax1040IncomeDragPageState extends State<Tax1040IncomeDragPage> {
 
   @override
   Widget build(BuildContext context) {
+    final pageDraggable = _currentPageDraggableLines;
+    final pageTrayItems = _tray
+        .where((item) => pageDraggable.contains(item.line))
+        .toList();
+    final showContinue = !_done && !_isLastPage && _currentPageComplete;
+
     return Scaffold(
       backgroundColor: AppColors.servSafeBlue,
       body: SafeArea(
@@ -809,47 +883,26 @@ class _Tax1040IncomeDragPageState extends State<Tax1040IncomeDragPage> {
                 padding: AppSizes.pageMargin,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
-                  spacing: 10,
+                  spacing: 8,
                   children: [
                     _buildHeader(),
-                    _buildBackLink(),
-                    Text(
-                      'Section 2 of 6 · Income',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.strongText,
-                      ),
-                    ),
-                    Text(
-                      'Drag each item onto the line it belongs on',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: AppFonts.header,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.strongText,
-                      ),
-                    ),
-                    Text(
-                      'Read what it is, then drop it in the right spot on '
-                      'the actual form.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 13, color: AppColors.bodyText),
-                    ),
+                    _buildTopRow(),
                     _buildProgress(),
                     _buildForm(),
-                    Text(
-                      'DRAG FROM HERE',
-                      style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 0.6,
-                        color: AppColors.subtleText,
+                    if (pageTrayItems.isNotEmpty) ...[
+                      Text(
+                        'DRAG FROM HERE',
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0.6,
+                          color: AppColors.subtleText,
+                        ),
                       ),
-                    ),
-                    _buildTray(),
+                      _buildTray(pageTrayItems),
+                    ],
                     _buildConsole(),
+                    if (showContinue) _buildContinuePrompt(),
                     if (_done) _buildDonePanel(),
                   ],
                 ),
