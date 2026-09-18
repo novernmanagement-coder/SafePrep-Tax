@@ -271,7 +271,17 @@ class _Tax1040IncomeDragPageState extends State<Tax1040IncomeDragPage> {
   @override
   void initState() {
     super.initState();
-    _init();
+    // Assign the initial tray directly instead of going through _init()'s
+    // setState() — setState() before the very first build is unnecessary
+    // (initState()'s field assignments are already picked up by the first
+    // build automatically) and on some devices/build configs the very
+    // first setState() scheduled from inside initState() doesn't land
+    // before that first frame paints, which is exactly what would produce
+    // a page that renders correctly (static labels/headers) but with an
+    // empty tray (the one thing that depends on this assignment actually
+    // having happened). Doing it as a plain field assignment here removes
+    // that race entirely.
+    _tray = List<_IncomeItem>.from(_kIncomeItems)..shuffle();
   }
 
   void _init() {
@@ -900,7 +910,17 @@ class _Tax1040IncomeDragPageState extends State<Tax1040IncomeDragPage> {
                         ),
                       ),
                       _buildTray(pageTrayItems),
-                    ],
+                    ] else if (!_currentPageComplete && !_done)
+                      // Safety net: this page still has un-filled slots
+                      // but the tray came up empty for them — shouldn't
+                      // happen, but if it ever does, give a way to
+                      // recover instead of a silent dead end.
+                      Center(
+                        child: TextButton(
+                          onPressed: _init,
+                          child: const Text('Tray empty — tap to reload'),
+                        ),
+                      ),
                     _buildConsole(),
                     if (showContinue) _buildContinuePrompt(),
                     if (_done) _buildDonePanel(),
