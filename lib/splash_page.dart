@@ -12,11 +12,15 @@ import 'readiness_engine.dart';
 import 'peace_of_mind_page.dart';
 import 'onboard/onboard_intro.dart';
 import 'onboard/onboard_answers.dart';
+import 'redeem_code_service.dart';
 
 // BUILD 29 — Splash routing, revised so casual/free-info visitors
 // never hit the access-code wall.
 //
-// Three paths:
+// Four paths:
+//   web + ?code=... in the URL → auto-redeem that code, straight to
+//                             DashboardPage on success (Tax Starter web
+//                             only — see Path 0 in _navigate() below)
 //   purchased              → DashboardPage
 //   everyone else          → OnboardIntro (the funnel), every launch,
 //                             no run cap
@@ -207,6 +211,42 @@ class _SplashPageState extends State<SplashPage> {
       await AppStatePersistence.save();
     }
     if (!mounted || _navigated) return;
+
+    // ── Path 0 (web only): auto-redeem a code passed in the URL ───────
+    // The post-purchase confirmation page (foodsafetymadeeasy.com) bakes
+    // the buyer's own code into the "Open Tax Starter on the web" link
+    // — both the on-page button and the emailed copy of it — as
+    // ?code=XXXXXXXX. Clicking through unlocks immediately with no
+    // manual typing and no onboarding funnel. Read via Uri.base since
+    // this is web-only (kIsWeb-gated) — no query-param support or need
+    // on iOS/Android, where IAP is the only unlock path.
+    //
+    // Any failure (missing/invalid/expired/already-used code) just
+    // falls through to Path 2's normal funnel below — the same code
+    // can still be entered by hand from the paywall's redeem dialog,
+    // so a bad or reused URL never strands anyone.
+    if (kIsWeb && !state.hasUnlockedApp) {
+      final urlCode = Uri.base.queryParameters['code']?.trim();
+      if (urlCode != null && urlCode.isNotEmpty) {
+        final result = await RedeemCodeService.redeem(urlCode);
+        if (!mounted || _navigated) return;
+        if (result == RedeemResult.success) {
+          _navigated = true;
+          MixpanelService.instance.track(
+            'SpOn_Splash_Route',
+            properties: {'app_name': 'ST', 'path': 'auto_redeem_url'},
+          );
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (_) =>
+                  _fineTuning ? const PeaceOfMindPage() : const DashboardPage(),
+            ),
+          );
+          return;
+        }
+      }
+    }
 
     // ── Path 1: purchased and active → Dashboard ─────────────────────
     // Checked FIRST so a paying customer never sees the funnel again.
