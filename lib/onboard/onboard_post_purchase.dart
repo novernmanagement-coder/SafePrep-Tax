@@ -45,14 +45,21 @@ class _OnboardPostPurchaseState extends State<OnboardPostPurchase> {
   /// actually gave us, and it still ties the "X min" language to
   /// something they told us about themselves.
   int get _estimateMinutes {
+    // Remapped from an older 4-value confidence enum (confident/
+    // prepared/almostReady/newToServSafe) that no longer exists — this
+    // file predates KnowledgeLevel being redefined around test-attempt
+    // history instead (see onboard_answers.dart). Kept the same
+    // more-experience-means-less-time shape rather than inventing new
+    // numbers. NOTE: this whole page is dead/orphaned code, never
+    // imported from anywhere in the app (confirmed via grep) — this
+    // fix only gets `flutter analyze` clean, it doesn't make the page
+    // reachable.
     switch (OnboardingAnswers.instance.knowledgeLevel) {
-      case KnowledgeLevel.confident:
+      case KnowledgeLevel.takenMultiple:
         return 90;
-      case KnowledgeLevel.prepared:
-        return 120;
-      case KnowledgeLevel.almostReady:
+      case KnowledgeLevel.takenBefore:
         return 150;
-      case KnowledgeLevel.newToServSafe:
+      case KnowledgeLevel.firstTime:
         return _maxEstimateMinutes;
       case null:
         return 150;

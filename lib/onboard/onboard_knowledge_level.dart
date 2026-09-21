@@ -203,7 +203,7 @@ class _OnboardKnowledgeLevelState extends State<OnboardKnowledgeLevel> {
               const SizedBox(height: 26),
 
               Text(
-                'SERVSAFE TEST HISTORY',
+                'TAX EXAM HISTORY',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 11,

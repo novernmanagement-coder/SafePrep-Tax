@@ -1,0 +1,42 @@
+ID,Category,Term,Definition
+1,Forms & Schedules,Form 1040,The main federal individual income tax return — everything else ultimately feeds into it.
+2,Forms & Schedules,Schedule 1,"Reports additional income (like unemployment or business income) and adjustments to income (like student loan interest or an IRA deduction). Additional income totals on Schedule 1, line 10, flow to Form 1040, line 8; adjustments total on line 26 flow to Form 1040, line 10."
+3,Forms & Schedules,Schedule 2,"Reports additional taxes owed beyond the regular tax calculation, such as self-employment tax. Line 3 (like the alternative minimum tax) flows to Form 1040, line 17; line 21 (including self-employment tax) flows to Form 1040, line 23."
+4,Forms & Schedules,Schedule 3,"Reports additional credits and payments not entered directly on Form 1040, like education credits or estimated tax payments. Nonrefundable credits on line 8 flow to Form 1040, line 20; other payments and refundable credits on line 15 flow to Form 1040, line 31."
+5,Forms & Schedules,Schedule A,"Used to itemize deductions instead of taking the standard deduction. The total on Schedule A, line 17, carries to Form 1040, line 12e."
+6,Forms & Schedules,Schedule B,"Reports interest and dividend income over the IRS threshold that requires it to be itemized. That interest and dividend income feed Form 1040, lines 2b and 3b."
+7,Forms & Schedules,Schedule C,"Reports profit or loss from a sole proprietorship or self-employment activity. Net profit or loss carries to Schedule 1, line 3, which flows into Form 1040, line 8."
+8,Forms & Schedules,Schedule D,"Reports capital gains and losses from selling investments or property. The result carries to Form 1040, line 7a."
+9,Forms & Schedules,Schedule SE,"Calculates the self-employment tax owed on net earnings from self-employment. The tax carries to Schedule 2, line 4, and the deduction for half of it carries to Schedule 1, line 15."
+10,Forms & Schedules,Schedule EIC,"Provides the information the IRS needs to verify a taxpayer's Earned Income Tax Credit claim. It supports the credit claimed on Form 1040, line 27a."
+11,Forms & Schedules,Form W-4,The form an employee gives their employer to determine how much tax to withhold from each paycheck.
+12,Forms & Schedules,Form 1098,"Reports mortgage interest, tuition, or student loan interest paid during the year, depending on the version. Mortgage interest typically feeds Schedule A; tuition or student loan interest versions feed education credits or the student loan interest deduction on Schedule 1, line 21."
+13,Filing Basics & Dependents,Filing Status,"Determines your tax rates and standard deduction. The five statuses are Single, Married Filing Jointly, Married Filing Separately, Head of Household, and Qualifying Surviving Spouse."
+14,Filing Basics & Dependents,Dependent,"A qualifying child or qualifying relative you can claim, which can unlock certain credits and filing statuses."
+15,Filing Basics & Dependents,Qualifying Child,"A dependent who meets age, relationship, residency, and support tests — generally under 19, or under 24 if a full-time student."
+16,Filing Basics & Dependents,Head of Household,A filing status for an unmarried taxpayer who pays more than half the cost of keeping up a home for a qualifying person.
+17,Income,W-2,"The form an employer issues reporting wages paid and taxes withheld for an employee. Box 1 wages feed Form 1040, line 1a; withholding feeds line 25a."
+18,Income,1099,"A family of forms reporting income paid to a non-employee — freelance pay, interest, dividends, and more. Which 1040 line depends on the type — for example 1099-INT feeds line 2b and 1099-DIV feeds line 3b — and any withholding shown feeds line 25b."
+19,Income,Gross Income,"All taxable income received in money, goods, property, or services, before any deductions."
+20,Income,Earned Income,"Income from working — wages, salaries, tips, self-employment — as opposed to investment income."
+21,Retirement Accounts & Distributions,Traditional IRA,A retirement account funded with pre-tax (often deductible) contributions; withdrawals are taxed as ordinary income.
+22,Retirement Accounts & Distributions,Roth IRA,A retirement account funded with after-tax contributions; qualified withdrawals are tax-free.
+23,Retirement Accounts & Distributions,RMD,Required Minimum Distribution — the minimum amount an account owner must withdraw annually from most retirement accounts starting at a certain age.
+24,Retirement Accounts & Distributions,Early Withdrawal Penalty,"An additional tax, commonly 10%, for taking retirement funds out before the account's minimum age — on top of any regular income tax owed."
+25,Adjustments to Income,Adjustments to Income,"Specific expenses — like IRA contributions or student loan interest — subtracted from gross income to arrive at AGI, available whether or not you itemize."
+26,Adjustments to Income,AGI,Adjusted Gross Income — gross income minus adjustments; the starting point for taxable income and eligibility for many credits.
+27,Adjustments to Income,Student Loan Interest Deduction,"An above-the-line deduction for interest paid on qualified student loans, subject to income limits."
+28,Health Savings Accounts,HSA,"A tax-advantaged account for medical expenses, available to people enrolled in a qualifying high-deductible health plan. Contributions, growth, and qualified withdrawals are all tax-free."
+29,Health Savings Accounts,HDHP,High-Deductible Health Plan — the type of health insurance required to be HSA-eligible.
+30,Health Savings Accounts,FSA,"An employer-sponsored account for medical or dependent-care expenses, funded pre-tax but generally use it or lose it each year."
+31,Deductions,Standard Deduction,"A fixed dollar amount that reduces taxable income, available to every filer based on filing status."
+32,Deductions,Itemized Deduction,"Specific deductible expenses — mortgage interest, state and local taxes, charitable gifts, and more — claimed instead of the standard deduction when they add up to more."
+33,Deductions,Above-the-Line Deduction,"A deduction subtracted before arriving at AGI, available even if you don't itemize."
+34,Tax Credits & Calculations,Tax Credit,A dollar-for-dollar reduction of tax owed — more valuable than a deduction of the same size.
+35,Tax Credits & Calculations,Refundable Credit,"A credit that can reduce your tax bill below zero and be paid out as a refund, like the Earned Income Tax Credit."
+36,Tax Credits & Calculations,EITC,Earned Income Tax Credit — a refundable credit for low-to-moderate-income working individuals and families.
+37,Tax Credits & Calculations,Marginal Tax Rate,"The tax rate applied to your next dollar of income, based on which tax bracket it falls into."
+38,Tax Credits & Calculations,Effective Tax Rate,Your total tax divided by your total income — the average rate you actually pay.
+39,Residency & Multi-State Filing,Resident,A taxpayer taxed by a state on all their income because that state is their permanent home (domicile).
+40,Residency & Multi-State Filing,Nonresident,"A taxpayer who earned income in a state without living there, typically owing tax only on income sourced to that state."
+41,Residency & Multi-State Filing,Part-Year Resident,A taxpayer who moved into or out of a state during the year and files as a resident for only part of it.

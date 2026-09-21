@@ -62,6 +62,11 @@ class IAPService {
   bool _available = false;
   bool get isAvailable => _available;
 
+  // Last reason a product load failed (empty response, error, timeout).
+  // Included in the analytics event when a purchase is blocked before
+  // StoreKit is ever reached, so the cause is visible in Mixpanel.
+  String _lastLoadIssue = 'none';
+
   // Tracks in-flight purchases so _onPurchaseUpdate can resolve the
   // Future that the calling buy* method is awaiting. Keyed by product ID
   // — this app only ever has one purchase in flight per product at a
@@ -97,6 +102,24 @@ class IAPService {
     return _isSandboxCached!;
   }
 
+  // Logs a purchase that never reached StoreKit's purchase stream
+  // (store unavailable, product not found, buy call threw). These paths
+  // previously logged nothing, which made App Review failures invisible.
+  Future<void> _trackBlocked(String reason, {String? detail}) async {
+    final isSandbox = await _isSandboxEnvironment();
+    MixpanelService.instance.track(
+      'purchase_blocked',
+      properties: {
+        'reason': reason,
+        'detail': detail ?? '',
+        'product_id': kProductUnlockApp,
+        'load_issue': _lastLoadIssue,
+        'store_available': _available,
+        'is_test_purchase': isSandbox,
+      },
+    );
+  }
+
   // ── Initialization ──────────────────────────────────────────
   Future<void> initialize() async {
     // TIMEOUT GUARD (Aug 2026) — isAvailable() and queryProductDetails()
@@ -117,6 +140,10 @@ class IAPService {
     }
     if (!_available) return;
 
+    // Cancel any previous listener first — initialize() can now be
+    // called again as a retry from _purchase(), and a second live
+    // subscription would process every purchase twice.
+    await _subscription?.cancel();
     _subscription = _iap.purchaseStream.listen(
       _onPurchaseUpdate,
       onDone: () => _subscription?.cancel(),
@@ -134,26 +161,31 @@ class IAPService {
           .timeout(const Duration(seconds: 15));
     } catch (e) {
       debugPrint('IAP product load timeout/error: $e');
+      _lastLoadIssue = 'query_exception: $e';
       return;
     }
 
     if (response.error != null) {
       debugPrint('IAP product load error: ${response.error}');
+      _lastLoadIssue =
+          'response_error: ${response.error?.code} ${response.error?.message}';
       return;
     }
 
     if (response.notFoundIDs.isNotEmpty) {
       debugPrint(
-        'Play could not find these product IDs: '
+        'Store could not find these product IDs: '
         '${response.notFoundIDs.join(', ')} '
         '(requested ${response.productDetails.length + response.notFoundIDs.length} total, '
         'found ${response.productDetails.length})',
       );
+      _lastLoadIssue = 'not_found: ${response.notFoundIDs.join(', ')}';
     }
 
     for (final p in response.productDetails) {
       if (p.id == kProductUnlockApp) {
         _unlockProduct = p;
+        _lastLoadIssue = 'none';
       }
     }
 
@@ -205,6 +237,7 @@ class IAPService {
             properties: {
               'product_id': purchase.productID,
               'error': purchase.error?.message ?? 'unknown',
+              'error_code': purchase.error?.code ?? '',
               'is_test_purchase': isSandbox,
             },
           );
@@ -271,14 +304,28 @@ class IAPService {
   // non-consumable, so this always goes through buyNonConsumable() —
   // the old isConsumable branch (used only by the removed repeatable
   // $2.99 renewal) is gone.
+  //
+  // Oct 2026 change: if the store wasn't available when the app
+  // launched (App Review's device can be slow / cold), retry
+  // initialize() once here instead of failing immediately, and log
+  // every pre-StoreKit failure path via _trackBlocked().
   Future<IAPResult> _purchase(ProductDetails? Function() getProduct) async {
-    if (!_available) return IAPResult.storeUnavailable;
+    if (!_available) {
+      await initialize();
+    }
+    if (!_available) {
+      await _trackBlocked('store_unavailable');
+      return IAPResult.storeUnavailable;
+    }
 
     var product = getProduct();
     if (product == null) {
       await _loadProducts();
       product = getProduct();
-      if (product == null) return IAPResult.productNotFound;
+      if (product == null) {
+        await _trackBlocked('product_not_found');
+        return IAPResult.productNotFound;
+      }
     }
 
     final completer = Completer<IAPResult>();
@@ -286,10 +333,16 @@ class IAPService {
 
     try {
       final purchaseParam = PurchaseParam(productDetails: product);
-      await _iap.buyNonConsumable(purchaseParam: purchaseParam);
+      final started = await _iap.buyNonConsumable(purchaseParam: purchaseParam);
+      if (!started) {
+        _pendingPurchases.remove(product.id);
+        await _trackBlocked('buy_returned_false');
+        return IAPResult.error;
+      }
     } catch (e) {
       debugPrint('IAP buy error: $e');
       _pendingPurchases.remove(product.id);
+      await _trackBlocked('buy_exception', detail: e.toString());
       return IAPResult.error;
     }
 
@@ -297,6 +350,7 @@ class IAPService {
       _purchaseTimeout,
       onTimeout: () {
         _pendingPurchases.remove(product!.id);
+        _trackBlocked('purchase_timeout');
         return IAPResult.timeout;
       },
     );

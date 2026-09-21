@@ -22,9 +22,18 @@ class MixpanelService {
   //   SafePrep Refresher  → 'SR'
   //   SafePrep Alcohol    → 'SA'
   //   SafePrep Tax        → 'ST'
-  static const String _appPrefix = 'ST';
+  //
+  // Not const: main.dart's Tax Starter entry point never passes
+  // appPrefix, so it keeps defaulting to 'ST' exactly as before. A
+  // second entry point sharing this same codebase (e.g. a spun-off
+  // interview-prep-only app/flavor) passes its own prefix here instead
+  // — otherwise its events would silently register as 'ST' and get
+  // mislabeled as Tax Starter, the same class of bug the 21-file
+  // hardcoded-'SP' cleanup fixed for this app.
+  String _appPrefix = 'ST';
 
-  Future<void> init() async {
+  Future<void> init({String appPrefix = 'ST'}) async {
+    _appPrefix = appPrefix;
     try {
       _mixpanel = await Mixpanel.init(_token, trackAutomaticEvents: true);
 

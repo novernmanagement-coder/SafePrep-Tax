@@ -16,7 +16,19 @@ import 'mixpanel_service.dart';
 // tip at a time. MVP ships with 2 scenarios (InterviewPrep.csv) to
 // get into review quickly; content grows from there.
 class InterviewPrepPage extends StatefulWidget {
-  const InterviewPrepPage({super.key});
+  const InterviewPrepPage({
+    super.key,
+    this.showNavBar = true,
+    this.showBrandHeader = true,
+  });
+
+  // Both default to true so Tax Starter's existing usage (home_page.dart
+  // -> PeaceOfMindPage -> here) is completely unaffected. Set false when
+  // this page is reused standalone (e.g. a separate interview-prep-only
+  // app) where Tax Starter's bottom nav and "Tax [logo] Starter" header
+  // branding/tap-target don't apply.
+  final bool showNavBar;
+  final bool showBrandHeader;
 
   @override
   State<InterviewPrepPage> createState() => _InterviewPrepPageState();
@@ -238,7 +250,7 @@ class _InterviewPrepPageState extends State<InterviewPrepPage> {
             _buildHeader(),
             _buildFsmeIntroBanner(),
             Expanded(child: _buildBody()),
-            const SafePrepNavBar(),
+            if (widget.showNavBar) const SafePrepNavBar(),
           ],
         ),
       ),
@@ -250,43 +262,46 @@ class _InterviewPrepPageState extends State<InterviewPrepPage> {
       padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Tax',
-                style: TextStyle(
-                  fontSize: AppFonts.header,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.bodyText,
+          if (widget.showBrandHeader) ...[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Tax',
+                  style: TextStyle(
+                    fontSize: AppFonts.header,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.bodyText,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 6),
-              GestureDetector(
-                onTap: () => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (_) => const PeaceOfMindPage()),
+                const SizedBox(width: 6),
+                GestureDetector(
+                  onTap: () => Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (_) => const PeaceOfMindPage()),
+                  ),
+                  child: Image.asset(
+                    'Assets/splash.png',
+                    width: 36,
+                    height: 36,
+                    fit: BoxFit.contain,
+                  ),
                 ),
-                child: Image.asset(
-                  'Assets/splash.png',
-                  width: 36,
-                  height: 36,
-                  fit: BoxFit.contain,
+                const SizedBox(width: 8),
+                FsmeEyePair(key: _eyeKey, mood: _eyeMood, size: 22, spacing: 6),
+                const SizedBox(width: 8),
+                const Text(
+                  'Starter',
+                  style: TextStyle(
+                    fontSize: AppFonts.header,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.bodyText,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              FsmeEyePair(key: _eyeKey, mood: _eyeMood, size: 22, spacing: 6),
-              const SizedBox(width: 8),
-              const Text(
-                'Starter',
-                style: TextStyle(
-                  fontSize: AppFonts.header,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.bodyText,
-                ),
-              ),
-            ],
-          ),
+              ],
+            ),
+          ] else
+            FsmeEyePair(key: _eyeKey, mood: _eyeMood, size: 26, spacing: 7),
           const SizedBox(height: 4),
           const Text(
             '💼 Interview Prep',

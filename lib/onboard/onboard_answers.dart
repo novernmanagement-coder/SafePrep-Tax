@@ -20,6 +20,7 @@ library;
 /// paywall subline copy and FSME's one-line reaction only; does NOT
 /// change the underlying curriculum, pacing, or which category starts
 /// first.
+///
 enum KnowledgeLevel {
   firstTime,
   takenBefore,

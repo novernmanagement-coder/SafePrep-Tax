@@ -1,123 +1,97 @@
 ID,Category,Fact
-1,Time & Temperature,The temperature danger zone for TCS food is between 41°F and 135°F.
-2,Time & Temperature,TCS food must be cooled from 135°F to 70°F within 2 hours.
-3,Time & Temperature,After reaching 70°F food must continue cooling to 41°F within 4 more hours.
-4,Time & Temperature,The total cooling window for TCS food is 6 hours from 135°F to 41°F.
-5,Time & Temperature,Hot TCS food must be held at 135°F or above at all times.
-6,Time & Temperature,Cold TCS food must be held at 41°F or below at all times.
-7,Time & Temperature,Poultry must reach a minimum internal cooking temperature of 165°F for 15 seconds.
-8,Time & Temperature,Ground meat must reach a minimum internal cooking temperature of 155°F for 15 seconds.
-9,Time & Temperature,Whole muscle beef pork and seafood must reach 145°F for 15 seconds.
-10,Time & Temperature,All TCS food reheated for service must reach 165°F for 15 seconds.
-11,Time & Temperature,Food reheated in a microwave must reach 165°F and rest covered for 2 minutes.
-12,Time & Temperature,Stuffed meats and stuffed poultry must reach 165°F because the stuffing contacts raw proteins.
-13,Time & Temperature,Ready-to-eat TCS food held at 41°F or below may be kept for a maximum of 7 days.
-14,Time & Temperature,TCS food that has been in the danger zone for more than 4 cumulative hours must be discarded.
-15,Time & Temperature,Shallow pans ice baths and blast chillers are all approved methods for rapid cooling.
-16,Cross-Contamination,Cross-contamination occurs when pathogens are transferred from one food or surface to another.
-17,Cross-Contamination,Raw poultry must always be stored on the lowest shelf in a cooler.
-18,Cross-Contamination,Foods in a cooler are stored from top to bottom by minimum required cooking temperature.
-19,Cross-Contamination,Ready-to-eat food must always be stored above all raw proteins in a refrigerator.
-20,Cross-Contamination,Cross-contact refers specifically to the transfer of allergen proteins from one food to another.
-21,Cross-Contamination,Even a trace amount of an allergen can trigger a life-threatening reaction in a sensitive individual.
-22,Cross-Contamination,The nine major food allergens are milk eggs fish shellfish tree nuts peanuts wheat soybeans and sesame.
-23,Cross-Contamination,Dedicated color-coded cutting boards help prevent cross-contamination between different food types.
-24,Cross-Contamination,Gloves must be changed and hands must be washed when switching between raw and ready-to-eat foods.
-25,Cross-Contamination,Food-contact surfaces must be cleaned and sanitized immediately after contact with a raw protein.
-26,Cross-Contamination,Allergen-free meals must be prepared first or on completely separate equipment to prevent cross-contact.
-27,Cross-Contamination,A food slicer used continuously must be cleaned and sanitized every 4 hours.
-28,Cross-Contamination,Chemicals must always be stored in original labeled containers away from all food and equipment.
-29,Personal Hygiene,Food handlers must wash their hands for a minimum of 20 seconds using soap and warm water.
-30,Personal Hygiene,Hands must be washed after using the restroom handling raw meat touching the face and handling garbage.
-31,Personal Hygiene,Hand sanitizer may only be used after proper handwashing — it is a supplement not a substitute.
-32,Personal Hygiene,Handwashing must occur at a designated handwashing sink only — never in a prep or dish sink.
-33,Personal Hygiene,Water for handwashing must be at a minimum temperature of 100°F.
-34,Personal Hygiene,Hands must be dried with a single-use paper towel or air dryer after washing.
-35,Personal Hygiene,A plain band ring is the only jewelry permitted for food handlers.
-36,Personal Hygiene,Fingernails must be kept short clean and unpolished to prevent harboring pathogens.
-37,Personal Hygiene,A food handler with vomiting or diarrhea must be excluded from the operation immediately.
-38,Personal Hygiene,The five reportable illnesses in food service are Norovirus Hepatitis A Salmonella Typhi Shigella and E. coli O157:H7.
-39,Personal Hygiene,Jaundice is a symptom of Hepatitis A and requires immediate exclusion and reporting to the regulatory authority.
-40,Personal Hygiene,An infected wound on the hand must be covered with a bandage and protected with a single-use glove.
-41,Personal Hygiene,Food handlers may drink in food prep areas only from a covered container with a straw.
-42,Receiving & Storage,Cold TCS food must be received at 41°F or below.
-43,Receiving & Storage,Shell eggs and shucked shellfish may be received at 45°F or below.
-44,Receiving & Storage,Live shellfish must be received at an air temperature of 45°F or below.
-45,Receiving & Storage,Hot TCS food received during a hot delivery must arrive at 135°F or above.
-46,Receiving & Storage,Frozen food must be received completely solid with no signs of thawing or refreezing.
-47,Receiving & Storage,Dented swollen rusted or leaking canned goods must always be rejected at receiving.
-48,Receiving & Storage,Shellfish tags must be kept on file for 90 days from the date the last shellfish was sold.
-49,Receiving & Storage,The FIFO method — First In First Out — ensures older stock is used before newer stock.
-50,Receiving & Storage,Dry goods must be stored at least 6 inches off the floor to allow cleaning and deter pests.
-51,Receiving & Storage,Raw chicken must be stored on the lowest shelf of any refrigerator or walk-in cooler.
-52,Receiving & Storage,Ready-to-eat fruit and cooked food must be stored on the top shelf above all raw proteins.
-53,Receiving & Storage,Large ice crystals on frozen food indicate it thawed and refroze during transport and must be rejected.
-54,Receiving & Storage,Refrigerators holding TCS food must maintain a temperature of 41°F or below at all times.
-55,Receiving & Storage,A delivery that arrives with tampered or broken packaging must be rejected regardless of temperature.
-56,Food Preparation,The four approved thawing methods are refrigeration running cold water microwave and cooking from frozen.
-57,Food Preparation,Food thawed in a microwave must be cooked immediately after thawing.
-58,Food Preparation,Food thawed under running water must be kept under water at 70°F or below.
-59,Food Preparation,Produce must be washed under cool running water before cutting peeling or cooking.
-60,Food Preparation,Ice must always be handled with a scoop — never with bare hands or a glass.
-61,Food Preparation,Separate utensils must be used for raw proteins and ready-to-eat foods to prevent cross-contamination.
-62,Food Preparation,Food contaminated by chemicals glass or other physical hazards must be discarded immediately.
-63,Food Preparation,Partial cooking must be limited to no more than 60 minutes before the food is finished cooking.
-64,Food Preparation,Whole muscle beef roasts may be cooked to 145°F but must be held at that temperature for 4 minutes.
-65,Food Preparation,Time-temperature abused food must be discarded — reheating or chilling does not make it safe again.
-66,Cleaning & Sanitizing,Cleaning removes dirt and organic matter while sanitizing reduces pathogens to safe levels.
-67,Cleaning & Sanitizing,A surface must always be cleaned before it can be effectively sanitized.
-68,Cleaning & Sanitizing,The correct order for a three-compartment sink is wash rinse sanitize and air-dry.
-69,Cleaning & Sanitizing,The wash compartment of a three-compartment sink must be at least 110°F.
-70,Cleaning & Sanitizing,Chlorine sanitizer must be maintained between 50 and 99 ppm to be effective and safe.
-71,Cleaning & Sanitizing,Iodine sanitizer must be maintained between 12.5 and 25 ppm.
-72,Cleaning & Sanitizing,Quaternary ammonium sanitizer concentration must follow the manufacturer's instructions.
-73,Cleaning & Sanitizing,Food-contact surfaces in continuous use must be cleaned and sanitized at least every 4 hours.
-74,Cleaning & Sanitizing,Sanitized equipment must always be allowed to air-dry — never dried with a towel.
-75,Cleaning & Sanitizing,A high-temperature dish machine must reach 180°F on the surface of dishes during the final rinse.
-76,Cleaning & Sanitizing,A low-temperature dish machine relies on chemical sanitizer and requires a minimum rinse of 120°F.
-77,Cleaning & Sanitizing,Wiping cloths must be stored in sanitizing solution between uses — never in plain water.
-78,Cleaning & Sanitizing,Test strips must be used to verify sanitizer concentration — always check the strip expiration date first.
-79,Cleaning & Sanitizing,A cutting board with deep knife scars cannot be effectively sanitized and must be replaced.
-80,Cleaning & Sanitizing,Ice machines must be cleaned regularly per manufacturer instructions to prevent mold and bacterial buildup.
-81,Facility & Equipment,Handwashing sinks must be used for handwashing only — never for food prep or equipment rinsing.
-82,Facility & Equipment,Every handwashing sink must be stocked with soap single-use towels and a waste bin at all times.
-83,Facility & Equipment,A handwashing sink must provide running water at a minimum temperature of 100°F.
-84,Facility & Equipment,A handwashing reminder sign must be posted at every handwashing sink.
-85,Facility & Equipment,Floor-mounted equipment must be elevated at least 6 inches off the floor to allow cleaning underneath.
-86,Facility & Equipment,Light fixtures in food prep areas must have shatter-resistant covers to prevent glass contamination.
-87,Facility & Equipment,Adequate lighting in a walk-in cooler allows staff to read labels check dates and identify spoilage.
-88,Facility & Equipment,A backed-up drain in a food prep area is an immediate health hazard — food prep must stop.
-89,Facility & Equipment,Garbage containers in food prep areas must have tight-fitting lids to deter pests.
-90,Facility & Equipment,A backflow prevention device stops contaminated water from reversing into the potable water supply.
-91,Pest Management,The most effective pest prevention strategy is eliminating food water and shelter sources.
-92,Pest Management,All gaps cracks and openings in exterior walls floors and doors must be sealed to prevent pest entry.
-93,Pest Management,Self-closing doors and door sweeps work together to prevent pests from entering through exterior doors.
-94,Pest Management,Window screens must be tight-fitting and in good repair in any food prep area with operable windows.
-95,Pest Management,Droppings nesting materials and gnaw marks are the most common early signs of a pest infestation.
-96,Pest Management,Only a licensed pest control operator may apply pesticides in a food service facility.
-97,Pest Management,Cardboard boxes provide ideal harborage for cockroaches and must be removed from the facility promptly.
-98,Pest Management,Cockroach infestations often produce a distinctive musty oily odor in addition to visible droppings.
-99,Pest Management,Rodents can enter through a gap as small as a dime — all openings must be sealed regardless of size.
-100,Pest Management,Fruit flies breed in floor drains and drain pans — keeping these clean eliminates their breeding sites.
-101,Pest Management,Fly light traps must be positioned away from food to prevent dead insects from falling into food.
-102,Pest Management,Pest control inspection reports must be reviewed after each visit and findings acted upon promptly.
-103,Food Safety Management,The person in charge must be present and knowledgeable about food safety at all times during operation.
-104,Food Safety Management,Active managerial control means identifying and correcting food safety risks before they cause illness.
-105,Food Safety Management,HACCP stands for Hazard Analysis Critical Control Points.
-106,Food Safety Management,The three types of food safety hazards are biological chemical and physical.
-107,Food Safety Management,A critical control point is a step in food handling where a hazard can be prevented eliminated or reduced.
-108,Food Safety Management,When a critical control point is not met corrective action must be taken immediately.
-109,Food Safety Management,Food safety records provide written proof that monitoring and corrective actions were performed.
-110,Food Safety Management,A food recall requires the immediate removal of affected product from service.
-111,Food Safety Management,Multiple employees reporting stomach illness on the same day may indicate a foodborne illness outbreak.
-112,Food Safety Management,The difference between restriction and exclusion is that restriction limits duties while exclusion removes the food handler entirely.
-113,General,Foodborne illness affects an estimated 48 million Americans every year.
-114,General,The top five risk factors for foodborne illness are improper holding temperatures inadequate cooking poor personal hygiene contaminated equipment and unsafe food sources.
-115,General,Most foodborne illnesses are preventable with consistent application of basic food safety practices.
-116,General,Norovirus is the most common cause of foodborne illness in the United States.
-117,General,Bacteria multiply most rapidly between 70°F and 125°F — the middle of the temperature danger zone.
-118,General,Under ideal conditions a single bacterium can multiply to over one million in just 10 hours.
-119,General,TCS stands for Temperature Control for Safety.
-120,General,The ServSafe exam consists of 90 questions and requires a score of 75% or higher to pass.
-121,General,A food safety culture starts with management — when managers take food safety seriously staff follow.
-122,General,When in doubt throw it out — the cost of discarding food is always less than the cost of a foodborne illness outbreak.
+1,Filing Basics & Dependents,"There are five filing statuses: Single, Married Filing Jointly, Married Filing Separately, Head of Household, and Qualifying Surviving Spouse."
+2,Filing Basics & Dependents,Head of Household status requires paying more than half the cost of keeping up a home for a qualifying person.
+3,Filing Basics & Dependents,"A qualifying child must be under 19, or under 24 if a full-time student, or any age if permanently disabled."
+4,Filing Basics & Dependents,"A qualifying child must live with the taxpayer for more than half the year, with limited exceptions."
+5,Filing Basics & Dependents,A qualifying relative's gross income must be below the annual exemption threshold to be claimed as a dependent.
+6,Filing Basics & Dependents,Only one taxpayer can claim a given dependent in the same tax year.
+7,Filing Basics & Dependents,"Married Filing Separately often disqualifies taxpayers from several credits, including the Earned Income Tax Credit."
+8,Filing Basics & Dependents,Qualifying Surviving Spouse status can be used for up to two years after a spouse's death if a dependent child lives with the taxpayer.
+9,Filing Basics & Dependents,A taxpayer can be claimed as someone else's dependent even if they also file their own tax return.
+10,Filing Basics & Dependents,"Support tests, relationship tests, and residency tests all factor into who qualifies as a dependent."
+11,Filing Basics & Dependents,Divorced parents can only both claim the same child in alternating years if Form 8332 is used to release the claim.
+12,Filing Basics & Dependents,A taxpayer's filing status is determined by their marital status as of the last day of the tax year.
+13,Income,"Wages, salaries, and tips are reported to the taxpayer on Form W-2."
+14,Income,Self-employment income is reported on Schedule C and flows to Schedule SE for self-employment tax.
+15,Income,Interest income of $10 or more from a bank is reported on Form 1099-INT.
+16,Income,Dividend income is reported on Form 1099-DIV and can be either ordinary or qualified.
+17,Income,Qualified dividends are taxed at the lower long-term capital gains rates instead of ordinary income rates.
+18,Income,Unemployment compensation is fully taxable at the federal level and reported on Form 1099-G.
+19,Income,Short-term capital gains from assets held one year or less are taxed as ordinary income.
+20,Income,Long-term capital gains from assets held more than one year get preferential tax rates.
+21,Income,Social Security benefits can be partially taxable depending on the taxpayer's combined income.
+22,Income,Rental income and expenses are reported on Schedule E.
+23,Income,Alimony from divorce or separation agreements finalized after 2018 is not taxable income to the recipient.
+24,Income,"Gambling winnings are fully taxable as other income, even if no Form W-2G was issued."
+25,Retirement Accounts & Distributions,Traditional IRA contributions may be tax-deductible depending on income and workplace retirement plan coverage.
+26,Retirement Accounts & Distributions,"Roth IRA contributions are never tax-deductible, but qualified withdrawals are completely tax-free."
+27,Retirement Accounts & Distributions,Early withdrawals from a traditional IRA before age 59 and a half generally trigger a 10% additional tax.
+28,Retirement Accounts & Distributions,Required Minimum Distributions apply to most retirement accounts once the account owner reaches the RMD age set by law.
+29,Retirement Accounts & Distributions,"A 401(k) is an employer-sponsored plan, while an IRA is set up directly by the individual."
+30,Retirement Accounts & Distributions,Rolling over a retirement account within 60 days generally avoids taxes and penalties on the distribution.
+31,Retirement Accounts & Distributions,Distributions from a traditional IRA are taxed as ordinary income in the year received.
+32,Retirement Accounts & Distributions,Roth IRA contributions can be withdrawn tax-free and penalty-free at any time since they were already taxed.
+33,Retirement Accounts & Distributions,Catch-up contributions let taxpayers age 50 and older contribute more to IRAs and 401(k)s each year.
+34,Retirement Accounts & Distributions,A SEP IRA lets self-employed individuals and small business owners make larger tax-deferred contributions.
+35,Retirement Accounts & Distributions,Inherited IRAs generally follow different distribution rules than the original owner's account.
+36,Retirement Accounts & Distributions,"The 10% early withdrawal penalty on IRAs has exceptions, including qualified higher education expenses and first-time home purchases."
+37,Retirement Accounts & Distributions,"Form 1099-R reports distributions from pensions, annuities, IRAs, and other retirement plans."
+38,Retirement Accounts & Distributions,Excess IRA contributions that aren't corrected in time can trigger a 6% excise tax each year they remain in the account.
+39,Adjustments to Income,"Adjustments to income are subtracted from gross income to arrive at Adjusted Gross Income, or AGI."
+40,Adjustments to Income,Traditional IRA deductions and student loan interest are both reported as adjustments on Schedule 1.
+41,Adjustments to Income,Self-employed taxpayers can deduct one-half of their self-employment tax as an adjustment to income.
+42,Adjustments to Income,Health Savings Account contributions made outside of payroll are deducted as an adjustment to income.
+43,Adjustments to Income,Educator expenses let eligible teachers deduct a limited amount of out-of-pocket classroom supply costs.
+44,Adjustments to Income,Student loan interest deductions phase out at higher income levels.
+45,Adjustments to Income,Self-employed health insurance premiums can be deducted as an adjustment for qualifying business owners.
+46,Adjustments to Income,"Adjustments to income reduce AGI, which in turn can affect eligibility for many credits and deductions."
+47,Adjustments to Income,Alimony paid under a divorce agreement finalized before 2019 can still be deducted as an adjustment to income.
+48,Health Savings Accounts,"To contribute to an HSA, a taxpayer must be enrolled in a High Deductible Health Plan."
+49,Health Savings Accounts,HSA contributions are deductible even if the taxpayer doesn't itemize deductions.
+50,Health Savings Accounts,HSA funds used for qualified medical expenses are withdrawn completely tax-free.
+51,Health Savings Accounts,Unused HSA funds roll over year to year - there is no use-it-or-lose-it rule like a Flexible Spending Account.
+52,Health Savings Accounts,Non-qualified HSA withdrawals before age 65 are taxable and generally hit with a 20% additional tax.
+53,Health Savings Accounts,"After age 65, HSA funds can be withdrawn for any purpose without penalty, though non-medical withdrawals are still taxed as income."
+54,Health Savings Accounts,"HSA contributions can come from the account holder, an employer, or both, up to the annual limit."
+55,Health Savings Accounts,Family HDHP coverage allows a higher HSA contribution limit than self-only coverage.
+56,Deductions,"Taxpayers choose either the standard deduction or itemized deductions, whichever gives the better tax result."
+57,Deductions,Itemized deductions are reported on Schedule A and include items like mortgage interest and charitable gifts.
+58,Deductions,The standard deduction amount depends on filing status and is adjusted annually for inflation.
+59,Deductions,Medical expenses are only deductible to the extent they exceed a percentage-of-AGI threshold.
+60,Deductions,State and local tax deductions on Schedule A are capped under current law.
+61,Deductions,Charitable contributions of cash are generally deductible up to a percentage of the taxpayer's AGI.
+62,Deductions,"Taxpayers who are 65 or older, or blind, get an additional amount added to their standard deduction."
+63,Deductions,The Qualified Business Income deduction can give eligible pass-through business owners a deduction of up to 20% of qualified income.
+64,Deductions,Mortgage interest is deductible on Schedule A for acquisition debt up to the current law's limit.
+65,Tax Credits & Calculations,"A tax credit reduces tax owed dollar-for-dollar, while a deduction only reduces taxable income."
+66,Tax Credits & Calculations,A refundable credit can reduce tax below zero and generate a refund; a nonrefundable credit cannot.
+67,Tax Credits & Calculations,The Child Tax Credit is a per-qualifying-child credit that phases out at higher income levels.
+68,Tax Credits & Calculations,The Earned Income Tax Credit is a refundable credit aimed at low-to-moderate income working taxpayers.
+69,Tax Credits & Calculations,The Child and Dependent Care Credit helps offset costs paid so a taxpayer can work or look for work.
+70,Tax Credits & Calculations,The American Opportunity Credit covers qualified education expenses for the first four years of postsecondary education.
+71,Tax Credits & Calculations,"The Lifetime Learning Credit has no limit on the number of years it can be claimed, unlike the American Opportunity Credit."
+72,Tax Credits & Calculations,The Saver's Credit rewards lower-income taxpayers for contributing to a retirement account.
+73,Tax Credits & Calculations,The Credit for Other Dependents applies to dependents who don't qualify for the Child Tax Credit.
+74,Tax Credits & Calculations,Married Filing Separately status disqualifies a taxpayer from several major credits.
+75,Tax Credits & Calculations,"Tax is calculated using either the tax tables or the tax computation worksheet, depending on taxable income."
+76,Tax Credits & Calculations,The Additional Child Tax Credit is the refundable portion of the Child Tax Credit.
+77,Tax Credits & Calculations,The Foreign Tax Credit can prevent double taxation on income already taxed by another country.
+78,Tax Credits & Calculations,"Estimated tax penalties can apply when a taxpayer underpays throughout the year, even if they pay in full by the filing deadline."
+79,Residency & Multi-State Filing,"A taxpayer's resident state generally taxes all of their income, regardless of where it was earned."
+80,Residency & Multi-State Filing,A nonresident return is typically filed for income earned in a state where the taxpayer doesn't live.
+81,Residency & Multi-State Filing,A part-year resident return applies when a taxpayer moved into or out of a state during the tax year.
+82,Residency & Multi-State Filing,Many states offer a credit for taxes paid to another state to avoid double taxation on the same income.
+83,Residency & Multi-State Filing,"Domicile, not just physical presence, often determines which state a taxpayer is considered a resident of."
+84,Residency & Multi-State Filing,Some states have reciprocity agreements that let residents of one state work in another without owing that state's income tax.
+85,Residency & Multi-State Filing,A handful of states have no state income tax at all.
+86,Residency & Multi-State Filing,"Remote workers may owe tax in the state where they physically work, even if their employer is based elsewhere."
+87,General,The IRS officially opens e-file season each year in late January.
+88,General,"The federal filing deadline for most individual returns is April 15, unless it falls on a weekend or holiday."
+89,General,"Taxpayers can request an automatic six-month extension to file, but an extension to file is not an extension to pay."
+90,General,The IRS processes most e-filed returns with direct deposit refunds within 21 days.
+91,General,"A Preparer Tax Identification Number, or PTIN, is required for anyone who is paid to prepare federal tax returns."
+92,General,Form 1040 is the standard individual income tax return used by nearly all U.S. taxpayers.
+93,General,"The IRS uses a progressive tax system, meaning higher portions of income are taxed at higher rates."
+94,General,Marginal tax rate and effective tax rate are not the same thing - effective rate is almost always lower.
+95,General,Accuracy and attention to detail are two of the most valuable skills a tax preparer can bring to a client.
+96,General,Millions of taxpayers use a paid preparer every year instead of filing on their own.

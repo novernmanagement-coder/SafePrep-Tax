@@ -1,0 +1,3 @@
+#include "Release.xcconfig"
+PRODUCT_BUNDLE_IDENTIFIER = com.geraldmiller.interviewace
+APP_DISPLAY_NAME = "How To Ace The Interview"

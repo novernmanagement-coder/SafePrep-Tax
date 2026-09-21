@@ -643,16 +643,32 @@ class _Tax1040IncomeDragPageState extends State<Tax1040IncomeDragPage> {
               style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
             ),
           ),
-          // NOTE: deliberately NOT wrapped in IntrinsicHeight — that
+          // NOTE: deliberately NOT wrapped in IntrinsicHeight (that
           // forces every descendant to support intrinsic-dimension
           // sizing, and _buildDottedLine() uses a LayoutBuilder, which
-          // explicitly does not support that and throws on every layout
-          // pass (this was the earlier blank-screen bug). Plain
-          // CrossAxisAlignment.stretch on the Row still stretches the
-          // sidebar to the table's real height via normal two-pass flex
-          // layout — no intrinsic query involved.
+          // explicitly does not support that) AND deliberately NOT using
+          // CrossAxisAlignment.stretch either. This Row sits inside a
+          // Column that's inside a SingleChildScrollView, so the height
+          // constraint this Row receives from its parent is unbounded
+          // (maxHeight == infinity) — that's normal and fine for a
+          // scrolling list. But CrossAxisAlignment.stretch works by
+          // taking the Row's OWN incoming maxHeight and handing it to
+          // every child as a *tight* constraint. In debug builds, handing
+          // a child a tight-infinite height trips a hard layout
+          // assertion; asserts are stripped in release/TestFlight builds,
+          // so instead of crashing it silently produces an enormous
+          // computed height for this Row — which is exactly what made
+          // the tray (and everything below it) effectively unreachable:
+          // not missing, just pushed tens of thousands of pixels down the
+          // scroll extent. Using the default (non-stretch) cross
+          // alignment lets each child size to its own natural height
+          // instead, which is bounded and correct here. Trade-off: the
+          // sidebar's right-hand divider border may end a touch short of
+          // the table's full height on pages where the two columns'
+          // natural heights differ slightly — a cosmetic gap, not a
+          // functional bug.
           Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (showSidebar)
                 Container(
