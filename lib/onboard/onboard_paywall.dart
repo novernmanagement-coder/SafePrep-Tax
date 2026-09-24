@@ -79,7 +79,10 @@ class _OnboardPaywallState extends State<OnboardPaywall> {
   static const Color _softWhite = Color(0xFFF0EDE8);
   static const Color _cardBg = Color(0xFF13130F);
 
-  static const String _price = '\$19.99';
+  // Localized price straight from the App Store (falls back to \$19.99
+  // only until the product has loaded). Hardcoding the price showed
+  // US dollars to every storefront, including App Review's.
+  String get _price => IAPService.instance.unlockPrice;
 
   bool _purchasing = false;
   bool _restoring = false;
@@ -450,7 +453,7 @@ class _OnboardPaywallState extends State<OnboardPaywall> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Got a code from your instructor? Enter it below.',
+                    'Have an unlock code? Enter it below.',
                     style: TextStyle(
                       color: _softWhite.withValues(alpha: 0.7),
                       fontSize: 13,
@@ -497,8 +500,8 @@ class _OnboardPaywallState extends State<OnboardPaywall> {
                           final result = await RedeemCodeService.redeem(
                             controller.text,
                           );
-                          setState(() => _redeeming = false);
                           if (!mounted) return;
+                          setState(() => _redeeming = false);
                           if (result == RedeemResult.success) {
                             Navigator.of(dialogContext).pop();
                             Navigator.pushAndRemoveUntil(
@@ -614,14 +617,14 @@ class _OnboardPaywallState extends State<OnboardPaywall> {
               _unlockItem(
                 icon: Icons.dashboard_rounded,
                 title: 'Personal Dashboard',
-                description: 'Your study hub — readiness score, progress, '
+                description:
+                    'Your study hub — readiness score, progress, '
                     'and what to focus on next.',
               ),
               _unlockItem(
                 icon: Icons.bolt,
                 title: '60-Second Trainer',
-                description:
-                    'A fast primer that hits the core Tax concepts.',
+                description: 'A fast primer that hits the core Tax concepts.',
               ),
               _unlockItem(
                 icon: Icons.quiz,
@@ -630,14 +633,14 @@ class _OnboardPaywallState extends State<OnboardPaywall> {
               ),
               _unlockItem(
                 icon: Icons.fact_check,
-                title: 'Full 217-Question Exam',
-                description: 'A complete Intuit Tax-aligned simulation.',
+                title: 'Full 294-Question Bank',
+                description:
+                    'Built around the Intuit Academy Tax Level 1 curriculum.',
               ),
               _unlockItem(
                 icon: Icons.all_inclusive,
                 title: 'Unlimited Randomized Quizzes',
-                description:
-                    'No limits. No repeats unless you want them.',
+                description: 'No limits. No repeats unless you want them.',
               ),
 
               const SizedBox(height: 14),
@@ -662,11 +665,7 @@ class _OnboardPaywallState extends State<OnboardPaywall> {
                         color: _darkBg,
                         border: Border.all(color: _gold),
                       ),
-                      child: const Icon(
-                        Icons.verified,
-                        size: 15,
-                        color: _gold,
-                      ),
+                      child: const Icon(Icons.verified, size: 15, color: _gold),
                     ),
                     const SizedBox(width: 10),
                     Expanded(
@@ -680,7 +679,8 @@ class _OnboardPaywallState extends State<OnboardPaywall> {
                           children: const [
                             TextSpan(text: 'Every question mapped to '),
                             TextSpan(
-                              text: 'the official Intuit Tax Academy '
+                              text:
+                                  'the Intuit Academy Tax '
                                   'Level 1 curriculum',
                               style: TextStyle(
                                 fontWeight: FontWeight.w700,
@@ -713,7 +713,7 @@ class _OnboardPaywallState extends State<OnboardPaywall> {
                 child: Column(
                   children: [
                     _accessRow('Lifetime access'),
-                    _accessRow('300+ aligned questions'),
+                    _accessRow('294 aligned questions'),
                     _accessRow('Adaptive progress tracking'),
                     _accessRow('Exam-weighted study flow'),
                     _accessRow('Exclusive Intuit Interview Prep'),
@@ -803,7 +803,7 @@ class _OnboardPaywallState extends State<OnboardPaywall> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 6),
                   child: Text(
-                    'Have a code from your instructor? Redeem it',
+                    'Have an unlock code? Redeem it',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 12,

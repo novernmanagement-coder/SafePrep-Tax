@@ -162,12 +162,9 @@ class RedeemCodeService {
   /// never blocks or reverses the unlock the student already got.
   static void _markUsed(String digitsOnly) {
     http
-        .post(
-          Uri.parse(_checkUrl),
-          body: {'code': digitsOnly},
-        )
+        .post(Uri.parse(_checkUrl), body: {'code': digitsOnly})
         .timeout(const Duration(seconds: 4))
-        .catchError((_) {});
+        .then((_) {}, onError: (_) {});
   }
 
   /// Attempts to redeem [rawCode] (dashes/spaces tolerated — only the
