@@ -331,19 +331,36 @@ class IAPService {
     final completer = Completer<IAPResult>();
     _pendingPurchases[product.id] = completer;
 
-    try {
-      final purchaseParam = PurchaseParam(productDetails: product);
-      final started = await _iap.buyNonConsumable(purchaseParam: purchaseParam);
-      if (!started) {
-        _pendingPurchases.remove(product.id);
-        await _trackBlocked('buy_returned_false');
+    // Sept 30 2026 — one automatic retry if the buy call itself throws.
+    // App Review's 1.18.0(2) failure was a buy-time exception
+    // ("storekit2_failed_to_fetch_product") on a product that HAD loaded.
+    // A thrown buy call means no purchase was started, so reloading the
+    // product and trying once more can't double-charge anyone.
+    for (var attempt = 1; attempt <= 2; attempt++) {
+      final current = product!;
+      try {
+        final purchaseParam = PurchaseParam(productDetails: current);
+        final started =
+            await _iap.buyNonConsumable(purchaseParam: purchaseParam);
+        if (!started) {
+          _pendingPurchases.remove(current.id);
+          await _trackBlocked('buy_returned_false');
+          return IAPResult.error;
+        }
+        break; // purchase sheet requested — wait on the completer below
+      } catch (e) {
+        debugPrint('IAP buy error (attempt $attempt): $e');
+        if (attempt == 1) {
+          await _trackBlocked('buy_exception_retrying', detail: e.toString());
+          await Future.delayed(const Duration(seconds: 1));
+          await _loadProducts();
+          product = getProduct() ?? current;
+          continue;
+        }
+        _pendingPurchases.remove(current.id);
+        await _trackBlocked('buy_exception', detail: e.toString());
         return IAPResult.error;
       }
-    } catch (e) {
-      debugPrint('IAP buy error: $e');
-      _pendingPurchases.remove(product.id);
-      await _trackBlocked('buy_exception', detail: e.toString());
-      return IAPResult.error;
     }
 
     return completer.future.timeout(

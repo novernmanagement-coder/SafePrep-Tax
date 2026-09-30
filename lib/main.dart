@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:in_app_purchase_storekit/in_app_purchase_storekit.dart';
 import 'app_state_persistence.dart';
 import 'csv_loader.dart';
 import 'iap_service.dart';
@@ -39,6 +40,18 @@ void main() async {
   // redeem code unlocking the app — see RedeemCodeService. Skip IAP
   // entirely on web rather than letting it fail every launch.
   if (!kIsWeb) {
+    // Sept 30 2026 — App Review fix (Guideline 2.1(b), 1.18.0 build 2).
+    // in_app_purchase_storekit 0.4.x uses StoreKit 2 by default, and its
+    // buy step re-fetches the product natively. In App Review's sandbox
+    // that re-fetch failed on an iPad even though queryProductDetails()
+    // had already loaded the product fine — Mixpanel showed
+    // purchase_blocked / buy_exception /
+    // "storekit2_failed_to_fetch_product". Force the StoreKit 1 path on
+    // iOS, which buys straight from the already-loaded product. Must run
+    // BEFORE IAPService.initialize().
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      InAppPurchaseStoreKitPlatform.enableStoreKit1();
+    }
     IAPService.instance.initialize();
   }
 
