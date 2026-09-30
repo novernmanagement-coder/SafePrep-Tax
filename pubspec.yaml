@@ -4,7 +4,7 @@ description: "Tax Starter - Tax Certification Exam Prep"
 
 publish_to: 'none'
 
-version: 1.18.0+3
+version: 1.18.0+4
 
 
 environment:
@@ -29,7 +29,6 @@ dependencies:
 
   in_app_purchase: ^3.2.0
 
-  in_app_purchase_storekit: ^0.4.0
 
   in_app_review: ^2.0.12
 

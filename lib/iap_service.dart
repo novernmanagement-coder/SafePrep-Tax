@@ -331,12 +331,12 @@ class IAPService {
     final completer = Completer<IAPResult>();
     _pendingPurchases[product.id] = completer;
 
-    // Sept 30 2026 — one automatic retry if the buy call itself throws.
+    // Sept 30 2026 — up to two automatic retries if the buy call throws.
     // App Review's 1.18.0(2) failure was a buy-time exception
     // ("storekit2_failed_to_fetch_product") on a product that HAD loaded.
     // A thrown buy call means no purchase was started, so reloading the
-    // product and trying once more can't double-charge anyone.
-    for (var attempt = 1; attempt <= 2; attempt++) {
+    // product and trying again can't double-charge anyone.
+    for (var attempt = 1; attempt <= 3; attempt++) {
       final current = product!;
       try {
         final purchaseParam = PurchaseParam(productDetails: current);
@@ -350,9 +350,11 @@ class IAPService {
         break; // purchase sheet requested — wait on the completer below
       } catch (e) {
         debugPrint('IAP buy error (attempt $attempt): $e');
-        if (attempt == 1) {
+        if (attempt < 3) {
           await _trackBlocked('buy_exception_retrying', detail: e.toString());
-          await Future.delayed(const Duration(seconds: 1));
+          // 1.5s, then 3s — gives StoreKit 2's native product fetch time
+          // to recover in App Review's slow sandbox.
+          await Future.delayed(Duration(milliseconds: 1500 * attempt));
           await _loadProducts();
           product = getProduct() ?? current;
           continue;
