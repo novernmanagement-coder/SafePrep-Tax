@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants.dart';
@@ -798,6 +799,13 @@ class _OnboardPaywallState extends State<OnboardPaywall> {
                 ),
               ),
 
+              // WEB ONLY (Sept 30 2026) — App Review rejected 1.18.0(2)
+              // under Guideline 3.1.1: an iOS app can't unlock paid
+              // content with codes bought outside Apple's IAP. Google
+              // Play's payments policy says the same. Codes from the
+              // WooCommerce checkout are for the web edition only, so
+              // the link is hidden on iOS/Android.
+              if (kIsWeb)
               GestureDetector(
                 onTap: _showRedeemDialog,
                 child: Padding(
